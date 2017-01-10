@@ -82,6 +82,8 @@ class MultiplayerViewController: UIViewController {
             self.playerNameView.alpha = 1
         }
         
+        MultiplayerViewController.differentMode = 0
+        
         if MultiplayerViewController.differentMode == 1 {
             
             ViewController.mode = 2
