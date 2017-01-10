@@ -65,9 +65,6 @@ class MultiplayerViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.view.addSubview(self.playerNameView)
-        playerNameView.center = self.view.center
-        
         whiteCountdown.text = "\(MultiplayerViewController.time) secs"
         blueCountdown.text = "\(MultiplayerViewController.time) secs"
         
@@ -141,6 +138,10 @@ class MultiplayerViewController: UIViewController {
             blueScoreStack.isHidden = true
             whiteTimeStack.isHidden = true
             blueTimeStack.isHidden = true
+            
+            self.view.addSubview(self.playerNameView)
+            playerNameView.center = self.view.center
+            
         }
         
         playerNameView.center = self.view.center
