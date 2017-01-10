@@ -49,6 +49,13 @@ class PlayerNamesViewController: UIViewController, UITextFieldDelegate {
                 MultiplayerViewController.differentMode = 1
             }
             
+            if acModeSwitch.isOn == true {
+                MultiplayerViewController.differentMode = 1
+            }
+            if trlModeSwitch.isOn == true {
+                MultiplayerViewController.differentMode = 2
+            }
+            
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let ivc = storyboard.instantiateViewController(withIdentifier: "Multi")
             ivc.modalPresentationStyle = .custom
