@@ -11,6 +11,7 @@ import MessageUI
 
 class AccountViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate, UIPickerViewDataSource, UIPickerViewDelegate, UITableViewDataSource, UITableViewDelegate, MFMailComposeViewControllerDelegate {
 
+    @IBOutlet weak var lockBTN: UIButton!
     @IBOutlet weak var tableView: UITableView!
     
     let tableItems = ["Tapedup Status", "Highscore", "Total Taps", "Total Seconds Played", "Total Games Played"]
@@ -689,6 +690,12 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
         } else {
             tableView.isScrollEnabled = true
         }
+        
+        let image = lockBTN.currentImage
+        let tintedImage = image?.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
+        lockBTN.setImage(tintedImage, for: .normal)
+        lockBTN.setImage(tintedImage, for: .selected)
+        lockBTN.tintColor = UIColor(red: 230.0/255.0, green: 224.0/255.0, blue: 221.0/255.0, alpha: 1.0)
         
         // Do any additional setup after loading the view.
     }
