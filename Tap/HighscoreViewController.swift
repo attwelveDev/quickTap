@@ -30,7 +30,10 @@ class HighscoreViewController: UIViewController {
             youLBL.text = "You achieved your highscore of"
             highscore.text = "\(UserDefaults.standard.value(forKey: "Highscore")!)"
             onLBL.text = "on"
-            date.text = "\(UserDefaults.standard.value(forKey: "checkDateNewHighscore")!)"
+            if UserDefaults.standard.value(forKey: "Highscore") == nil {
+                UserDefaults.standard.set(0, forKey: "Highscore")
+                date.text = "\(UserDefaults.standard.value(forKey: "checkDateNewHighscore")!)"
+            }
         } else if UserDefaults.standard.integer(forKey: "Highscore") == 0 {
             youLBL.isHidden = true
             highscore.isHidden = true

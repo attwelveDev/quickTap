@@ -23,6 +23,11 @@ class StartViewController: UIViewController {
 
         // Do any additional setup after loading the view.
         
+        if UserDefaults.standard.value(forKey: "usernameDefault") == nil {
+            UserDefaults.standard.set("Username", forKey: "usernameDefault")
+            AccountViewController.defaultUsername = UserDefaults.standard.value(forKey: "usernameDefault") as! String
+        }
+        
         if UserDefaults.standard.value(forKey: "timesPlayed") == nil {
             
             UserDefaults.standard.set(0, forKey: "timesPlayed")

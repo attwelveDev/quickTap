@@ -35,7 +35,7 @@ class MultiplayerViewController: UIViewController {
     @IBOutlet weak var brownPN: UILabel!
     @IBOutlet weak var bluePN: UILabel!
     
-    static var brownPNV = "Brown"
+    static var brownPNV = "Username"
     static var bluePNV = "Blue"
     
     @IBOutlet weak var containerView: UIView!
@@ -121,6 +121,10 @@ class MultiplayerViewController: UIViewController {
             spaceToBTN2.constant = 1
             
             animateOut()
+            
+            brownPN.isHidden = false
+            bluePN.isHidden = false
+            
             whiteScoreStack.isHidden = false
             blueScoreStack.isHidden = false
             
@@ -157,7 +161,13 @@ class MultiplayerViewController: UIViewController {
         whiteTimeStack.transform = CGAffineTransform(rotationAngle: 3.14)
         brownPN.transform = CGAffineTransform(rotationAngle: 3.14)
         
-        brownPN.text = "\(MultiplayerViewController.brownPNV)"
+        if UserDefaults.standard.value(forKey: "usernameDefault") == nil {
+            UserDefaults.standard.set("Username", forKey: "usernameDefault")
+            AccountViewController.defaultUsername = UserDefaults.standard.value(forKey: "usernameDefault") as! String
+        }
+        MultiplayerViewController.brownPNV = AccountViewController.defaultUsername
+        
+        brownPN.text = "\(AccountViewController.defaultUsername)"
         bluePN.text = "\(MultiplayerViewController.bluePNV)"
         
         MultiplayerViewController.whiteScore = 0

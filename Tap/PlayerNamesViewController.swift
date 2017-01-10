@@ -19,7 +19,7 @@ class PlayerNamesViewController: UIViewController, UITextFieldDelegate {
             playerOneDefault.setValue(MultiplayerViewController.brownPNV, forKey: "playerOneName")
             playerOneDefault.synchronize()
         } else if playerOneTF.text?.isEmpty == true {
-            MultiplayerViewController.brownPNV = "Brown"
+            MultiplayerViewController.brownPNV = "Username"
             let playerOneDefault = UserDefaults.standard
             playerOneDefault.setValue(MultiplayerViewController.brownPNV, forKey: "playerOneName")
             playerOneDefault.synchronize()
@@ -46,10 +46,19 @@ class PlayerNamesViewController: UIViewController, UITextFieldDelegate {
         } else if MultiplayerViewController.brownPNV != MultiplayerViewController.bluePNV {
             
             if UserDefaults.standard.value(forKey: "acModeSwitchState") == nil {
+                MultiplayerViewController.bluePNV = playerOneTF.text!
+                MultiplayerViewController.brownPNV = playerTwoTF.text!
                 MultiplayerViewController.differentMode = 1
+                let storyboard = UIStoryboard(name: "Main", bundle: nil)
+                let ivc = storyboard.instantiateViewController(withIdentifier: "Multi")
+                ivc.modalPresentationStyle = .custom
+                ivc.modalTransitionStyle = .crossDissolve
+                self.present(ivc, animated: true, completion: { _ in })
             }
             
             if acModeSwitch.isOn == true {
+                MultiplayerViewController.bluePNV = playerOneTF.text!
+                MultiplayerViewController.brownPNV = playerTwoTF.text!
                 MultiplayerViewController.differentMode = 1
                 let storyboard = UIStoryboard(name: "Main", bundle: nil)
                 let ivc = storyboard.instantiateViewController(withIdentifier: "Multi")
@@ -58,6 +67,8 @@ class PlayerNamesViewController: UIViewController, UITextFieldDelegate {
                 self.present(ivc, animated: true, completion: { _ in })
             }
             if trlModeSwitch.isOn == true {
+                MultiplayerViewController.bluePNV = playerOneTF.text!
+                MultiplayerViewController.brownPNV = playerTwoTF.text!
                 MultiplayerViewController.differentMode = 2
                 let storyboard = UIStoryboard(name: "Main", bundle: nil)
                 let ivc = storyboard.instantiateViewController(withIdentifier: "Multi")
@@ -288,7 +299,7 @@ class PlayerNamesViewController: UIViewController, UITextFieldDelegate {
             playerOneDefault.setValue(MultiplayerViewController.brownPNV, forKey: "playerOneName")
             playerOneDefault.synchronize()
         } else if playerOneTF.text?.isEmpty == true {
-            MultiplayerViewController.brownPNV = "Brown"
+            MultiplayerViewController.brownPNV = "Username"
             let playerOneDefault = UserDefaults.standard
             playerOneDefault.setValue(MultiplayerViewController.brownPNV, forKey: "playerOneName")
             playerOneDefault.synchronize()
@@ -355,7 +366,7 @@ class PlayerNamesViewController: UIViewController, UITextFieldDelegate {
                 playerOneDefault.setValue(MultiplayerViewController.brownPNV, forKey: "playerOneName")
                 playerOneDefault.synchronize()
             } else if playerOneTF.text?.isEmpty == true {
-                MultiplayerViewController.brownPNV = "Brown"
+                MultiplayerViewController.brownPNV = "Username"
                 let playerOneDefault = UserDefaults.standard
                 playerOneDefault.setValue(MultiplayerViewController.brownPNV, forKey: "playerOneName")
                 playerOneDefault.synchronize()
@@ -381,7 +392,30 @@ class PlayerNamesViewController: UIViewController, UITextFieldDelegate {
                 
             } else if MultiplayerViewController.brownPNV != MultiplayerViewController.bluePNV {
                 
-                MultiplayerViewController.differentMode = 1
+                if UserDefaults.standard.value(forKey: "acModeSwitchState") == nil {
+                    MultiplayerViewController.differentMode = 1
+                }
+                
+                if acModeSwitch.isOn == true {
+                    MultiplayerViewController.bluePNV = playerOneTF.text!
+                    MultiplayerViewController.brownPNV = playerTwoTF.text!
+                    MultiplayerViewController.differentMode = 1
+                    let storyboard = UIStoryboard(name: "Main", bundle: nil)
+                    let ivc = storyboard.instantiateViewController(withIdentifier: "Multi")
+                    ivc.modalPresentationStyle = .custom
+                    ivc.modalTransitionStyle = .crossDissolve
+                    self.present(ivc, animated: true, completion: { _ in })
+                }
+                if trlModeSwitch.isOn == true {
+                    MultiplayerViewController.bluePNV = playerOneTF.text!
+                    MultiplayerViewController.brownPNV = playerTwoTF.text!
+                    MultiplayerViewController.differentMode = 2
+                    let storyboard = UIStoryboard(name: "Main", bundle: nil)
+                    let ivc = storyboard.instantiateViewController(withIdentifier: "Multi")
+                    ivc.modalPresentationStyle = .custom
+                    ivc.modalTransitionStyle = .crossDissolve
+                    self.present(ivc, animated: true, completion: { _ in })
+                }
                 
                 let storyboard = UIStoryboard(name: "Main", bundle: nil)
                 let ivc = storyboard.instantiateViewController(withIdentifier: "Multi")
@@ -389,10 +423,11 @@ class PlayerNamesViewController: UIViewController, UITextFieldDelegate {
                 ivc.modalTransitionStyle = .crossDissolve
                 self.present(ivc, animated: true, completion: { _ in })
             }
+
         }
         
         if playerOneTF.text?.isEmpty == true {
-            playerOneTF.text = "Brown"
+            playerOneTF.text = "Username"
         }
         if playerTwoTF.text?.isEmpty == true {
             playerTwoTF.text = "Blue"
@@ -404,7 +439,7 @@ class PlayerNamesViewController: UIViewController, UITextFieldDelegate {
             playerOneDefault.setValue(MultiplayerViewController.brownPNV, forKey: "playerOneName")
             playerOneDefault.synchronize()
         } else if playerOneTF.text?.isEmpty == true {
-            MultiplayerViewController.brownPNV = "Brown"
+            MultiplayerViewController.brownPNV = "Username"
             let playerOneDefault = UserDefaults.standard
             playerOneDefault.setValue(MultiplayerViewController.brownPNV, forKey: "playerOneName")
             playerOneDefault.synchronize()
