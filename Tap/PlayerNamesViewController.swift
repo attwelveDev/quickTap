@@ -51,9 +51,19 @@ class PlayerNamesViewController: UIViewController, UITextFieldDelegate {
             
             if acModeSwitch.isOn == true {
                 MultiplayerViewController.differentMode = 1
+                let storyboard = UIStoryboard(name: "Main", bundle: nil)
+                let ivc = storyboard.instantiateViewController(withIdentifier: "Multi")
+                ivc.modalPresentationStyle = .custom
+                ivc.modalTransitionStyle = .crossDissolve
+                self.present(ivc, animated: true, completion: { _ in })
             }
             if trlModeSwitch.isOn == true {
                 MultiplayerViewController.differentMode = 2
+                let storyboard = UIStoryboard(name: "Main", bundle: nil)
+                let ivc = storyboard.instantiateViewController(withIdentifier: "Multi")
+                ivc.modalPresentationStyle = .custom
+                ivc.modalTransitionStyle = .crossDissolve
+                self.present(ivc, animated: true, completion: { _ in })
             }
             
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
@@ -158,8 +168,6 @@ class PlayerNamesViewController: UIViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        MultiplayerViewController.differentMode = 0
-        
         acModeSwitch.isOn = UserDefaults.standard.bool(forKey: "acModeSwitchState")
         trlModeSwitch.isOn = UserDefaults.standard.bool(forKey: "trlModeSwitchState")
         
@@ -182,7 +190,6 @@ class PlayerNamesViewController: UIViewController, UITextFieldDelegate {
             trlModeSwitch.setOn(false, animated: true)
             UserDefaults.standard.set(acModeSwitch.isOn, forKey: "acModeSwitchState")
             UserDefaults.standard.set(trlModeSwitch.isOn, forKey: "trlModeSwitchState")
-            MultiplayerViewController.differentMode = 1
             slider.isUserInteractionEnabled = true
             trlModeText.textColor = UIColor(red: 81.0/255.0, green: 118.0/255.0, blue: 138.0/255.0, alpha: 1.0)
             acModeText.textColor = UIColor(red: 33.0/255.0, green: 93.0/255.0, blue: 125.0/255.0, alpha: 1.0)
@@ -193,7 +200,6 @@ class PlayerNamesViewController: UIViewController, UITextFieldDelegate {
             acModeSwitch.setOn(false, animated: true)
             UserDefaults.standard.set(acModeSwitch.isOn, forKey: "acModeSwitchState")
             UserDefaults.standard.set(trlModeSwitch.isOn, forKey: "trlModeSwitchState")
-            MultiplayerViewController.differentMode = 2
             trlModeText.textColor = UIColor(red: 33.0/255.0, green: 93.0/255.0, blue: 125.0/255.0, alpha: 1.0)
             acModeText.textColor = UIColor(red: 81.0/255.0, green: 118.0/255.0, blue: 138.0/255.0, alpha: 1.0)
             tapText.textColor = UIColor.lightText

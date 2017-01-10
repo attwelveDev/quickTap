@@ -64,6 +64,16 @@ class MultiplayerViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        brownPN.isHidden = true
+        bluePN.isHidden = true
+        whiteScoreStack.isHidden = true
+        blueScoreStack.isHidden = true
+        whiteTimeStack.isHidden = true
+        blueTimeStack.isHidden = true
+        
+        self.view.addSubview(self.playerNameView)
+        playerNameView.center = self.view.center
         
         whiteCountdown.text = "\(MultiplayerViewController.time) secs"
         blueCountdown.text = "\(MultiplayerViewController.time) secs"
@@ -81,8 +91,6 @@ class MultiplayerViewController: UIViewController {
         }) { _ in
             self.playerNameView.alpha = 1
         }
-        
-        MultiplayerViewController.differentMode = 0
         
         if MultiplayerViewController.differentMode == 1 {
             
@@ -132,20 +140,8 @@ class MultiplayerViewController: UIViewController {
             
             self.stopwatch = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(MultiplayerViewController.stopwatchUpdate), userInfo: nil, repeats: true)
             
-        } else {
-            
-            brownPN.isHidden = true
-            bluePN.isHidden = true
-            whiteScoreStack.isHidden = true
-            blueScoreStack.isHidden = true
-            whiteTimeStack.isHidden = true
-            blueTimeStack.isHidden = true
-            
-            self.view.addSubview(self.playerNameView)
-            playerNameView.center = self.view.center
-            
         }
-        
+
         playerNameView.center = self.view.center
 
         playerNameView.layer.shadowColor = UIColor.black.cgColor
@@ -215,6 +211,7 @@ class MultiplayerViewController: UIViewController {
         if(MultiplayerViewController.time == 0) {
             
             (DispatchQueue.main).async{
+                self.timer.invalidate()
                 self.winner()
                 let storyboard = UIStoryboard(name: "Main", bundle: nil)
                 let ivc = storyboard.instantiateViewController(withIdentifier: "GameOver") as! GameOverViewController
