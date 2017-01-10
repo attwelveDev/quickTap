@@ -163,7 +163,7 @@ class MultiplayerViewController: UIViewController {
         
         if UserDefaults.standard.value(forKey: "usernameDefault") == nil {
             UserDefaults.standard.set("Username", forKey: "usernameDefault")
-            AccountViewController.defaultUsername = UserDefaults.standard.value(forKey: "usernameDefault") as! String
+            AccountViewController.defaultUsername = "Username"
         }
         MultiplayerViewController.brownPNV = AccountViewController.defaultUsername
         
