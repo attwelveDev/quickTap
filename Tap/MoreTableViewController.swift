@@ -180,7 +180,7 @@ class MoreTableViewController: UITableViewController, SFSafariViewControllerDele
         
         mailComposerVC.setToRecipients([""])
         mailComposerVC.setSubject("Download QuickTap!")
-        mailComposerVC.setMessageBody("Hello! I love QuickTap and I think you should check it out! QuickTap is all about tapping quickly, hence the name. With two modes in Singleplayer, 'Time Mode' and 'Highscore Mode' and a competitive mode in Multiplayer. You'll always be engaged because of the huge range of choices. Download here: https://itunes.apple.com/us/app/quicktap/id1190851546?mt=8", isHTML: false)
+        mailComposerVC.setMessageBody("Hello! I love QuickTap and I think you should check it out! QuickTap is all about tapping quickly, hence the name. With two modes in Singleplayer, 'Time Mode' and 'Highscore Mode' along side AcrossTable Mode and Territorial Mode. You'll always be engaged because of the huge range of choices. Download here: https://itunes.apple.com/us/app/quicktap/id1190851546?mt=8", isHTML: false)
         
         return mailComposerVC
     }

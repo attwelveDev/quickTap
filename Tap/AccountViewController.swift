@@ -159,7 +159,7 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
         
         mailComposerVC.setToRecipients([""])
         mailComposerVC.setSubject("My Tapedup Profile")
-        mailComposerVC.setMessageBody("I am currently \(UserDefaults.standard.string(forKey: "tapedupStatus")!) Tapedup Status. My highscore is \(UserDefaults.standard.value(forKey: "Highscore")!) and I have tapped \(UserDefaults.standard.value(forKey: "totalTaps")!) times. I have played for \(UserDefaults.standard.value(forKey: "totalPlayTime")!) secs and played \(UserDefaults.standard.integer(forKey: "timesPlayed")) games. QuickTap is all about tapping quickly, hence the name. With two modes in Singleplayer, 'Time Mode' and 'Highscore Mode' and a competitive mode in Multiplayer. Download here: https://itunes.apple.com/us/app/quicktap/id1190851546?mt=8", isHTML: false)
+        mailComposerVC.setMessageBody("I am currently \(UserDefaults.standard.string(forKey: "tapedupStatus")!) Tapedup Status. My highscore is \(UserDefaults.standard.value(forKey: "Highscore")!) and I have tapped \(UserDefaults.standard.value(forKey: "totalTaps")!) times. I have played for \(UserDefaults.standard.value(forKey: "totalPlayTime")!) secs and played \(UserDefaults.standard.integer(forKey: "timesPlayed")) games. QuickTap is all about tapping quickly, hence the name. With two modes in Singleplayer, 'Time Mode' and 'Highscore Mode' along side AcrossTable Mode and Territorial Mode. Download here: https://itunes.apple.com/us/app/quicktap/id1190851546?mt=8", isHTML: false)
         
         return mailComposerVC
     }
