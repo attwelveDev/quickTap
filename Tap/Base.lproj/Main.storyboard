@@ -238,18 +238,18 @@
                                         <rect key="frame" x="0.0" y="28" width="328" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="lTI-6t-fnW" id="agK-oz-5HH">
-                                            <rect key="frame" x="0.0" y="0.0" width="328" height="43"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="328" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="jyF-zb-3dt">
-                                                    <rect key="frame" x="15" y="11" width="34" height="21"/>
+                                                    <rect key="frame" x="15" y="12" width="33.5" height="20.5"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Detail" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="qgp-pw-ILL">
-                                                    <rect key="frame" x="269" y="11" width="44" height="21"/>
+                                                    <rect key="frame" x="269" y="12" width="44" height="20.5"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
@@ -875,9 +875,9 @@ knowing what device you are using.</string>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="c6M-V8-jnH">
                             <rect key="frame" x="16" y="75" width="263" height="45"/>
                             <attributedString key="attributedText">
-                                <fragment content="Version 1.0">
+                                <fragment content="Version 2.38">
                                     <attributes>
-                                        <color key="NSColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                        <color key="NSColor" red="0.90251296758651733" green="0.87860709428787231" blue="0.86578613519668579" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <font key="NSFont" size="20" name=".AppleSystemUIFont"/>
                                         <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
                                     </attributes>
@@ -887,14 +887,14 @@ knowing what device you are using.</string>
 Cg
 </string>
                                     <attributes>
-                                        <color key="NSColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                        <color key="NSColor" red="0.90251296758651733" green="0.87860709428787231" blue="0.86578613519668579" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <font key="NSFont" metaFont="system" size="15"/>
                                         <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
                                     </attributes>
                                 </fragment>
-                                <fragment content="Build 1">
+                                <fragment content="Build 2">
                                     <attributes>
-                                        <color key="NSColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                        <color key="NSColor" red="0.90251296759999999" green="0.87860709429999995" blue="0.86578613520000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <font key="NSFont" size="16" name=".AppleSystemUIFont"/>
                                         <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
                                     </attributes>
@@ -1774,22 +1774,22 @@ Thank you for reading this and continuing to play this app. Make sure you share 
                             </connections>
                         </button>
                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="asz-0y-osp">
-                            <rect key="frame" x="0.0" y="183.5" width="300" height="64.5"/>
+                            <rect key="frame" x="0.0" y="183" width="300" height="66"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="749" text="Tap as much as you can in" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RiO-ag-eCp">
-                                    <rect key="frame" x="44" y="0.0" width="212.5" height="21.5"/>
+                                    <rect key="frame" x="44" y="0.0" width="213" height="22"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                     <color key="textColor" red="0.90251296759999999" green="0.87860709429999995" blue="0.86578613520000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="60" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jOm-SZ-H60">
-                                    <rect key="frame" x="137.5" y="21.5" width="25" height="21.5"/>
+                                    <rect key="frame" x="138" y="22" width="25" height="22"/>
                                     <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="18"/>
                                     <color key="textColor" red="0.90251296759999999" green="0.87860709429999995" blue="0.86578613520000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="252" text="seconds" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Xk1-8l-KLv">
-                                    <rect key="frame" x="116" y="43" width="68.5" height="21.5"/>
+                                    <rect key="frame" x="116" y="44" width="69" height="22"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                     <color key="textColor" red="0.90251296759999999" green="0.87860709429999995" blue="0.86578613520000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     <nil key="highlightedColor"/>
@@ -1797,22 +1797,22 @@ Thank you for reading this and continuing to play this app. Make sure you share 
                             </subviews>
                         </stackView>
                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="vGX-eP-DqB">
-                            <rect key="frame" x="33" y="320.5" width="235" height="64.5"/>
+                            <rect key="frame" x="33" y="319" width="235" height="66"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="749" text="Beat your highscore of" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="csE-42-7IY">
-                                    <rect key="frame" x="26" y="0.0" width="183" height="21.5"/>
+                                    <rect key="frame" x="26" y="0.0" width="183" height="22"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                     <color key="textColor" red="0.90251296759999999" green="0.87860709429999995" blue="0.86578613520000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bgT-QB-MGU">
-                                    <rect key="frame" x="111.5" y="21.5" width="12.5" height="21.5"/>
+                                    <rect key="frame" x="111" y="22" width="13" height="22"/>
                                     <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="18"/>
                                     <color key="textColor" red="0.90251296759999999" green="0.87860709429999995" blue="0.86578613520000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="252" text="in the set time of 60 seconds" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TAK-hb-b8P">
-                                    <rect key="frame" x="0.0" y="43" width="235" height="21.5"/>
+                                    <rect key="frame" x="0.0" y="44" width="235" height="22"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                     <color key="textColor" red="0.90251296759999999" green="0.87860709429999995" blue="0.86578613520000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     <nil key="highlightedColor"/>
@@ -1820,7 +1820,7 @@ Thank you for reading this and continuing to play this app. Make sure you share 
                             </subviews>
                         </stackView>
                         <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="60" minValue="10" maxValue="120" translatesAutoresizingMaskIntoConstraints="NO" id="Sv3-a3-lgv">
-                            <rect key="frame" x="6" y="145.5" width="288" height="31"/>
+                            <rect key="frame" x="6" y="145" width="288" height="31"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="284" id="4jp-Fd-KHU"/>
                             </constraints>
@@ -1832,7 +1832,7 @@ Thank you for reading this and continuing to play this app. Make sure you share 
                             </connections>
                         </slider>
                         <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Paa-Ms-gQ7">
-                            <rect key="frame" x="126" y="109.5" width="51" height="31"/>
+                            <rect key="frame" x="126" y="109" width="51" height="31"/>
                             <color key="onTintColor" cocoaTouchSystemColor="lightTextColor"/>
                             <color key="thumbTintColor" red="0.90251296759999999" green="0.87860709429999995" blue="0.86578613520000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <connections>
@@ -1840,7 +1840,7 @@ Thank you for reading this and continuing to play this app. Make sure you share 
                             </connections>
                         </switch>
                         <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="JqE-BC-qbh">
-                            <rect key="frame" x="126" y="280.5" width="51" height="31"/>
+                            <rect key="frame" x="126" y="279" width="51" height="31"/>
                             <color key="onTintColor" cocoaTouchSystemColor="lightTextColor"/>
                             <color key="thumbTintColor" red="0.90251296759999999" green="0.87860709429999995" blue="0.86578613520000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <connections>
@@ -1848,13 +1848,13 @@ Thank you for reading this and continuing to play this app. Make sure you share 
                             </connections>
                         </switch>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Time Mode" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HIj-7F-JzP">
-                            <rect key="frame" x="66" y="77.5" width="168" height="24"/>
+                            <rect key="frame" x="66" y="77" width="168" height="24"/>
                             <fontDescription key="fontDescription" type="system" weight="black" pointSize="20"/>
                             <color key="textColor" red="0.90251296759999999" green="0.87860709429999995" blue="0.86578613520000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Highscore Mode" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9yH-NE-G7e">
-                            <rect key="frame" x="66" y="248.5" width="167.5" height="24"/>
+                            <rect key="frame" x="66" y="247" width="168" height="24"/>
                             <fontDescription key="fontDescription" type="system" weight="black" pointSize="20"/>
                             <color key="textColor" red="0.90251296759999999" green="0.87860709429999995" blue="0.86578613520000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <nil key="highlightedColor"/>
