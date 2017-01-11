@@ -8,6 +8,7 @@
 
 import UIKit
 import MessageUI
+import LocalAuthentication
 
 class AccountViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate, UIPickerViewDataSource, UIPickerViewDelegate, UITableViewDataSource, UITableViewDelegate, MFMailComposeViewControllerDelegate {
 
@@ -585,6 +586,84 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
             return deviceArray[row]
         }
     }
+    @IBOutlet var EnableTouchIDView: UIView!
+    @IBOutlet weak var cancelEnabling: UIButton!
+    @IBOutlet weak var enableTouchID: UIButton!
+    @IBOutlet weak var errorTitle: UILabel!
+    @IBOutlet weak var errorAndStuffTID: UILabel!
+    @IBAction func dismissEnablingView(_ sender: Any) {
+        animateOutTID()
+    }
+    @IBAction func enableTouchIDAuth(_ sender: Any) {
+        authenitcateUser()
+    }
+    @IBAction func startEnableTouchID(_ sender: Any) {
+        animateInTID()
+        animateOutCE()
+        animateOut()
+        animateOutUN()
+        animateOutA()
+        animateOutD()
+        
+    }
+    
+    func animateInTID() {
+        self.view.addSubview(EnableTouchIDView)
+        EnableTouchIDView.center = self.view.center
+        
+        self.errorTitle.text = "Enable Touch ID Authentication"
+        self.errorAndStuffTID.text = "You must have a Touch ID fingerprint stored on your Touch ID compatible device."
+        
+        EnableTouchIDView.transform = CGAffineTransform.init(scaleX: 1.3, y: 1.3)
+        EnableTouchIDView.alpha = 0
+        
+        UIView.animate(withDuration: 0.5) {
+            self.visualEffectView?.effect = self.effect
+            self.EnableTouchIDView.alpha = 1
+            self.EnableTouchIDView.transform = CGAffineTransform.identity
+        }
+    }
+    
+    func animateOutTID() {
+        UIView.animate(withDuration: 0.5, animations: {
+            self.EnableTouchIDView.transform = CGAffineTransform.init(scaleX: 1.3, y: 1.3)
+            self.EnableTouchIDView.alpha = 0
+            
+            self.visualEffectView?.effect = nil
+            
+        }) { (success: Bool) in
+            self.EnableTouchIDView.removeFromSuperview()
+        }
+    }
+    
+    func authenitcateUser() {
+        let context = LAContext()
+        
+        var error: NSError?
+        
+        
+        if context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) {
+            let displayedPermissionString = "You chose to lock your account \(AccountViewController.defaultUsername). In order to access it, input your Touch ID"
+            context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: displayedPermissionString) {
+                    [unowned self] success, authenticationError in
+                DispatchQueue.main.async {
+                    if success {
+                        print("Success!")
+                        self.animateOutTID()
+                        UserDefaults.standard.set(true, forKey: "userHasTouchIDAuth")
+                        
+                    } else {
+                        self.errorTitle.text = "Error"
+                        self.errorAndStuffTID.text = "Access to Tapedup Failed. Please try again."
+                    }
+                }
+            }
+            
+        } else {
+            self.errorTitle.text = "Error"
+            self.errorAndStuffTID.text = "Your device is not compatible with Touch ID authentication"
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -596,6 +675,12 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
 
         navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
         navigationController?.navigationBar.shadowImage = UIImage()
+        
+        if UserDefaults.standard.bool(forKey: "userHasTouchIDAuth") == true {
+            
+        } else {
+            UserDefaults.standard.set(false, forKey: "userHasTouchIDAuth")
+        }
         
         if let savedUserAvatar = UserDefaults.standard.object(forKey: "userAvatar") as? NSData {
             if let image = UIImage(data: savedUserAvatar as Data) {
@@ -696,6 +781,13 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
         lockBTN.setImage(tintedImage, for: .normal)
         lockBTN.setImage(tintedImage, for: .selected)
         lockBTN.tintColor = UIColor(red: 230.0/255.0, green: 224.0/255.0, blue: 221.0/255.0, alpha: 1.0)
+        
+        EnableTouchIDView.layer.cornerRadius = 5.0
+        EnableTouchIDView.clipsToBounds = false
+        cancelEnabling.layer.cornerRadius = 5.0
+        cancelEnabling.clipsToBounds = false
+        enableTouchID.layer.cornerRadius = 5.0
+        enableTouchID.clipsToBounds = false
         
         // Do any additional setup after loading the view.
     }

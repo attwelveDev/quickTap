@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import LocalAuthentication
 
 class StartViewController: UIViewController {
 
@@ -22,6 +23,12 @@ class StartViewController: UIViewController {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
+        
+        if UserDefaults.standard.bool(forKey: "userHasTouchIDAuth") == true {
+            
+        } else {
+            UserDefaults.standard.set(false, forKey: "userHasTouchIDAuth")
+        }
         
         if UserDefaults.standard.value(forKey: "usernameDefault") == nil {
             UserDefaults.standard.set("Username", forKey: "usernameDefault")
@@ -80,12 +87,83 @@ class StartViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
+    @IBOutlet weak var errorTitle: UILabel!
+    @IBOutlet weak var errorAndStuffTID: UILabel!
+    var effect: UIVisualEffect!
+    var visualEffectView: UIVisualEffectView!
+    @IBOutlet var EnableTouchIDView: UIView!
+    func animateInTID() {
+        self.view.addSubview(EnableTouchIDView)
+        EnableTouchIDView.center = self.view.center
+        
+        self.errorTitle.text = "Enable Touch ID Authentication"
+        self.errorAndStuffTID.text = "You must have a Touch ID fingerprint stored on your Touch ID compatible device."
+        
+        EnableTouchIDView.transform = CGAffineTransform.init(scaleX: 1.3, y: 1.3)
+        EnableTouchIDView.alpha = 0
+        
+        UIView.animate(withDuration: 0.5) {
+            self.visualEffectView?.effect = self.effect
+            self.EnableTouchIDView.alpha = 1
+            self.EnableTouchIDView.transform = CGAffineTransform.identity
+        }
+    }
+    
+    func animateOutTID() {
+        UIView.animate(withDuration: 0.5, animations: {
+            self.EnableTouchIDView.transform = CGAffineTransform.init(scaleX: 1.3, y: 1.3)
+            self.EnableTouchIDView.alpha = 0
+            
+            self.visualEffectView?.effect = nil
+            
+        }) { (success: Bool) in
+            self.EnableTouchIDView.removeFromSuperview()
+        }
+    }
+    
+    func authenitcateUser() {
+        let context = LAContext()
+        
+        var error: NSError?
+        
+        
+        if context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) {
+            let displayedPermissionString = "You chose to lock your account \(AccountViewController.defaultUsername). In order to access it, input your Touch ID"
+            context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: displayedPermissionString) {
+                [unowned self] success, authenticationError in
+                DispatchQueue.main.async {
+                    if success {
+                        self.animateOutTID()
+                        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+                        let ivc = storyboard.instantiateViewController(withIdentifier: "accountVC")
+                        ivc.modalPresentationStyle = .custom
+                        ivc.modalTransitionStyle = .crossDissolve
+                        self.present(ivc, animated: true, completion: { _ in })
+                        
+                    } else {
+                        self.errorTitle.text = "Error"
+                        self.errorAndStuffTID.text = "Access to Tapedup Failed. Please try again."
+                    }
+                }
+            }
+            
+        } else {
+            self.errorTitle.text = "Error"
+            self.errorAndStuffTID.text = "Your device is not compatible with Touch ID authentication"
+        }
+    }
+    
     @IBAction func accountAction(_ sender: Any) {
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let ivc = storyboard.instantiateViewController(withIdentifier: "accountVC")
-        ivc.modalPresentationStyle = .custom
-        ivc.modalTransitionStyle = .crossDissolve
-        self.present(ivc, animated: true, completion: { _ in })
+        if UserDefaults.standard.bool(forKey: "userHasTouchIDAuth") == true {
+            self.authenitcateUser()
+        } else {
+            UserDefaults.standard.set(false, forKey: "userHasTouchIDAuth")
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let ivc = storyboard.instantiateViewController(withIdentifier: "accountVC")
+            ivc.modalPresentationStyle = .custom
+            ivc.modalTransitionStyle = .crossDissolve
+            self.present(ivc, animated: true, completion: { _ in })
+        }
     }
     @IBAction func singleplayerAction(_ sender: Any) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
