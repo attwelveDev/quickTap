@@ -272,7 +272,71 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="wY6-bu-aBO" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-3062" y="865"/>
+            <point key="canvasLocation" x="-3861" y="864"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="zQu-Gz-dhb">
+            <objects>
+                <viewController storyboardIdentifier="signUpVC2" id="9EX-cv-PyJ" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="nkz-xB-cG0"/>
+                        <viewControllerLayoutGuide type="bottom" id="v7U-GU-uxa"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="0dQ-BQ-0ap">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HP2-cR-XMg">
+                                <rect key="frame" x="16" y="515" width="288" height="36"/>
+                                <color key="backgroundColor" red="0.84093689920000003" green="0.57722330089999996" blue="0.43500560519999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                <state key="normal" title="Skip">
+                                    <color key="titleColor" red="0.11437185850000001" green="0.36248782280000003" blue="0.49568670990000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                            </button>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="LD0-Os-7Z4">
+                                <rect key="frame" x="16" y="238.5" width="288" height="91.5"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yVK-AP-3fx">
+                                        <rect key="frame" x="48.5" y="0.0" width="191" height="46"/>
+                                        <state key="normal" image="signInWithGoogle">
+                                            <color key="titleColor" red="0.90251296759999999" green="0.87860709429999995" blue="0.86578613520000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        </state>
+                                    </button>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Benefits" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Xz9-BD-ghv">
+                                        <rect key="frame" x="100.5" y="46" width="87" height="24"/>
+                                        <fontDescription key="fontDescription" type="system" weight="black" pointSize="20"/>
+                                        <color key="textColor" red="0.90251296759999999" green="0.87860709429999995" blue="0.86578613520000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Login!" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sLn-at-WPq">
+                                        <rect key="frame" x="118" y="70" width="52" height="21.5"/>
+                                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
+                                        <color key="textColor" red="0.90251296759999999" green="0.87860709429999995" blue="0.86578613520000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                            </stackView>
+                        </subviews>
+                        <color key="backgroundColor" red="0.11437185853719711" green="0.36248782277107239" blue="0.49568670988082886" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="LD0-Os-7Z4" firstAttribute="centerY" secondItem="0dQ-BQ-0ap" secondAttribute="centerY" id="3GM-v4-rXU"/>
+                            <constraint firstAttribute="leadingMargin" secondItem="HP2-cR-XMg" secondAttribute="leading" id="81E-Of-Uu5"/>
+                            <constraint firstItem="LD0-Os-7Z4" firstAttribute="leading" secondItem="0dQ-BQ-0ap" secondAttribute="leadingMargin" id="GyT-Rf-up4"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="HP2-cR-XMg" secondAttribute="trailing" id="PBI-dQ-hFo"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="LD0-Os-7Z4" secondAttribute="trailing" id="k6t-fl-Db5"/>
+                            <constraint firstItem="v7U-GU-uxa" firstAttribute="top" secondItem="HP2-cR-XMg" secondAttribute="bottom" constant="17" id="tSb-LM-1Yh"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="k4d-h6-efB">
+                        <barButtonItem key="leftBarButtonItem" image="Back" id="cqA-WS-bQT">
+                            <color key="tintColor" red="0.90251296759999999" green="0.87860709429999995" blue="0.86578613520000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        </barButtonItem>
+                    </navigationItem>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="sWO-bG-ziy" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-2945.625" y="861.97183098591552"/>
         </scene>
         <!--Account View Controller-->
         <scene sceneID="ge0-vy-Brt">
@@ -304,18 +368,18 @@
                                         <rect key="frame" x="0.0" y="28" width="328" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="lTI-6t-fnW" id="agK-oz-5HH">
-                                            <rect key="frame" x="0.0" y="0.0" width="328" height="43.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="328" height="43"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="jyF-zb-3dt">
-                                                    <rect key="frame" x="15" y="12" width="33.5" height="20.5"/>
+                                                    <rect key="frame" x="15" y="11" width="34" height="21"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Detail" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="qgp-pw-ILL">
-                                                    <rect key="frame" x="269" y="12" width="44" height="20.5"/>
+                                                    <rect key="frame" x="269" y="11" width="44" height="21"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
@@ -2723,7 +2787,7 @@ Thank you for reading this and continuing to play this app. Make sure you share 
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fEb-YT-htt" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-3064" y="1742"/>
+            <point key="canvasLocation" x="-3863" y="1742"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="2SA-p7-XDh">
@@ -2741,7 +2805,7 @@ Thank you for reading this and continuing to play this app. Make sure you share 
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="wAy-qT-UDy" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-4089" y="1742"/>
+            <point key="canvasLocation" x="-4886" y="1742"/>
         </scene>
         <!--Highscore View Controller-->
         <scene sceneID="NNk-MZ-sb6">
@@ -2810,7 +2874,7 @@ Thank you for reading this and continuing to play this app. Make sure you share 
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="kc0-Yb-4JV" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-4089" y="863"/>
+            <point key="canvasLocation" x="-4886" y="862"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="qUe-Tm-WwE">
@@ -2954,7 +3018,7 @@ Thank you for reading this and continuing to play this app. Make sure you share 
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="WXd-ui-6aj" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-5256" y="862"/>
+            <point key="canvasLocation" x="-6054" y="862"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="G57-R5-bWN">
@@ -2972,7 +3036,25 @@ Thank you for reading this and continuing to play this app. Make sure you share 
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="wqD-EE-O1r" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-5254" y="1742"/>
+            <point key="canvasLocation" x="-6053" y="1742"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="vNz-KW-IWw">
+            <objects>
+                <navigationController storyboardIdentifier="signUpVC" automaticallyAdjustsScrollViewInsets="NO" id="g3G-Ch-Fno" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="TYh-SS-fgT">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="9EX-cv-PyJ" kind="relationship" relationship="rootViewController" id="4eb-i7-zWu"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="kF6-hK-xeh" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-2942" y="1742"/>
         </scene>
     </scenes>
     <resources>
@@ -2984,6 +3066,7 @@ Thank you for reading this and continuing to play this app. Make sure you share 
         <image name="playerName" width="339" height="340"/>
         <image name="quickTapAppLogo" width="533" height="532"/>
         <image name="scorePicture" width="339" height="339"/>
+        <image name="signInWithGoogle" width="191" height="46"/>
         <image name="territorialModeHowTo" width="810" height="1440"/>
         <image name="theQ" width="1072" height="1062"/>
         <image name="timeModeHowTo" width="810" height="1440"/>
