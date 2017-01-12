@@ -229,7 +229,6 @@ class ViewController: UIViewController {
     static var highscore = 0
     
     @IBOutlet var playView: UIView!
-
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -266,8 +265,6 @@ class ViewController: UIViewController {
             countdown.text = "60 secs"
         }
         
-        
-        
         GameOverViewController.timePlayed = Int(slider.value)
         time = Int(slider.value)
         countdown.text = "\(UserDefaults.standard.integer(forKey: "valueTextValue")) secs"
@@ -289,6 +286,8 @@ class ViewController: UIViewController {
         score.isHidden = true
         scoreDisplay.isHidden = true
         countdownToEndStack.isHidden = true
+        hs.isHidden = true
+        highscoreLabel.isHidden = true
         
         hsSwitch.setOn(false, animated: false)
         hsLooks.textColor = UIColor.lightText

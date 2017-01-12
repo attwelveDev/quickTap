@@ -630,7 +630,7 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
         EnableTouchIDView.center = self.view.center
         
         self.errorTitle.text = "Enable Touch ID Authentication"
-        self.errorAndStuffTID.text = "You must have a Touch ID fingerprint stored on your Touch ID compatible device."
+        self.errorAndStuffTID.text = "You must have a Touch ID fingerprint stored on your Touch ID compatible device to enable Touch ID authentication."
         
         EnableTouchIDView.transform = CGAffineTransform.init(scaleX: 1.3, y: 1.3)
         EnableTouchIDView.alpha = 0
