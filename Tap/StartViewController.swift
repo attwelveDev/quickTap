@@ -79,7 +79,14 @@ class StartViewController: UIViewController {
         moreDisplay.clipsToBounds = true
     
         quickTapTitle.layer.shadowOpacity = 0.5
-    
+        
+        EnableTouchIDView.layer.cornerRadius = 5.0
+        EnableTouchIDView.clipsToBounds = true
+        cancelBTN.layer.cornerRadius = 5.0
+        cancelBTN.clipsToBounds = true
+        okBTN.layer.cornerRadius = 5.0
+        okBTN.clipsToBounds = true
+        
     }
 
     override func didReceiveMemoryWarning() {
@@ -87,7 +94,26 @@ class StartViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
+    @IBOutlet weak var cancelBTN: UIButton!
+    @IBOutlet weak var okBTN: UIButton!
     @IBOutlet weak var errorTitle: UILabel!
+    @IBAction func dismissEnabling(_ sender: Any) {
+        animateOutTID()
+    }
+    @IBAction func touchIDAuth(_ sender: Any) {
+        if UserDefaults.standard.bool(forKey: "userHasTouchIDAuth") == true {
+            self.authenitcateUser()
+        }
+        let context = LAContext()
+        
+        var error: NSError?
+        
+        if context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) {
+            
+        } else {
+            animateOutTID()
+        }
+    }
     @IBOutlet weak var errorAndStuffTID: UILabel!
     var effect: UIVisualEffect!
     var visualEffectView: UIVisualEffectView!
@@ -96,8 +122,8 @@ class StartViewController: UIViewController {
         self.view.addSubview(EnableTouchIDView)
         EnableTouchIDView.center = self.view.center
         
-        self.errorTitle.text = "Enable Touch ID Authentication"
-        self.errorAndStuffTID.text = "You must have a Touch ID fingerprint stored on your Touch ID compatible device."
+        self.errorTitle.text = "Touch ID Authentication"
+        self.errorAndStuffTID.text = "To access your Tapedup Profile, press 'OK' then input your Touch ID"
         
         EnableTouchIDView.transform = CGAffineTransform.init(scaleX: 1.3, y: 1.3)
         EnableTouchIDView.alpha = 0
@@ -148,14 +174,15 @@ class StartViewController: UIViewController {
             }
             
         } else {
-            self.errorTitle.text = "Error"
-            self.errorAndStuffTID.text = "Your device is not compatible with Touch ID authentication"
+            animateInTID()
+            self.errorTitle.text = "Touch ID Authentication"
+            self.errorAndStuffTID.text = "To access your Tapedup Profile, press 'OK' then input your Touch ID"
         }
     }
     
     @IBAction func accountAction(_ sender: Any) {
         if UserDefaults.standard.bool(forKey: "userHasTouchIDAuth") == true {
-            self.authenitcateUser()
+            animateInTID()
         } else {
             UserDefaults.standard.set(false, forKey: "userHasTouchIDAuth")
             let storyboard = UIStoryboard(name: "Main", bundle: nil)

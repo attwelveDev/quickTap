@@ -595,16 +595,34 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
         animateOutTID()
     }
     @IBAction func enableTouchIDAuth(_ sender: Any) {
-        authenitcateUser()
+        if UserDefaults.standard.bool(forKey: "userHasTouchIDAuth") == true {
+            
+            UserDefaults.standard.set(false, forKey: "userHasTouchIDAuth")
+            animateOutTID()
+        } else {
+            authenitcateUser()
+        }
     }
     @IBAction func startEnableTouchID(_ sender: Any) {
+        if UserDefaults.standard.bool(forKey: "userHasTouchIDAuth") == false {
         animateInTID()
         animateOutCE()
         animateOut()
         animateOutUN()
         animateOutA()
         animateOutD()
-        
+        } else {
+            animateInTID()
+            animateOutCE()
+            animateOut()
+            animateOutUN()
+            animateOutA()
+            animateOutD()
+            
+            errorTitle.text = "Disable Touch ID Authentication"
+            errorAndStuffTID.text = "You're about to disable Touch ID access to this Tapedup Profile. Press 'OK to continue."
+            
+        }
     }
     
     func animateInTID() {
@@ -648,7 +666,6 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
                     [unowned self] success, authenticationError in
                 DispatchQueue.main.async {
                     if success {
-                        print("Success!")
                         self.animateOutTID()
                         UserDefaults.standard.set(true, forKey: "userHasTouchIDAuth")
                         

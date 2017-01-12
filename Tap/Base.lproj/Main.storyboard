@@ -113,11 +113,13 @@
                     <connections>
                         <outlet property="EnableTouchIDView" destination="uPI-s9-gGD" id="GFf-Fb-Bcv"/>
                         <outlet property="accountDisplay" destination="x7h-c3-cck" id="enz-2V-htc"/>
+                        <outlet property="cancelBTN" destination="LES-hq-g2D" id="r8z-be-o1U"/>
                         <outlet property="errorAndStuffTID" destination="eCi-HW-pNI" id="iFk-2v-UDY"/>
                         <outlet property="errorTitle" destination="kg5-6R-pjQ" id="Str-hO-cZj"/>
                         <outlet property="instructionsDisplay" destination="WNH-zn-U2s" id="ofC-Hq-JLL"/>
                         <outlet property="moreDisplay" destination="TVe-im-hnR" id="jZ9-TL-RAx"/>
                         <outlet property="multiplayerDisplay" destination="ppr-Gc-s4O" id="zpX-ga-TKC"/>
+                        <outlet property="okBTN" destination="tCA-MW-VXG" id="uv3-u4-aog"/>
                         <outlet property="quickTapTitle" destination="vhr-ea-TCW" id="p7P-Le-tn6"/>
                         <outlet property="singleplayerDisplay" destination="FnN-24-MQl" id="2IB-Qz-YeG"/>
                     </connections>
@@ -134,7 +136,7 @@
                                 <color key="titleColor" red="0.11437185850000001" green="0.36248782280000003" blue="0.49568670990000002" alpha="0.75" colorSpace="custom" customColorSpace="sRGB"/>
                             </state>
                             <connections>
-                                <action selector="dismissEnablingView:" destination="4zv-Cn-yu2" eventType="touchUpInside" id="OGi-qn-sFA"/>
+                                <action selector="dismissEnabling:" destination="a7d-gs-U08" eventType="touchUpInside" id="L6Q-JT-B8Z"/>
                             </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tCA-MW-VXG">
@@ -145,10 +147,10 @@
                                 <color key="titleColor" red="0.11437185850000001" green="0.36248782280000003" blue="0.49568670990000002" alpha="0.75" colorSpace="custom" customColorSpace="sRGB"/>
                             </state>
                             <connections>
-                                <action selector="enableTouchIDAuth:" destination="4zv-Cn-yu2" eventType="touchUpInside" id="7r3-lO-G3E"/>
+                                <action selector="touchIDAuth:" destination="a7d-gs-U08" eventType="touchUpInside" id="3Mg-F8-rhe"/>
                             </connections>
                         </button>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Enable Touch ID Authentication" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kg5-6R-pjQ">
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Touch ID Authentication" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kg5-6R-pjQ">
                             <rect key="frame" x="16" y="20" width="263" height="21"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="21" id="gNU-vS-YcR"/>
@@ -157,7 +159,7 @@
                             <color key="textColor" red="0.90251296759999999" green="0.87860709429999995" blue="0.86578613520000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <nil key="highlightedColor"/>
                         </label>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="You must have a Touch ID fingerprint stored on your Touch ID compatible device." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eCi-HW-pNI">
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="To access your Tapedup Profile, press 'OK' then input your Touch ID" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eCi-HW-pNI">
                             <rect key="frame" x="16" y="49" width="263" height="51"/>
                             <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="12"/>
                             <color key="textColor" red="0.90251296759999999" green="0.87860709429999995" blue="0.86578613520000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
