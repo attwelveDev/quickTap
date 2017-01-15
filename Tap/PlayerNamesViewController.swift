@@ -107,7 +107,7 @@ class PlayerNamesViewController: UIViewController, UITextFieldDelegate {
         UserDefaults.standard.set(value.text!, forKey: "multiValueTextValue")
         
         MultiplayerViewController.time = Int(sender.value)
-        GameOverViewController.timePlayed = Int(sender.value)
+        GameOverViewController.timePlayed = Double(Int(sender.value))
         
     }
     
@@ -252,7 +252,7 @@ class PlayerNamesViewController: UIViewController, UITextFieldDelegate {
             MultiplayerViewController.time = 60
         }
         
-        GameOverViewController.timePlayed = Int(slider.value)
+        GameOverViewController.timePlayed = Double(Int(slider.value))
         
         backBTN.layer.cornerRadius = 5.0
         backBTN.clipsToBounds = true

@@ -10,13 +10,19 @@ import UIKit
 import MessageUI
 import LocalAuthentication
 
+extension Double {
+    var cleanValue: String {
+        return self.truncatingRemainder(dividingBy: 1) == 0 ? String(format: "%.0f", self) : String(self)
+    }
+}
+
 class AccountViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate, UIPickerViewDataSource, UIPickerViewDelegate, UITableViewDataSource, UITableViewDelegate, MFMailComposeViewControllerDelegate {
 
     @IBOutlet weak var lockBTN: UIButton!
     @IBOutlet weak var tableView: UITableView!
     
     let tableItems = ["Tapedup Status", "Highscore", "Total Taps", "Total Seconds Played", "Total Games Played"]
-    var detailTableItems = ["\(UserDefaults.standard.string(forKey: "tapedupStatus")!)", "\(UserDefaults.standard.value(forKey: "Highscore")!)", "\(UserDefaults.standard.value(forKey: "totalTaps")!)", "\(UserDefaults.standard.value(forKey: "totalPlayTime")!) secs", "\(UserDefaults.standard.integer(forKey: "timesPlayed"))"]
+    var detailTableItems = ["\(NSUbiquitousKeyValueStore.default().object(forKey: "tapedupStatus")!)", "\(NSUbiquitousKeyValueStore.default().object(forKey: "Highscore")!)", "\(NSUbiquitousKeyValueStore.default().object(forKey: "totalTaps")!)", "\(NSUbiquitousKeyValueStore.default().object(forKey: "totalPlayTime")!) secs", "\(NSUbiquitousKeyValueStore.default().double(forKey: "timesPlayed").cleanValue)"]
     let cellIdentifier = "Cell"
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -161,7 +167,7 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
         
         mailComposerVC.setToRecipients([""])
         mailComposerVC.setSubject("My Tapedup Profile")
-        mailComposerVC.setMessageBody("I am currently \(UserDefaults.standard.string(forKey: "tapedupStatus")!) Tapedup Status. My highscore is \(UserDefaults.standard.value(forKey: "Highscore")!) and I have tapped \(UserDefaults.standard.value(forKey: "totalTaps")!) times. I have played for \(UserDefaults.standard.value(forKey: "totalPlayTime")!) secs and played \(UserDefaults.standard.integer(forKey: "timesPlayed")) games. QuickTap is all about tapping quickly, hence the name. With two modes in Singleplayer, 'Time Mode' and 'Highscore Mode' along side AcrossTable Mode and Territorial Mode. Download here: https://itunes.apple.com/us/app/quicktap/id1190851546?mt=8", isHTML: false)
+        mailComposerVC.setMessageBody("I am currently \(NSUbiquitousKeyValueStore.default().string(forKey: "tapedupStatus")!) Tapedup Status. My highscore is \(NSUbiquitousKeyValueStore.default().object(forKey: "Highscore")!) and I have tapped \(NSUbiquitousKeyValueStore.default().object(forKey: "totalTaps")!) times. I have played for \(NSUbiquitousKeyValueStore.default().object(forKey: "totalPlayTime")!) secs and played \(NSUbiquitousKeyValueStore.default().double(forKey: "timesPlayed").cleanValue) games. QuickTap is all about tapping quickly, hence the name. With two modes in Singleplayer, 'Time Mode' and 'Highscore Mode' along side AcrossTable Mode and Territorial Mode. Download here: https://itunes.apple.com/us/app/quicktap/id1190851546?mt=8", isHTML: false)
         
         return mailComposerVC
     }
@@ -178,6 +184,8 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
         animateOutUN()
         animateOutA()
         animateOutD()
+        animateOutTID()
+
         
     }
     
@@ -235,6 +243,8 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
         animateOutUN()
         animateOutA()
         animateOutD()
+        animateOutTID()
+
     }
     
     @IBAction func changeToDefault(_ sender: Any) {
@@ -245,7 +255,7 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
         
         let defaultImage = UIImage(named: "anonymousTapper")
         let imageData = UIImageJPEGRepresentation(defaultImage!, 1.0)
-        UserDefaults.standard.set(imageData, forKey: "userAvatar")
+        NSUbiquitousKeyValueStore.default().set(imageData, forKey: "userAvatar")
         
     }
     @IBAction func changeViaCamera(_ sender: Any) {
@@ -291,7 +301,7 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
         imageAvatar.transform = CGAffineTransform.identity
         
         let imageData = UIImageJPEGRepresentation(newAvatar, 1.0)
-        UserDefaults.standard.set(imageData, forKey: "userAvatar")
+        NSUbiquitousKeyValueStore.default().set(imageData, forKey: "userAvatar")
         
     }
     
@@ -363,6 +373,8 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
         animateOut()
         animateOutA()
         animateOutD()
+        animateOutTID()
+
     }
     @IBAction func cancelUsernameEditing(_ sender: Any) {
 
@@ -378,8 +390,8 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
 
         name.setTitle("\(usernameField.text!)", for: UIControlState.normal)
         
-        let usernameDefault = UserDefaults.standard
-        usernameDefault.setValue(usernameField.text!, forKey: "usernameDefault")
+        let usernameDefault = NSUbiquitousKeyValueStore.default()
+        usernameDefault.set(usernameField.text!, forKey: "usernameDefault")
         usernameDefault.synchronize()
     }
     
@@ -432,15 +444,19 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
         
         whichFunction = 0
         
-        let ageDefault = UserDefaults.standard
-        if (ageDefault.value(forKey: "ageForRow") != nil){
-            pickAge.selectRow((ageDefault.integer(forKey: "ageForRow") - 1), inComponent: 0, animated: false)
+        let ageDefault = NSUbiquitousKeyValueStore.default()
+        let UD = UserDefaults.standard
+        let age = UD.integer(forKey: "ageForRow")
+        if (ageDefault.object(forKey: "ageForRow") != nil){
+            pickAge.selectRow((UD.integer(forKey: "ageForRow") - 1), inComponent: 0, animated: false)
+            ageDefault.set(age, forKey: "ageForRow")
         }
         animateInA()
         animateOutCE()
         animateOut()
         animateOutUN()
         animateOutD()
+        animateOutTID()
     }
     @IBAction func cancelAction(_ sender: Any) {
         animateOutA()
@@ -449,8 +465,8 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
         let row = pickAge.selectedRow(inComponent: 0)
         age.setTitle("\(values[row]) yo", for: UIControlState.normal)
         animateOutA()
+        NSUbiquitousKeyValueStore.default().set(values[row], forKey: "ageForRow")
         UserDefaults.standard.set(values[row], forKey: "ageForRow")
-        
     }
     
     func animateInA() {
@@ -508,6 +524,7 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
         animateOut()
         animateOutUN()
         animateOutA()
+        animateOutTID()
     }
     @IBAction func cancelChangingDevice(_ sender: Any) {
         animateOutD()
@@ -699,7 +716,7 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
             UserDefaults.standard.set(false, forKey: "userHasTouchIDAuth")
         }
         
-        if let savedUserAvatar = UserDefaults.standard.object(forKey: "userAvatar") as? NSData {
+        if let savedUserAvatar = NSUbiquitousKeyValueStore.default().object(forKey: "userAvatar") as? NSData {
             if let image = UIImage(data: savedUserAvatar as Data) {
                 imageAvatar.image = image
 
@@ -735,15 +752,15 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
         okBTN.layer.cornerRadius = 5.0
         okBTN.clipsToBounds = true
         
-        let usernameDefault = UserDefaults.standard
-        if (usernameDefault.value(forKey: "usernameDefault") != nil){
-            name.setTitle("\(usernameDefault.value(forKey: "usernameDefault")!)", for: UIControlState.normal)
-            usernameField.text = "\(usernameDefault.value(forKey: "usernameDefault")!)"
+        let usernameDefault = NSUbiquitousKeyValueStore.default()
+        if (usernameDefault.object(forKey: "usernameDefault") != nil){
+            name.setTitle("\(usernameDefault.object(forKey: "usernameDefault")!)", for: UIControlState.normal)
+            usernameField.text = "\(usernameDefault.object(forKey: "usernameDefault")!)"
         }
         
-        let ageDefault = UserDefaults.standard
-        if (ageDefault.value(forKey: "ageForRow") != nil){
-            age.setTitle("\(ageDefault.value(forKey: "ageForRow")!) yo", for: UIControlState.normal)
+        let ageDefault = NSUbiquitousKeyValueStore.default()
+        if (ageDefault.object(forKey: "ageForRow") != nil){
+            age.setTitle("\(ageDefault.object(forKey: "ageForRow")!) yo", for: UIControlState.normal)
         }
         
         self.usernameField.delegate = self

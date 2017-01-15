@@ -17,12 +17,12 @@ class TapedupStatusViewController: UIViewController {
     @IBOutlet weak var taps: UILabel!
     @IBOutlet weak var nextLabel: UILabel!
     
-    var gamesPlayedBgn = 25
-    var timePlayedBgn = 600
-    var tapsTappedBgn = 1200
-    var gamesPlayedAve = 50
-    var timePlayedAve = 1200
-    var tapsTappedAve = 2400
+    var gamesPlayedBgn: Double = 25
+    var timePlayedBgn: Double = 600
+    var tapsTappedBgn: Double = 1200
+    var gamesPlayedAve: Double = 50
+    var timePlayedAve: Double = 1200
+    var tapsTappedAve: Double = 2400
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,55 +35,55 @@ class TapedupStatusViewController: UIViewController {
         navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
         navigationController?.navigationBar.shadowImage = UIImage()
         
-        level.text = "You are \(UserDefaults.standard.string(forKey: "tapedupStatus")!)"
+        level.text = "You are \(NSUbiquitousKeyValueStore.default().string(forKey: "tapedupStatus")!)"
         
-        if UserDefaults.standard.string(forKey: "tapedupStatus") == "Beginner" {
-            if gamesPlayedBgn <= UserDefaults.standard.integer(forKey: "timesPlayed") {
+        if NSUbiquitousKeyValueStore.default().string(forKey: "tapedupStatus") == "Beginner" {
+            if gamesPlayedBgn <= NSUbiquitousKeyValueStore.default().double(forKey: "timesPlayed") {
                 games.isHidden = true
             } else {
                 games.isHidden = false
             }
             
-            if timePlayedBgn <= UserDefaults.standard.integer(forKey: "totalPlayTime") {
+            if timePlayedBgn <= NSUbiquitousKeyValueStore.default().double(forKey: "totalPlayTime") {
                 time.isHidden = true
             } else {
                 time.isHidden = false
             }
             
-            if tapsTappedBgn <= UserDefaults.standard.integer(forKey: "totalTaps") {
+            if tapsTappedBgn <= NSUbiquitousKeyValueStore.default().double(forKey: "totalTaps") {
                 taps.isHidden = true
             } else {
                 taps.isHidden = false
             }
-            games.text = "\(gamesPlayedBgn - UserDefaults.standard.integer(forKey: "timesPlayed")) more games"
-            time.text = "\(timePlayedBgn - UserDefaults.standard.integer(forKey: "totalPlayTime")) more seconds of playing"
-            taps.text = "\(tapsTappedBgn - UserDefaults.standard.integer(forKey: "totalTaps")) more taps"
+            games.text = "\((gamesPlayedBgn - NSUbiquitousKeyValueStore.default().double(forKey: "timesPlayed")).cleanValue) more games"
+            time.text = "\((timePlayedBgn - NSUbiquitousKeyValueStore.default().double(forKey: "totalPlayTime")).cleanValue) more seconds of playing"
+            taps.text = "\((tapsTappedBgn - NSUbiquitousKeyValueStore.default().double(forKey: "totalTaps")).cleanValue) more taps"
             nextLabel.text = "to upgrade your Tapedup Status to Average"
         }
-        if UserDefaults.standard.string(forKey: "tapedupStatus") == "Average" {
-            if gamesPlayedAve <= UserDefaults.standard.integer(forKey: "timesPlayed") {
+        if NSUbiquitousKeyValueStore.default().string(forKey: "tapedupStatus") == "Average" {
+            if gamesPlayedAve <= NSUbiquitousKeyValueStore.default().double(forKey: "timesPlayed") {
                 games.isHidden = true
             } else {
                 games.isHidden = false
             }
             
-            if timePlayedAve <= UserDefaults.standard.integer(forKey: "totalPlayTime") {
+            if timePlayedAve <= NSUbiquitousKeyValueStore.default().double(forKey: "totalPlayTime") {
                 time.isHidden = true
             } else {
                 time.isHidden = false
             }
             
-            if tapsTappedAve <= UserDefaults.standard.integer(forKey: "totalTaps") {
+            if tapsTappedAve <= NSUbiquitousKeyValueStore.default().double(forKey: "totalTaps") {
                 taps.isHidden = true
             } else {
                 taps.isHidden = false
             }
-            games.text = "\(gamesPlayedAve - UserDefaults.standard.integer(forKey: "timesPlayed")) more games"
-            time.text = "\(timePlayedAve - UserDefaults.standard.integer(forKey: "totalPlayTime")) more seconds of playing"
-            taps.text = "\(tapsTappedAve - UserDefaults.standard.integer(forKey: "totalTaps")) more taps"
+            games.text = "\((gamesPlayedAve - NSUbiquitousKeyValueStore.default().double(forKey: "timesPlayed")).cleanValue) more games"
+            time.text = "\((timePlayedAve - NSUbiquitousKeyValueStore.default().double(forKey: "totalPlayTime")).cleanValue) more seconds of playing"
+            taps.text = "\((tapsTappedAve - NSUbiquitousKeyValueStore.default().double(forKey: "totalTaps")).cleanValue) more taps"
             nextLabel.text = "to upgrade your Tapedup Status to Master"
         }
-        if UserDefaults.standard.string(forKey: "tapedupStatus") == "Master" {
+        if NSUbiquitousKeyValueStore.default().string(forKey: "tapedupStatus") == "Master" {
             play.text = "Well done!"
             games.text = "You are one of the unique humans to achieve"
             time.text = "the Master Status!"

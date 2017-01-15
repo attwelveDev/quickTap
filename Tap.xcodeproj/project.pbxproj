@@ -29,13 +29,6 @@
 		04EFA9741E0F5F80007DC4BB /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04EFA9731E0F5F80007DC4BB /* AboutViewController.swift */; };
 		04F9D9191DDEBDB8003069DD /* MultiplayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F9D9181DDEBDB8003069DD /* MultiplayerViewController.swift */; };
 		937499AE1E2610430002EAF5 /* LocalAuthentication.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 937499AD1E2610430002EAF5 /* LocalAuthentication.framework */; };
-		939197D41E276C1500D9224E /* SafariServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 939197D31E276C1500D9224E /* SafariServices.framework */; };
-		939197D61E276C1D00D9224E /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 939197D51E276C1D00D9224E /* SystemConfiguration.framework */; };
-		939197D81E276CF400D9224E /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 939197D71E276CF400D9224E /* GoogleService-Info.plist */; };
-		939197E51E2780A900D9224E /* GoogleSignIn.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 939197E11E2780A900D9224E /* GoogleSignIn.bundle */; };
-		939197E61E2780A900D9224E /* GoogleSignIn.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 939197E21E2780A900D9224E /* GoogleSignIn.framework */; };
-		939197E71E2780A900D9224E /* GoogleSignInDependencies.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 939197E31E2780A900D9224E /* GoogleSignInDependencies.framework */; };
-		939197E81E2780A900D9224E /* GoogleSymbolUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 939197E41E2780A900D9224E /* GoogleSymbolUtilities.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -83,15 +76,8 @@
 		04E2318D1DD81175001B70D2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		04EFA9731E0F5F80007DC4BB /* AboutViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AboutViewController.swift; sourceTree = "<group>"; };
 		04F9D9181DDEBDB8003069DD /* MultiplayerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultiplayerViewController.swift; sourceTree = "<group>"; };
+		936550DB1E29CF20000A7748 /* Tap.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Tap.entitlements; sourceTree = "<group>"; };
 		937499AD1E2610430002EAF5 /* LocalAuthentication.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = LocalAuthentication.framework; path = System/Library/Frameworks/LocalAuthentication.framework; sourceTree = SDKROOT; };
-		939197D31E276C1500D9224E /* SafariServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SafariServices.framework; path = System/Library/Frameworks/SafariServices.framework; sourceTree = SDKROOT; };
-		939197D51E276C1D00D9224E /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
-		939197D71E276CF400D9224E /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
-		939197E11E2780A900D9224E /* GoogleSignIn.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = GoogleSignIn.bundle; path = ../../.Trash/GoogleSignIn.bundle; sourceTree = "<group>"; };
-		939197E21E2780A900D9224E /* GoogleSignIn.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GoogleSignIn.framework; path = ../../.Trash/GoogleSignIn.framework; sourceTree = "<group>"; };
-		939197E31E2780A900D9224E /* GoogleSignInDependencies.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GoogleSignInDependencies.framework; path = ../../.Trash/GoogleSignInDependencies.framework; sourceTree = "<group>"; };
-		939197E41E2780A900D9224E /* GoogleSymbolUtilities.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GoogleSymbolUtilities.framework; path = ../../.Trash/GoogleSymbolUtilities.framework; sourceTree = "<group>"; };
-		939197EA1E2781F100D9224E /* Tap-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Tap-Bridging-Header.h"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -99,12 +85,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				939197E81E2780A900D9224E /* GoogleSymbolUtilities.framework in Frameworks */,
-				939197D61E276C1D00D9224E /* SystemConfiguration.framework in Frameworks */,
-				939197D41E276C1500D9224E /* SafariServices.framework in Frameworks */,
 				937499AE1E2610430002EAF5 /* LocalAuthentication.framework in Frameworks */,
-				939197E71E2780A900D9224E /* GoogleSignInDependencies.framework in Frameworks */,
-				939197E61E2780A900D9224E /* GoogleSignIn.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -190,6 +171,7 @@
 		04E2316A1DD81175001B70D2 /* Tap */ = {
 			isa = PBXGroup;
 			children = (
+				936550DB1E29CF20000A7748 /* Tap.entitlements */,
 				04E2316B1DD81175001B70D2 /* AppDelegate.swift */,
 				04A504E31DD86A9D003645CD /* StartViewController.swift */,
 				04EFA9731E0F5F80007DC4BB /* AboutViewController.swift */,
@@ -201,8 +183,6 @@
 				04E231721DD81175001B70D2 /* Assets.xcassets */,
 				04E231741DD81175001B70D2 /* LaunchScreen.storyboard */,
 				04E231771DD81175001B70D2 /* Info.plist */,
-				939197D71E276CF400D9224E /* GoogleService-Info.plist */,
-				939197EA1E2781F100D9224E /* Tap-Bridging-Header.h */,
 			);
 			path = Tap;
 			sourceTree = "<group>";
@@ -228,12 +208,6 @@
 		937499AC1E2610430002EAF5 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				939197E11E2780A900D9224E /* GoogleSignIn.bundle */,
-				939197E21E2780A900D9224E /* GoogleSignIn.framework */,
-				939197E31E2780A900D9224E /* GoogleSignInDependencies.framework */,
-				939197E41E2780A900D9224E /* GoogleSymbolUtilities.framework */,
-				939197D51E276C1D00D9224E /* SystemConfiguration.framework */,
-				939197D31E276C1500D9224E /* SafariServices.framework */,
 				937499AD1E2610430002EAF5 /* LocalAuthentication.framework */,
 			);
 			name = Frameworks;
@@ -310,6 +284,14 @@
 						DevelopmentTeam = 8NBK23EYP2;
 						LastSwiftMigration = 0820;
 						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.Push = {
+								enabled = 0;
+							};
+							com.apple.iCloud = {
+								enabled = 1;
+							};
+						};
 					};
 					04E2317B1DD81175001B70D2 = {
 						CreatedOnToolsVersion = 8.1;
@@ -353,8 +335,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				04E231761DD81175001B70D2 /* LaunchScreen.storyboard in Resources */,
-				939197E51E2780A900D9224E /* GoogleSignIn.bundle in Resources */,
-				939197D81E276CF400D9224E /* GoogleService-Info.plist in Resources */,
 				04E231731DD81175001B70D2 /* Assets.xcassets in Resources */,
 				04E231711DD81175001B70D2 /* Main.storyboard in Resources */,
 			);
@@ -551,6 +531,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = Tap/Tap.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer: Thinh Nguyen (TVDVVWA6WP)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = 8NBK23EYP2;
@@ -560,7 +541,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.Aaron-Nguyen.Tap";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_OBJC_BRIDGING_HEADER = "Tap/Tap-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 3.0;
 			};
@@ -571,6 +552,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = Tap/Tap.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Thinh Nguyen (8NBK23EYP2)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = 8NBK23EYP2;
@@ -580,7 +562,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.Aaron-Nguyen.Tap";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_OBJC_BRIDGING_HEADER = "Tap/Tap-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Release;

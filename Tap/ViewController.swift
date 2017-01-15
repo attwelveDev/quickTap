@@ -143,7 +143,7 @@ class ViewController: UIViewController {
         UserDefaults.standard.set(value.text!, forKey: "valueTextValue")
         
         time = Int(sender.value)
-        GameOverViewController.timePlayed = Int(sender.value)
+        GameOverViewController.timePlayed = Double(Int(sender.value))
         countdown.text = "\(time) secs"
         
         if (slider.value <= 10) {
@@ -205,7 +205,7 @@ class ViewController: UIViewController {
             
             let highscoreDefault = UserDefaults.standard
             if (highscoreDefault.value(forKey: "Highscore") != nil){
-                ViewController.highscore = highscoreDefault.value(forKey: "Highscore") as! NSInteger!
+                ViewController.highscore = highscoreDefault.value(forKey: "Highscore") as! Double!
                 highscoreLabel.text = "\(ViewController.highscore)"
             }
         }
@@ -225,8 +225,8 @@ class ViewController: UIViewController {
         }
     }
     
-    static var score = 0
-    static var highscore = 0
+    static var score: Double = 0
+    static var highscore: Double = 0
     
     @IBOutlet var playView: UIView!
     
@@ -265,7 +265,7 @@ class ViewController: UIViewController {
             countdown.text = "60 secs"
         }
         
-        GameOverViewController.timePlayed = Int(slider.value)
+        GameOverViewController.timePlayed = Double(Int(slider.value))
         time = Int(slider.value)
         countdown.text = "\(UserDefaults.standard.integer(forKey: "valueTextValue")) secs"
         
@@ -295,10 +295,10 @@ class ViewController: UIViewController {
         highLooks.textColor = UIColor.lightText
         inLooks.textColor = UIColor.lightText
         
-        let highscoreDefault = UserDefaults.standard
-        if (highscoreDefault.value(forKey: "Highscore") != nil){
-            ViewController.highscore = highscoreDefault.value(forKey: "Highscore") as! NSInteger!
-            highscoreDisplay.text = "\(ViewController.highscore)"
+        let highscoreDefault = NSUbiquitousKeyValueStore.default()
+        if (highscoreDefault.object(forKey: "Highscore") != nil){
+            ViewController.highscore = highscoreDefault.object(forKey: "Highscore") as! Double!
+            highscoreDisplay.text = "\((ViewController.highscore).cleanValue)"
         }
         
         hsSwitch.isOn = UserDefaults.standard.bool(forKey: "hsSwitchState")
@@ -358,10 +358,10 @@ class ViewController: UIViewController {
             time = 60
             hs.text = "Highscore"
             
-            let highscoreDefault = UserDefaults.standard
-            if (highscoreDefault.value(forKey: "Highscore") != nil){
-                ViewController.highscore = highscoreDefault.value(forKey: "Highscore") as! NSInteger!
-                highscoreLabel.text = "\(ViewController.highscore)"
+            let highscoreDefault = NSUbiquitousKeyValueStore.default()
+            if (highscoreDefault.object(forKey: "Highscore") != nil){
+                ViewController.highscore = highscoreDefault.object(forKey: "Highscore") as! Double!
+                highscoreLabel.text = "\((ViewController.highscore).cleanValue)"
             }
         }
         
@@ -414,17 +414,17 @@ class ViewController: UIViewController {
     @IBAction func tapped(_ sender: Any) {
         
         ViewController.score += 1
-        scoreLabel.text = "\(ViewController.score)"
+        scoreLabel.text = "\((ViewController.score).cleanValue)"
         
         if ViewController.mode == 0 {
             if ViewController.score >= ViewController.highscore {
                 ViewController.highscore = ViewController.score
-                highscoreLabel.text = "\(ViewController.highscore)"
+                highscoreLabel.text = "\((ViewController.highscore).cleanValue)"
                 highscoreLabel.textColor = UIColor.green
                 scoreLabel.textColor = UIColor.green
                 
-                let highscoreDefault = UserDefaults.standard
-                highscoreDefault.setValue(ViewController.highscore, forKey: "Highscore")
+                let highscoreDefault = NSUbiquitousKeyValueStore.default()
+                highscoreDefault.set(ViewController.highscore, forKey: "Highscore")
                 highscoreDefault.synchronize()
                 
             }

@@ -26,15 +26,15 @@ class HighscoreViewController: UIViewController {
         navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
         navigationController?.navigationBar.shadowImage = UIImage()
         
-        if UserDefaults.standard.value(forKey: "Highscore") != nil && UserDefaults.standard.integer(forKey: "Highscore") > 0 {
+        if NSUbiquitousKeyValueStore.default().object(forKey: "Highscore") != nil && NSUbiquitousKeyValueStore.default().double(forKey: "Highscore") > 0 {
             youLBL.text = "You achieved your highscore of"
-            highscore.text = "\(UserDefaults.standard.value(forKey: "Highscore")!)"
+            highscore.text = "\(NSUbiquitousKeyValueStore.default().object(forKey: "Highscore")!)"
             onLBL.text = "on"
-            if UserDefaults.standard.value(forKey: "Highscore") == nil {
-                UserDefaults.standard.set(0, forKey: "Highscore")
-                date.text = "\(UserDefaults.standard.value(forKey: "checkDateNewHighscore")!)"
+            if NSUbiquitousKeyValueStore.default().object(forKey: "Highscore") == nil {
+                NSUbiquitousKeyValueStore.default().set(0, forKey: "Highscore")
+                date.text = "\(NSUbiquitousKeyValueStore.default().object(forKey: "checkDateNewHighscore")!)"
             }
-        } else if UserDefaults.standard.integer(forKey: "Highscore") == 0 {
+        } else if NSUbiquitousKeyValueStore.default().double(forKey: "Highscore") == 0 {
             youLBL.isHidden = true
             highscore.isHidden = true
             onLBL.text = "Go play Highscore Mode to see some stats here!"

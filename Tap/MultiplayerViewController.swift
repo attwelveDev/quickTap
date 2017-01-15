@@ -183,7 +183,7 @@ class MultiplayerViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    static var timeDurationOfTM = 0
+    static var timeDurationOfTM: Double = 0
     
     func stopwatchUpdate() {
         MultiplayerViewController.timeDurationOfTM += 1
@@ -232,8 +232,8 @@ class MultiplayerViewController: UIViewController {
         }
     }
     
-    static var whiteScore = 0
-    static var blueScore = 0
+    static var whiteScore: Double = 0
+    static var blueScore: Double = 0
     static var win = 0
     
     func winner () {
@@ -246,7 +246,7 @@ class MultiplayerViewController: UIViewController {
         }
     }
     
-    static var timesTapped = 0
+    static var timesTapped: Double = 0
     
     @IBOutlet weak var brownBTN: UIButton!
     @IBOutlet weak var brownBTNHeight: NSLayoutConstraint!

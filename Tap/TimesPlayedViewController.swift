@@ -27,31 +27,31 @@ class TimesPlayedViewController: UIViewController {
         navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
         navigationController?.navigationBar.shadowImage = UIImage()
 
-        totalLBL.text = "You have played a total of \(UserDefaults.standard.value(forKey: "timesPlayed")!) games"
+        totalLBL.text = "You have played a total of \(NSUbiquitousKeyValueStore.default().double(forKey: "timesPlayed").cleanValue) games"
         
-        if UserDefaults.standard.value(forKey: "timesPlayedTM") == nil {
-            UserDefaults.standard.set(0, forKey: "timesPlayedTM")
+        if NSUbiquitousKeyValueStore.default().object(forKey: "timesPlayedTM") == nil {
+            NSUbiquitousKeyValueStore.default().set(0, forKey: "timesPlayedTM")
             timeData.text = "0 in Time Mode"
         } else {
-            timeData.text = "\(UserDefaults.standard.integer(forKey: "timesPlayedTM")) in Time Mode"
+            timeData.text = "\(NSUbiquitousKeyValueStore.default().double(forKey: "timesPlayedTM").cleanValue) in Time Mode"
         }
-        if UserDefaults.standard.value(forKey: "timesPlayedHS") == nil {
-            UserDefaults.standard.set(0, forKey: "timesPlayedHS")
+        if NSUbiquitousKeyValueStore.default().object(forKey: "timesPlayedHS") == nil {
+            NSUbiquitousKeyValueStore.default().set(0, forKey: "timesPlayedHS")
             hsData.text = "0 in Highscore Mode"
         } else {
-            hsData.text = "\(UserDefaults.standard.integer(forKey: "timesPlayedHS")) in Highscore Mode"
+            hsData.text = "\(NSUbiquitousKeyValueStore.default().double(forKey: "timesPlayedHS").cleanValue) in Highscore Mode"
         }
-        if UserDefaults.standard.value(forKey: "timesPlayedAT") == nil {
-            UserDefaults.standard.set(0, forKey: "timesPlayedAT")
+        if NSUbiquitousKeyValueStore.default().object(forKey: "timesPlayedAT") == nil {
+            NSUbiquitousKeyValueStore.default().set(0, forKey: "timesPlayedAT")
             atData.text = "0 in AcrossTable Mode"
         } else {
-            atData.text = "\(UserDefaults.standard.integer(forKey: "timesPlayedAT")) in AcrossTable Mode"
+            atData.text = "\(NSUbiquitousKeyValueStore.default().double(forKey: "timesPlayedAT").cleanValue) in AcrossTable Mode"
         }
-        if UserDefaults.standard.value(forKey: "timesPlayedTRLM") == nil {
-            UserDefaults.standard.set(0, forKey: "timesPlayedTRLM")
+        if NSUbiquitousKeyValueStore.default().object(forKey: "timesPlayedTRLM") == nil {
+            NSUbiquitousKeyValueStore.default().set(0, forKey: "timesPlayedTRLM")
             trlData.text = "0 in Territorial Mode"
         } else {
-            trlData.text = "\(UserDefaults.standard.integer(forKey: "timesPlayedTRLM")) in Territorial Mode"
+            trlData.text = "\(NSUbiquitousKeyValueStore.default().double(forKey: "timesPlayedTRLM").cleanValue) in Territorial Mode"
         }
         
         // Do any additional setup after loading the view.

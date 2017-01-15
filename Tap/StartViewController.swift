@@ -30,40 +30,40 @@ class StartViewController: UIViewController {
             UserDefaults.standard.set(false, forKey: "userHasTouchIDAuth")
         }
         
-        if UserDefaults.standard.value(forKey: "usernameDefault") == nil {
-            UserDefaults.standard.set("Username", forKey: "usernameDefault")
-            AccountViewController.defaultUsername = UserDefaults.standard.value(forKey: "usernameDefault") as! String
+        if NSUbiquitousKeyValueStore.default().object(forKey: "usernameDefault") == nil {
+            NSUbiquitousKeyValueStore.default().set("Username", forKey: "usernameDefault")
+            AccountViewController.defaultUsername = NSUbiquitousKeyValueStore.default().object(forKey: "usernameDefault") as! String
         }
         
-        if UserDefaults.standard.value(forKey: "timesPlayed") == nil {
+        if NSUbiquitousKeyValueStore.default().object(forKey: "timesPlayed") == nil {
             
-            UserDefaults.standard.set(0, forKey: "timesPlayed")
-            
-        }
-        
-        if UserDefaults.standard.value(forKey: "Highscore") == nil {
-            
-            UserDefaults.standard.set(0, forKey: "Highscore")
+            NSUbiquitousKeyValueStore.default().set(0, forKey: "timesPlayed")
             
         }
         
-        if UserDefaults.standard.value(forKey: "totalPlayTime") == nil {
+        if NSUbiquitousKeyValueStore.default().object(forKey: "Highscore") == nil {
+            
+            NSUbiquitousKeyValueStore.default().set(0, forKey: "Highscore")
+            
+        }
+        
+        if NSUbiquitousKeyValueStore.default().object(forKey: "totalPlayTime") == nil {
 
             print("isNil")
             
-            UserDefaults.standard.set(0, forKey: "totalPlayTime")
+            NSUbiquitousKeyValueStore.default().set(0, forKey: "totalPlayTime")
 
         }
         
-        if UserDefaults.standard.value(forKey: "totalTaps") == nil {
+        if NSUbiquitousKeyValueStore.default().object(forKey: "totalTaps") == nil {
 
-            UserDefaults.standard.set(0, forKey: "totalTaps")
+            NSUbiquitousKeyValueStore.default().set(0, forKey: "totalTaps")
 
         }
         
-        if UserDefaults.standard.value(forKey: "tapedupStatus") == nil {
+        if NSUbiquitousKeyValueStore.default().object(forKey: "tapedupStatus") == nil {
             
-            UserDefaults.standard.set("Beginner", forKey: "tapedupStatus")
+            NSUbiquitousKeyValueStore.default().set("Beginner", forKey: "tapedupStatus")
             
         }
         
