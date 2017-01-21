@@ -386,7 +386,7 @@ class ViewController: UIViewController {
         pickView.layer.shadowRadius = 10
         pickView.layer.shadowPath = UIBezierPath(rect: pickView.bounds).cgPath
     }
-
+    
     var interval = 1
     
     func update() {
@@ -431,4 +431,36 @@ class ViewController: UIViewController {
         }
         
     }
+    
+    let label = UILabel(frame: CGRect(x: 0, y: 0, width: 25, height: 25))
+    
+    @IBAction func locationTapped(_ sender: Any, forEvent event: UIEvent) {
+        
+        guard let touch = event.allTouches?.first else { return }
+        let point = touch.location(in: tapBTN)
+        label.center = CGPoint(x: point.x, y: point.y - 30)
+        label.alpha = 1
+        label.textAlignment = .center
+        label.font = UIFont.boldSystemFont(ofSize: 18)
+        label.text = "+1"
+        label.textColor = UIColor.green
+        self.view.addSubview(label)
+        
+        label.tag = Int(ViewController.score + 1)
+        print(label.tag)
+        
+        let delay = DispatchTime.now() + 0.5
+        DispatchQueue.main.asyncAfter(deadline: delay) {
+            UIView.animate(withDuration: 0.5, animations: {
+                self.label.viewWithTag(Int(ViewController.score - 1))?.alpha = 0
+                self.label.viewWithTag(Int(ViewController.score))?.alpha = 0
+            }) { (success: Bool) in
+                self.label.viewWithTag(Int(ViewController.score - 1))?.removeFromSuperview()
+                self.label.viewWithTag(Int(ViewController.score))?.removeFromSuperview()
+            }
+
+        }
+        
+    }
+
 }

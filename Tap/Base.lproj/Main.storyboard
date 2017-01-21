@@ -1857,6 +1857,7 @@ Thank you for reading this and continuing to play this app. Make sure you share 
                                 <rect key="frame" x="-4" y="0.0" width="328" height="568"/>
                                 <color key="backgroundColor" red="0.11437185850000001" green="0.36248782280000003" blue="0.49568670990000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <connections>
+                                    <action selector="locationTapped:forEvent:" destination="BYZ-38-t0r" eventType="touchUpInside" id="O49-Uo-Cdu"/>
                                     <action selector="tapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="lQh-1I-CSs"/>
                                 </connections>
                             </button>
