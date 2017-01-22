@@ -449,14 +449,15 @@ class ViewController: UIViewController {
         label.tag = Int(ViewController.score + 1)
         print(label.tag)
         
+        var scoreSubtractOne = ViewController.score - 1
+        var inBetween: Int = ViewController.score...scoreSubtractOne
+        
         let delay = DispatchTime.now() + 0.5
         DispatchQueue.main.asyncAfter(deadline: delay) {
             UIView.animate(withDuration: 0.5, animations: {
-                self.label.viewWithTag(Int(ViewController.score - 1))?.alpha = 0
-                self.label.viewWithTag(Int(ViewController.score))?.alpha = 0
+                self.label.viewWithTag(Int(inBetween))?.alpha = 0
             }) { (success: Bool) in
-                self.label.viewWithTag(Int(ViewController.score - 1))?.removeFromSuperview()
-                self.label.viewWithTag(Int(ViewController.score))?.removeFromSuperview()
+                self.label.viewWithTag(Int(ViewController.score - scoreSubtractOne))?.removeFromSuperview()
             }
 
         }
