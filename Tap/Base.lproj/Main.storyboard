@@ -2658,7 +2658,6 @@ Thank you for reading this and continuing to play this app. Make sure you share 
                             </state>
                             <connections>
                                 <action selector="dismissError:" destination="qEo-xw-Hpc" eventType="touchUpInside" id="nsi-xG-JBJ"/>
-                                <action selector="pressed:" destination="qEo-xw-Hpc" eventType="touchUpInside" id="uBO-7e-zPo"/>
                             </connections>
                         </button>
                     </subviews>
