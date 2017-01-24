@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import ReplayKit
 
 extension Float {
     var cleanValue: String {
@@ -385,6 +386,12 @@ class ViewController: UIViewController {
         pickView.layer.shadowOffset = CGSize.zero
         pickView.layer.shadowRadius = 10
         pickView.layer.shadowPath = UIBezierPath(rect: pickView.bounds).cgPath
+    }
+    
+    func startRecording() {
+        if RPScreenRecorder.shared().isAvailable {
+            
+        }
     }
     
     var interval = 1
