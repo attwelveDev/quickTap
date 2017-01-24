@@ -436,6 +436,8 @@ class ViewController: UIViewController {
     
     @IBAction func locationTapped(_ sender: Any, forEvent event: UIEvent) {
         
+        label.tag = Int(ViewController.score + 10)
+        
         guard let touch = event.allTouches?.first else { return }
         let point = touch.location(in: tapBTN)
         label.center = CGPoint(x: point.x, y: point.y - 30)
@@ -444,19 +446,27 @@ class ViewController: UIViewController {
         label.font = UIFont.boldSystemFont(ofSize: 18)
         label.text = "+1"
         label.textColor = UIColor.green
+        
         self.view.addSubview(label)
         
-        label.tag = Int(ViewController.score + 1)
-        print(label.tag)
+        animateOutLabelAfterDelay()
         
+    }
+
+    func animateOutLabelAfterDelay() {
         let delay = DispatchTime.now() + 0.5
         DispatchQueue.main.asyncAfter(deadline: delay) {
+            
+            self.label.tag = Int(ViewController.score + 1)
+            print(self.label.tag)
+            
             UIView.animate(withDuration: 0.5, animations: {
+                
                 //if self.label.viewWithTag(Int(ViewController.score + 1))?.alpha == 1 {
                 //    self.label.viewWithTag(Int(ViewController.score + 1))?.alpha = 0
                 //}
                 if self.label.tag != Int(ViewController.score + 0) {
-                    //self.label.alpha = 0
+                    self.label.alpha = 0
                     print("Tag is \(self.label.tag)")
                 } else {
                     self.label.viewWithTag(Int(ViewController.score + 0))?.alpha = 0
@@ -468,14 +478,12 @@ class ViewController: UIViewController {
                 //    self.label.viewWithTag(Int(ViewController.score + 1))?.removeFromSuperview()
                 //}
                 if self.label.tag != Int(ViewController.score + 0) {
-                    //self.label.removeFromSuperview()
+                    self.label.removeFromSuperview()
                 } else {
                     self.label.viewWithTag(Int(ViewController.score + 0))?.removeFromSuperview()
                 }
             }
-
         }
-        
     }
-
+    
 }
