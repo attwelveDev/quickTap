@@ -7,13 +7,52 @@
 //
 
 import UIKit
+import WatchConnectivity
 
-class HighscoreViewController: UIViewController {
+class HighscoreViewController: UIViewController, WCSessionDelegate {
+ 
+    @available(iOS 9.3, *)
+    func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
+        
+    }
+    
+    func sessionDidBecomeInactive(_ session: WCSession) {
 
+    }
+    
+    func sessionDidDeactivate(_ session: WCSession) {
+
+    }
+    
     @IBOutlet weak var youLBL: UILabel!
     @IBOutlet weak var highscore: UILabel!
     @IBOutlet weak var onLBL: UILabel!
     @IBOutlet weak var date: UILabel!
+    
+    var session: WCSession?
+    let session2 = WCSession.default
+    
+    func session(_ session: WCSession, didReceiveApplicationContext applicationContext: [String : Any]) {
+        DispatchQueue.main.async() {
+            self.processApplicationContext()
+        }
+    }
+    
+    func processApplicationContext() {
+        if let watchContext = session2.receivedApplicationContext as? [String : Double] {
+            if watchContext["highscore"] != nil {
+                highscore.text = (String(describing: watchContext["highscore"]!.cleanValue))
+                highscore.text = (String(describing: watchContext["highscore"]!.cleanValue))
+                
+                let storedHighscore = Int(watchContext["highscore"]!.cleanValue)!
+                ViewController.highscore = Double(storedHighscore)
+                
+                let highscoreDefault = NSUbiquitousKeyValueStore.default
+                highscoreDefault.set(storedHighscore, forKey: "Highscore")
+                highscoreDefault.synchronize()
+            }
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,6 +77,12 @@ class HighscoreViewController: UIViewController {
             highscore.isHidden = true
             onLBL.text = "Go play Highscore Mode to see some stats here!"
             date.isHidden = true
+        }
+        
+        if WCSession.isSupported() {
+            session = WCSession.default
+            session?.delegate = self
+            session?.activate()
         }
         
         // Do any additional setup after loading the view.

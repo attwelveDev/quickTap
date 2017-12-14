@@ -23,11 +23,11 @@ class ViewController: UIViewController, WCSessionDelegate {
     }
     
     func sessionDidBecomeInactive(_ session: WCSession) {
-        print("error")
+
     }
     
     func sessionDidDeactivate(_ session: WCSession) {
-        print("error")
+
     }
     
     
@@ -384,6 +384,8 @@ class ViewController: UIViewController, WCSessionDelegate {
         
         interval = 1
         
+        processApplicationContext()
+        
         if WCSession.isSupported() {
             session = WCSession.default
             session?.delegate = self
@@ -432,18 +434,29 @@ class ViewController: UIViewController, WCSessionDelegate {
     }
     
     var session: WCSession?
+    let session2 = WCSession.default
     
     func session(_ session: WCSession, didReceiveApplicationContext applicationContext: [String : Any]) {
-        
+        DispatchQueue.main.async() {
+            self.processApplicationContext()
+        }
     }
     
-//    func processApplicationContext() {
-//        if let iPhoneContext = session?.applicationContext as? [String : Double] {
-//            if iPhoneContext["highscore"] != nil {
-//                
-//            }
-//        }
-//    }
+    func processApplicationContext() {
+        if let watchContext = session2.receivedApplicationContext as? [String : Double] {
+            if watchContext["highscore"] != nil {
+                highscoreLabel.text = (String(describing: watchContext["highscore"]!.cleanValue))
+                highscoreDisplay.text = (String(describing: watchContext["highscore"]!.cleanValue))
+                
+                let storedHighscore = Int(watchContext["highscore"]!.cleanValue)!
+                ViewController.highscore = Double(storedHighscore)
+                
+                let highscoreDefault = NSUbiquitousKeyValueStore.default
+                highscoreDefault.set(storedHighscore, forKey: "Highscore")
+                highscoreDefault.synchronize()
+            }
+        }
+    }
     
     @IBAction func tapped(_ sender: Any) {
         

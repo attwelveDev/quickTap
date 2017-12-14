@@ -18,6 +18,7 @@ class GameplayInterfaceController: WKInterfaceController, WCSessionDelegate {
     }
     
     let session = WCSession.default
+    var session2: WCSession?
     
     private func session(_ session: WCSession, didReceiveApplicationContext applicationContext: [String : AnyObject]) {
         DispatchQueue.main.async() {
@@ -25,10 +26,14 @@ class GameplayInterfaceController: WKInterfaceController, WCSessionDelegate {
         }
     }
     
+    var storedHighscore: Int = 0
+    
     func processApplicationContext() {
         if let iPhoneContext = session.receivedApplicationContext as? [String : Double] {
             if iPhoneContext["highscore"] != nil {
                 highscore.setText(String(describing: iPhoneContext["highscore"]!.cleanValue))
+                
+                storedHighscore = Int(iPhoneContext["highscore"]!.cleanValue)!
             }
         }
     }
@@ -42,6 +47,25 @@ class GameplayInterfaceController: WKInterfaceController, WCSessionDelegate {
     @IBAction func tapped() {
         GameplayInterfaceController.playerScore += 1
         score.setText("\(GameplayInterfaceController.playerScore)")
+        
+        if InterfaceController.modeSelection == "highscore" {
+            if GameplayInterfaceController.playerScore >= storedHighscore {
+                storedHighscore = GameplayInterfaceController.playerScore
+                highscore.setText(String(storedHighscore))
+                score.setTextColor(UIColor.green)
+                highscore.setTextColor(UIColor.green)
+                
+                if let validSession = session2 {
+                    let watchAppContext = ["highscore": storedHighscore]
+                    
+                    do {
+                        try validSession.updateApplicationContext(watchAppContext)
+                    } catch {
+                        print("error")
+                    }
+                }
+            }
+        }
     }
     
     var interval = 1
