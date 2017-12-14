@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import ReplayKit
+import WatchConnectivity
 
 extension Float {
     var cleanValue: String {
@@ -15,7 +15,21 @@ extension Float {
     }
 }
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, WCSessionDelegate {
+    
+    @available(iOS 9.3, *)
+    func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
+        
+    }
+    
+    func sessionDidBecomeInactive(_ session: WCSession) {
+        print("error")
+    }
+    
+    func sessionDidDeactivate(_ session: WCSession) {
+        print("error")
+    }
+    
     
     @IBOutlet weak var timeRemain: UILabel!
     @IBOutlet weak var score: UILabel!
@@ -160,7 +174,9 @@ class ViewController: UIViewController {
         let ivc = storyboard.instantiateViewController(withIdentifier: "Start")
         ivc.modalPresentationStyle = .custom
         ivc.modalTransitionStyle = .crossDissolve
-        self.present(ivc, animated: true, completion: { _ in })
+        //        self.present(ivc, animated: true, completion: { _ in })
+        self.present(ivc, animated: true, completion: nil)
+        
     }
     
     @IBAction func startGame(_ sender: Any) {
@@ -204,11 +220,6 @@ class ViewController: UIViewController {
             highscoreLabel.isHidden = false
             highscoreLabel.alpha = 1.0
             
-            let highscoreDefault = UserDefaults.standard
-            if (highscoreDefault.value(forKey: "Highscore") != nil){
-                ViewController.highscore = highscoreDefault.value(forKey: "Highscore") as! Double!
-                highscoreLabel.text = "\(ViewController.highscore)"
-            }
         }
         
     }
@@ -296,7 +307,7 @@ class ViewController: UIViewController {
         highLooks.textColor = UIColor.lightText
         inLooks.textColor = UIColor.lightText
         
-        let highscoreDefault = NSUbiquitousKeyValueStore.default()
+        let highscoreDefault = NSUbiquitousKeyValueStore.default
         if (highscoreDefault.object(forKey: "Highscore") != nil){
             ViewController.highscore = highscoreDefault.object(forKey: "Highscore") as! Double!
             highscoreDisplay.text = "\((ViewController.highscore).cleanValue)"
@@ -359,7 +370,7 @@ class ViewController: UIViewController {
             time = 60
             hs.text = "Highscore"
             
-            let highscoreDefault = NSUbiquitousKeyValueStore.default()
+            let highscoreDefault = NSUbiquitousKeyValueStore.default
             if (highscoreDefault.object(forKey: "Highscore") != nil){
                 ViewController.highscore = highscoreDefault.object(forKey: "Highscore") as! Double!
                 highscoreLabel.text = "\((ViewController.highscore).cleanValue)"
@@ -372,6 +383,12 @@ class ViewController: UIViewController {
         tapBTN.isUserInteractionEnabled = false
         
         interval = 1
+        
+        if WCSession.isSupported() {
+            session = WCSession.default
+            session?.delegate = self
+            session?.activate()
+        }
 
     }
 
@@ -388,15 +405,9 @@ class ViewController: UIViewController {
         pickView.layer.shadowPath = UIBezierPath(rect: pickView.bounds).cgPath
     }
     
-    func startRecording() {
-        if RPScreenRecorder.shared().isAvailable {
-            
-        }
-    }
-    
     var interval = 1
     
-    func update() {
+    @objc func update() {
 
         time -= 1
         countdown.text = "\(time) secs"
@@ -413,10 +424,26 @@ class ViewController: UIViewController {
                 let ivc = storyboard.instantiateViewController(withIdentifier: "GameOver")
                 ivc.modalPresentationStyle = .custom
                 ivc.modalTransitionStyle = .crossDissolve
-                self.present(ivc, animated: true, completion: { _ in })
+                //        self.present(ivc, animated: true, completion: { _ in })
+                self.present(ivc, animated: true, completion: nil)
+                
             }
         }
     }
+    
+    var session: WCSession?
+    
+    func session(_ session: WCSession, didReceiveApplicationContext applicationContext: [String : Any]) {
+        
+    }
+    
+//    func processApplicationContext() {
+//        if let iPhoneContext = session?.applicationContext as? [String : Double] {
+//            if iPhoneContext["highscore"] != nil {
+//                
+//            }
+//        }
+//    }
     
     @IBAction func tapped(_ sender: Any) {
         
@@ -430,10 +457,19 @@ class ViewController: UIViewController {
                 highscoreLabel.textColor = UIColor.green
                 scoreLabel.textColor = UIColor.green
                 
-                let highscoreDefault = NSUbiquitousKeyValueStore.default()
+                let highscoreDefault = NSUbiquitousKeyValueStore.default
                 highscoreDefault.set(ViewController.highscore, forKey: "Highscore")
                 highscoreDefault.synchronize()
-                
+
+                if let validSession = session {
+                    let iPhoneAppContext = ["highscore": ViewController.highscore.cleanValue]
+                    
+                    do {
+                        try validSession.updateApplicationContext(iPhoneAppContext)
+                    } catch {
+                        print("error")
+                    }
+                }
             }
         }
         
@@ -442,8 +478,6 @@ class ViewController: UIViewController {
     let label = UILabel(frame: CGRect(x: 0, y: 0, width: 25, height: 25))
     
     @IBAction func locationTapped(_ sender: Any, forEvent event: UIEvent) {
-        
-        label.tag = Int(ViewController.score + 10)
         
         guard let touch = event.allTouches?.first else { return }
         let point = touch.location(in: tapBTN)
@@ -454,43 +488,19 @@ class ViewController: UIViewController {
         label.text = "+1"
         label.textColor = UIColor.green
         
+//        let circlePath = UIBezierPath(arcCenter: CGPoint(x: point.x, y: point.y - 30), radius: CGFloat(20), startAngle: CGFloat(0), endAngle: CGFloat(Double.pi * 2), clockwise: true)
+//        let shapeLayer = CAShapeLayer()
+//        shapeLayer.path = circlePath.cgPath
+//        
+//        shapeLayer.fillColor = UIColor.clear.cgColor
+//        //you can change the stroke color
+//        shapeLayer.strokeColor = UIColor.green.cgColor
+//        //you can change the line width
+//        shapeLayer.lineWidth = 5.0
+//        
+//        view.layer.addSublayer(shapeLayer)
+        
         self.view.addSubview(label)
         
-        animateOutLabelAfterDelay()
-        
     }
-
-    func animateOutLabelAfterDelay() {
-        let delay = DispatchTime.now() + 0.5
-        DispatchQueue.main.asyncAfter(deadline: delay) {
-            
-            self.label.tag = Int(ViewController.score + 1)
-            print(self.label.tag)
-            
-            UIView.animate(withDuration: 0.5, animations: {
-                
-                //if self.label.viewWithTag(Int(ViewController.score + 1))?.alpha == 1 {
-                //    self.label.viewWithTag(Int(ViewController.score + 1))?.alpha = 0
-                //}
-                if self.label.tag != Int(ViewController.score + 0) {
-                    self.label.alpha = 0
-                    print("Tag is \(self.label.tag)")
-                } else {
-                    self.label.viewWithTag(Int(ViewController.score + 0))?.alpha = 0
-                    print("Tag isn't \(self.label.tag)")
-                }
-                
-            }) { (success: Bool) in
-                //if self.label.viewWithTag(Int(ViewController.score + 1))?.alpha == 0 {
-                //    self.label.viewWithTag(Int(ViewController.score + 1))?.removeFromSuperview()
-                //}
-                if self.label.tag != Int(ViewController.score + 0) {
-                    self.label.removeFromSuperview()
-                } else {
-                    self.label.viewWithTag(Int(ViewController.score + 0))?.removeFromSuperview()
-                }
-            }
-        }
-    }
-    
 }

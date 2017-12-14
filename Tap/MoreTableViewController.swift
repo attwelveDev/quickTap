@@ -152,7 +152,9 @@ class MoreTableViewController: UITableViewController, SFSafariViewControllerDele
             let ivc = storyboard.instantiateViewController(withIdentifier: "fromDeveloper")
             ivc.modalPresentationStyle = .custom
             ivc.modalTransitionStyle = .crossDissolve
-            self.present(ivc, animated: true, completion: { _ in })
+            //        self.present(ivc, animated: true, completion: { _ in })
+            self.present(ivc, animated: true, completion: nil)
+
             
             tableView.deselectRow(at: indexPath, animated: true)
         } else if (indexPath.section == 2 && indexPath.row == 3) {
@@ -161,7 +163,8 @@ class MoreTableViewController: UITableViewController, SFSafariViewControllerDele
             let ivc = storyboard.instantiateViewController(withIdentifier: "about")
             ivc.modalPresentationStyle = .custom
             ivc.modalTransitionStyle = .crossDissolve
-            self.present(ivc, animated: true, completion: { _ in })
+            //        self.present(ivc, animated: true, completion: { _ in })
+            self.present(ivc, animated: true, completion: nil)
             
             tableView.deselectRow(at: indexPath, animated: true)
         }
@@ -170,7 +173,7 @@ class MoreTableViewController: UITableViewController, SFSafariViewControllerDele
     
     func configuredMailComposeViewController() -> MFMailComposeViewController {
         UINavigationBar.appearance().barTintColor = UIColor(red: 33.0/255.0, green: 93.0/255.0, blue: 125.0/255.0, alpha: 1.0)
-        UINavigationBar.appearance().titleTextAttributes = [NSForegroundColorAttributeName: UIColor(red: 230.0/255.0, green: 224.0/255.0, blue: 221.0/255.0, alpha: 1.0)]
+        UINavigationBar.appearance().titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor(red: 230.0/255.0, green: 224.0/255.0, blue: 221.0/255.0, alpha: 1.0)]
         UINavigationBar.appearance().tintColor = UIColor(red: 230.0/255.0, green: 224.0/255.0, blue: 221.0/255.0, alpha: 1.0)
         
         UIApplication.shared.statusBarStyle = UIStatusBarStyle.lightContent
@@ -264,7 +267,7 @@ class MoreTableViewController: UITableViewController, SFSafariViewControllerDele
         
         self.navigationItem.title = "More"
         navigationController?.navigationBar.barTintColor = UIColor(red: 33.0/255.0, green: 93.0/255.0, blue: 125.0/255.0, alpha: 1.0)
-        self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor(red: 230.0/255.0, green: 224.0/255.0, blue: 221.0/255.0, alpha: 1.0)]
+        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor(red: 230.0/255.0, green: 224.0/255.0, blue: 221.0/255.0, alpha: 1.0)]
         self.navigationController?.navigationBar.tintColor = UIColor(red: 230.0/255.0, green: 224.0/255.0, blue: 221.0/255.0, alpha: 1.0)
         
         tableContent.backgroundColor = UIColor(red: 33.0/255.0, green: 93.0/255.0, blue: 125.0/255.0, alpha: 1.0)
@@ -307,7 +310,8 @@ class MoreTableViewController: UITableViewController, SFSafariViewControllerDele
         let ivc = storyboard.instantiateViewController(withIdentifier: "Start")
         ivc.modalPresentationStyle = .custom
         ivc.modalTransitionStyle = .crossDissolve
-        self.present(ivc, animated: true, completion: { _ in })
+//        self.present(ivc, animated: true, completion: { _ in })
+        self.present(ivc, animated: true, completion: nil)
     }
 
     /*

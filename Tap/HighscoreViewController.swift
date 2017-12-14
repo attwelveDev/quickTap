@@ -20,21 +20,20 @@ class HighscoreViewController: UIViewController {
 
         self.navigationItem.title = "Highscore"
         navigationController?.navigationBar.barTintColor = UIColor(red: 33.0/255.0, green: 93.0/255.0, blue: 125.0/255.0, alpha: 1.0)
-        self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor(red: 230.0/255.0, green: 224.0/255.0, blue: 221.0/255.0, alpha: 1.0)]
+        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor(red: 230.0/255.0, green: 224.0/255.0, blue: 221.0/255.0, alpha: 1.0)]
         self.navigationController?.navigationBar.tintColor = UIColor(red: 230.0/255.0, green: 224.0/255.0, blue: 221.0/255.0, alpha: 1.0)
         
         navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
         navigationController?.navigationBar.shadowImage = UIImage()
         
-        if NSUbiquitousKeyValueStore.default().object(forKey: "Highscore") != nil && NSUbiquitousKeyValueStore.default().double(forKey: "Highscore") > 0 {
+        if NSUbiquitousKeyValueStore.default.object(forKey: "Highscore") != nil && NSUbiquitousKeyValueStore.default.double(forKey: "Highscore") > 0 {
             youLBL.text = "You achieved your highscore of"
-            highscore.text = "\(NSUbiquitousKeyValueStore.default().object(forKey: "Highscore")!)"
+            highscore.text = "\(NSUbiquitousKeyValueStore.default.object(forKey: "Highscore")!)"
             onLBL.text = "on"
-            if NSUbiquitousKeyValueStore.default().object(forKey: "Highscore") == nil {
-                NSUbiquitousKeyValueStore.default().set(0, forKey: "Highscore")
-                date.text = "\(NSUbiquitousKeyValueStore.default().object(forKey: "checkDateNewHighscore")!)"
-            }
-        } else if NSUbiquitousKeyValueStore.default().double(forKey: "Highscore") == 0 {
+
+            date.text = "\(NSUbiquitousKeyValueStore.default.object(forKey: "checkDateNewHighscore")!)"
+            
+        } else if NSUbiquitousKeyValueStore.default.double(forKey: "Highscore") == 0 {
             youLBL.isHidden = true
             highscore.isHidden = true
             onLBL.text = "Go play Highscore Mode to see some stats here!"
@@ -54,7 +53,8 @@ class HighscoreViewController: UIViewController {
         let ivc = storyboard.instantiateViewController(withIdentifier: "accountVC")
         ivc.modalPresentationStyle = .custom
         ivc.modalTransitionStyle = .crossDissolve
-        self.present(ivc, animated: true, completion: { _ in })
+//        self.present(ivc, animated: true, completion: { _ in })
+        self.present(ivc, animated: true, completion: nil)
     }
 
     /*

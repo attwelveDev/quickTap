@@ -20,7 +20,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if urlForCloud == nil {
             print("No iCloud on device")
         } else {
-            let store = NSUbiquitousKeyValueStore.default()
+            let store = NSUbiquitousKeyValueStore.default
             
             NotificationCenter.default.addObserver(self, selector: #selector(AppDelegate.iCloudKeysChanged(_:)), name: NSUbiquitousKeyValueStore.didChangeExternallyNotification, object: store)
             
@@ -44,7 +44,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return true
     }
 
-    func iCloudKeysChanged(_ sender: NSNotification) {
+    @objc func iCloudKeysChanged(_ sender: NSNotification) {
         
     }
     

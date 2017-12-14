@@ -17,7 +17,8 @@ class LastPageViewController: UIViewController {
         let ivc = storyboard.instantiateViewController(withIdentifier: "Start")
         ivc.modalPresentationStyle = .custom
         ivc.modalTransitionStyle = .crossDissolve
-        self.present(ivc, animated: true, completion: { _ in })
+        //        self.present(ivc, animated: true, completion: { _ in })
+        self.present(ivc, animated: true, completion: nil)
     }
     
     override func viewDidLoad() {

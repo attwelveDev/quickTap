@@ -15,7 +15,8 @@ class AboutViewController: UIViewController {
         let ivc = storyboard.instantiateViewController(withIdentifier: "More")
         ivc.modalPresentationStyle = .custom
         ivc.modalTransitionStyle = .crossDissolve
-        self.present(ivc, animated: true, completion: { _ in })
+        //        self.present(ivc, animated: true, completion: { _ in })
+        self.present(ivc, animated: true, completion: nil)
     }
     
     @IBOutlet weak var textView: UITextView!
@@ -25,7 +26,7 @@ class AboutViewController: UIViewController {
 
         self.navigationItem.title = "About"
         navigationController?.navigationBar.barTintColor = UIColor(red: 33.0/255.0, green: 93.0/255.0, blue: 125.0/255.0, alpha: 1.0)
-        self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor(red: 230.0/255.0, green: 224.0/255.0, blue: 221.0/255.0, alpha: 1.0)]
+        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor(red: 230.0/255.0, green: 224.0/255.0, blue: 221.0/255.0, alpha: 1.0)]
         self.navigationController?.navigationBar.tintColor = UIColor(red: 230.0/255.0, green: 224.0/255.0, blue: 221.0/255.0, alpha: 1.0)
         
         navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)

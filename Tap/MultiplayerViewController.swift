@@ -185,7 +185,7 @@ class MultiplayerViewController: UIViewController {
     
     static var timeDurationOfTM: Double = 0
     
-    func stopwatchUpdate() {
+    @objc func stopwatchUpdate() {
         MultiplayerViewController.timeDurationOfTM += 1
         whiteScoreLabel.text = "\(MultiplayerViewController.timeDurationOfTM) secs"
         blueScoreLabel.text = "\(MultiplayerViewController.timeDurationOfTM) secs"
@@ -202,7 +202,7 @@ class MultiplayerViewController: UIViewController {
         
     }
     
-    func update (){
+    @objc func update (){
 
         MultiplayerViewController.time -= 1
         whiteCountdown.text = "\(MultiplayerViewController.time) secs"
@@ -227,7 +227,8 @@ class MultiplayerViewController: UIViewController {
                 let ivc = storyboard.instantiateViewController(withIdentifier: "GameOver") as! GameOverViewController
                 ivc.modalPresentationStyle = .custom
                 ivc.modalTransitionStyle = .crossDissolve
-                self.present(ivc, animated: true, completion: { _ in })
+                //        self.present(ivc, animated: true, completion: { _ in })
+                self.present(ivc, animated: true, completion: nil)
             }
         }
     }
@@ -268,7 +269,8 @@ class MultiplayerViewController: UIViewController {
                     let ivc = storyboard.instantiateViewController(withIdentifier: "GameOver") as! GameOverViewController
                     ivc.modalPresentationStyle = .custom
                     ivc.modalTransitionStyle = .crossDissolve
-                    self.present(ivc, animated: true, completion: { _ in })
+                    //        self.present(ivc, animated: true, completion: { _ in })
+                    self.present(ivc, animated: true, completion: nil)
                 }
 
             } else if blueBTN.bounds.height >= self.view.bounds.height {
@@ -279,7 +281,8 @@ class MultiplayerViewController: UIViewController {
                     let ivc = storyboard.instantiateViewController(withIdentifier: "GameOver") as! GameOverViewController
                     ivc.modalPresentationStyle = .custom
                     ivc.modalTransitionStyle = .crossDissolve
-                    self.present(ivc, animated: true, completion: { _ in })
+                    //        self.present(ivc, animated: true, completion: { _ in })
+                    self.present(ivc, animated: true, completion: nil)
                 }
                 
             }
@@ -315,7 +318,8 @@ class MultiplayerViewController: UIViewController {
                     let ivc = storyboard.instantiateViewController(withIdentifier: "GameOver") as! GameOverViewController
                     ivc.modalPresentationStyle = .custom
                     ivc.modalTransitionStyle = .crossDissolve
-                    self.present(ivc, animated: true, completion: { _ in })
+                    //        self.present(ivc, animated: true, completion: { _ in })
+                    self.present(ivc, animated: true, completion: nil)
                 }
                 
             } else if brownBTN.bounds.height >= self.view.bounds.height {
@@ -326,7 +330,8 @@ class MultiplayerViewController: UIViewController {
                     let ivc = storyboard.instantiateViewController(withIdentifier: "GameOver") as! GameOverViewController
                     ivc.modalPresentationStyle = .custom
                     ivc.modalTransitionStyle = .crossDissolve
-                    self.present(ivc, animated: true, completion: { _ in })
+                    //        self.present(ivc, animated: true, completion: { _ in })
+                    self.present(ivc, animated: true, completion: nil)
                 }
                 
             }

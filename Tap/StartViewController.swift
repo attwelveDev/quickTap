@@ -30,40 +30,40 @@ class StartViewController: UIViewController {
             UserDefaults.standard.set(false, forKey: "userHasTouchIDAuth")
         }
         
-        if NSUbiquitousKeyValueStore.default().object(forKey: "usernameDefault") == nil {
-            NSUbiquitousKeyValueStore.default().set("Username", forKey: "usernameDefault")
-            AccountViewController.defaultUsername = NSUbiquitousKeyValueStore.default().object(forKey: "usernameDefault") as! String
+        if NSUbiquitousKeyValueStore.default.object(forKey: "usernameDefault") == nil {
+            NSUbiquitousKeyValueStore.default.set("Username", forKey: "usernameDefault")
+            AccountViewController.defaultUsername = NSUbiquitousKeyValueStore.default.object(forKey: "usernameDefault") as! String
         }
         
-        if NSUbiquitousKeyValueStore.default().object(forKey: "timesPlayed") == nil {
+        if NSUbiquitousKeyValueStore.default.object(forKey: "timesPlayed") == nil {
             
-            NSUbiquitousKeyValueStore.default().set(0, forKey: "timesPlayed")
-            
-        }
-        
-        if NSUbiquitousKeyValueStore.default().object(forKey: "Highscore") == nil {
-            
-            NSUbiquitousKeyValueStore.default().set(0, forKey: "Highscore")
+            NSUbiquitousKeyValueStore.default.set(0, forKey: "timesPlayed")
             
         }
         
-        if NSUbiquitousKeyValueStore.default().object(forKey: "totalPlayTime") == nil {
+        if NSUbiquitousKeyValueStore.default.object(forKey: "Highscore") == nil {
+            
+            NSUbiquitousKeyValueStore.default.set(0, forKey: "Highscore")
+            
+        }
+        
+        if NSUbiquitousKeyValueStore.default.object(forKey: "totalPlayTime") == nil {
 
             print("isNil")
             
-            NSUbiquitousKeyValueStore.default().set(0, forKey: "totalPlayTime")
+            NSUbiquitousKeyValueStore.default.set(0, forKey: "totalPlayTime")
 
         }
         
-        if NSUbiquitousKeyValueStore.default().object(forKey: "totalTaps") == nil {
+        if NSUbiquitousKeyValueStore.default.object(forKey: "totalTaps") == nil {
 
-            NSUbiquitousKeyValueStore.default().set(0, forKey: "totalTaps")
+            NSUbiquitousKeyValueStore.default.set(0, forKey: "totalTaps")
 
         }
         
-        if NSUbiquitousKeyValueStore.default().object(forKey: "tapedupStatus") == nil {
+        if NSUbiquitousKeyValueStore.default.object(forKey: "tapedupStatus") == nil {
             
-            NSUbiquitousKeyValueStore.default().set("Beginner", forKey: "tapedupStatus")
+            NSUbiquitousKeyValueStore.default.set("Beginner", forKey: "tapedupStatus")
             
         }
         
@@ -164,7 +164,8 @@ class StartViewController: UIViewController {
                         let ivc = storyboard.instantiateViewController(withIdentifier: "accountVC")
                         ivc.modalPresentationStyle = .custom
                         ivc.modalTransitionStyle = .crossDissolve
-                        self.present(ivc, animated: true, completion: { _ in })
+                        //        self.present(ivc, animated: true, completion: { _ in })
+                        self.present(ivc, animated: true, completion: nil)
                         
                     } else {
                         self.errorTitle.text = "Error"
@@ -189,7 +190,8 @@ class StartViewController: UIViewController {
             let ivc = storyboard.instantiateViewController(withIdentifier: "accountVC")
             ivc.modalPresentationStyle = .custom
             ivc.modalTransitionStyle = .crossDissolve
-            self.present(ivc, animated: true, completion: { _ in })
+            //        self.present(ivc, animated: true, completion: { _ in })
+            self.present(ivc, animated: true, completion: nil)
         }
     }
     @IBAction func singleplayerAction(_ sender: Any) {
@@ -197,28 +199,32 @@ class StartViewController: UIViewController {
         let ivc = storyboard.instantiateViewController(withIdentifier: "Initial")
         ivc.modalPresentationStyle = .custom
         ivc.modalTransitionStyle = .crossDissolve
-        self.present(ivc, animated: true, completion: { _ in })
+        //       self.present(ivc, animated: true, completion: { _ in })
+        self.present(ivc, animated: true, completion: nil)
     }
     @IBAction func multiplayerAction(_ sender: Any) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let ivc = storyboard.instantiateViewController(withIdentifier: "Multi")
         ivc.modalPresentationStyle = .custom
         ivc.modalTransitionStyle = .crossDissolve
-        self.present(ivc, animated: true, completion: { _ in })
+        //        self.present(ivc, animated: true, completion: { _ in })
+        self.present(ivc, animated: true, completion: nil)
     }
     @IBAction func instructionsAction(_ sender: Any) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let ivc = storyboard.instantiateViewController(withIdentifier: "tutorial")
         ivc.modalPresentationStyle = .custom
         ivc.modalTransitionStyle = .crossDissolve
-        self.present(ivc, animated: true, completion: { _ in })
+        //        self.present(ivc, animated: true, completion: { _ in })
+        self.present(ivc, animated: true, completion: nil)
     }
     @IBAction func moreAction(_ sender: Any) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let ivc = storyboard.instantiateViewController(withIdentifier: "More")
         ivc.modalPresentationStyle = .custom
         ivc.modalTransitionStyle = .crossDissolve
-        self.present(ivc, animated: true, completion: { _ in })
+        //        self.present(ivc, animated: true, completion: { _ in })
+        self.present(ivc, animated: true, completion: nil)
     }
 
     /*

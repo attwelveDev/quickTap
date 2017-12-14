@@ -29,61 +29,61 @@ class TapedupStatusViewController: UIViewController {
 
         self.navigationItem.title = "Tapedup Status"
         navigationController?.navigationBar.barTintColor = UIColor(red: 33.0/255.0, green: 93.0/255.0, blue: 125.0/255.0, alpha: 1.0)
-        self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor(red: 230.0/255.0, green: 224.0/255.0, blue: 221.0/255.0, alpha: 1.0)]
+        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor(red: 230.0/255.0, green: 224.0/255.0, blue: 221.0/255.0, alpha: 1.0)]
         self.navigationController?.navigationBar.tintColor = UIColor(red: 230.0/255.0, green: 224.0/255.0, blue: 221.0/255.0, alpha: 1.0)
         
         navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
         navigationController?.navigationBar.shadowImage = UIImage()
         
-        level.text = "You are \(NSUbiquitousKeyValueStore.default().string(forKey: "tapedupStatus")!)"
+        level.text = "You are \(NSUbiquitousKeyValueStore.default.string(forKey: "tapedupStatus")!)"
         
-        if NSUbiquitousKeyValueStore.default().string(forKey: "tapedupStatus") == "Beginner" {
-            if gamesPlayedBgn <= NSUbiquitousKeyValueStore.default().double(forKey: "timesPlayed") {
+        if NSUbiquitousKeyValueStore.default.string(forKey: "tapedupStatus") == "Beginner" {
+            if gamesPlayedBgn <= NSUbiquitousKeyValueStore.default.double(forKey: "timesPlayed") {
                 games.isHidden = true
             } else {
                 games.isHidden = false
             }
             
-            if timePlayedBgn <= NSUbiquitousKeyValueStore.default().double(forKey: "totalPlayTime") {
+            if timePlayedBgn <= NSUbiquitousKeyValueStore.default.double(forKey: "totalPlayTime") {
                 time.isHidden = true
             } else {
                 time.isHidden = false
             }
             
-            if tapsTappedBgn <= NSUbiquitousKeyValueStore.default().double(forKey: "totalTaps") {
+            if tapsTappedBgn <= NSUbiquitousKeyValueStore.default.double(forKey: "totalTaps") {
                 taps.isHidden = true
             } else {
                 taps.isHidden = false
             }
-            games.text = "\((gamesPlayedBgn - NSUbiquitousKeyValueStore.default().double(forKey: "timesPlayed")).cleanValue) more games"
-            time.text = "\((timePlayedBgn - NSUbiquitousKeyValueStore.default().double(forKey: "totalPlayTime")).cleanValue) more seconds of playing"
-            taps.text = "\((tapsTappedBgn - NSUbiquitousKeyValueStore.default().double(forKey: "totalTaps")).cleanValue) more taps"
+            games.text = "\((gamesPlayedBgn - NSUbiquitousKeyValueStore.default.double(forKey: "timesPlayed")).cleanValue) more games"
+            time.text = "\((timePlayedBgn - NSUbiquitousKeyValueStore.default.double(forKey: "totalPlayTime")).cleanValue) more seconds of playing"
+            taps.text = "\((tapsTappedBgn - NSUbiquitousKeyValueStore.default.double(forKey: "totalTaps")).cleanValue) more taps"
             nextLabel.text = "to upgrade your Tapedup Status to Average"
         }
-        if NSUbiquitousKeyValueStore.default().string(forKey: "tapedupStatus") == "Average" {
-            if gamesPlayedAve <= NSUbiquitousKeyValueStore.default().double(forKey: "timesPlayed") {
+        if NSUbiquitousKeyValueStore.default.string(forKey: "tapedupStatus") == "Average" {
+            if gamesPlayedAve <= NSUbiquitousKeyValueStore.default.double(forKey: "timesPlayed") {
                 games.isHidden = true
             } else {
                 games.isHidden = false
             }
             
-            if timePlayedAve <= NSUbiquitousKeyValueStore.default().double(forKey: "totalPlayTime") {
+            if timePlayedAve <= NSUbiquitousKeyValueStore.default.double(forKey: "totalPlayTime") {
                 time.isHidden = true
             } else {
                 time.isHidden = false
             }
             
-            if tapsTappedAve <= NSUbiquitousKeyValueStore.default().double(forKey: "totalTaps") {
+            if tapsTappedAve <= NSUbiquitousKeyValueStore.default.double(forKey: "totalTaps") {
                 taps.isHidden = true
             } else {
                 taps.isHidden = false
             }
-            games.text = "\((gamesPlayedAve - NSUbiquitousKeyValueStore.default().double(forKey: "timesPlayed")).cleanValue) more games"
-            time.text = "\((timePlayedAve - NSUbiquitousKeyValueStore.default().double(forKey: "totalPlayTime")).cleanValue) more seconds of playing"
-            taps.text = "\((tapsTappedAve - NSUbiquitousKeyValueStore.default().double(forKey: "totalTaps")).cleanValue) more taps"
+            games.text = "\((gamesPlayedAve - NSUbiquitousKeyValueStore.default.double(forKey: "timesPlayed")).cleanValue) more games"
+            time.text = "\((timePlayedAve - NSUbiquitousKeyValueStore.default.double(forKey: "totalPlayTime")).cleanValue) more seconds of playing"
+            taps.text = "\((tapsTappedAve - NSUbiquitousKeyValueStore.default.double(forKey: "totalTaps")).cleanValue) more taps"
             nextLabel.text = "to upgrade your Tapedup Status to Master"
         }
-        if NSUbiquitousKeyValueStore.default().string(forKey: "tapedupStatus") == "Master" {
+        if NSUbiquitousKeyValueStore.default.string(forKey: "tapedupStatus") == "Master" {
             play.text = "Well done!"
             games.text = "You are one of the unique humans to achieve"
             time.text = "the Master Status!"
@@ -104,7 +104,8 @@ class TapedupStatusViewController: UIViewController {
         let ivc = storyboard.instantiateViewController(withIdentifier: "accountVC")
         ivc.modalPresentationStyle = .custom
         ivc.modalTransitionStyle = .crossDissolve
-        self.present(ivc, animated: true, completion: { _ in })
+//        self.present(ivc, animated: true, completion: { _ in })
+        self.present(ivc, animated: true, completion: nil)
     }
 
     /*

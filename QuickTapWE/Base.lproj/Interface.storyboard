@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder.WatchKit.Storyboard" version="3.0" toolsVersion="13771" targetRuntime="watchKit" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="AgC-eL-Hgc">
+    <device id="watch38" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="watchOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBWatchKitPlugin" version="13756"/>
+    </dependencies>
+    <scenes>
+        <!--home-->
+        <scene sceneID="aou-V4-d1y">
+            <objects>
+                <controller identifier="home" id="AgC-eL-Hgc" customClass="InterfaceController" customModule="QuickTapWE" customModuleProvider="target">
+                    <items>
+                        <group width="1" alignment="center" id="sTc-3R-ed3">
+                            <items>
+                                <imageView width="18" height="18" alignment="center" verticalAlignment="center" image="theQ" contentMode="scaleAspectFit" id="9Os-Ha-ajq"/>
+                                <label height="20" alignment="center" text="uickTap" id="v0C-do-Nk9">
+                                    <color key="textColor" red="0.89772921800000005" green="0.87864261870000004" blue="0.86666506529999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                    <fontDescription key="font" type="system" weight="black" pointSize="16"/>
+                                </label>
+                            </items>
+                        </group>
+                        <group width="1" alignment="center" verticalAlignment="center" layout="vertical" id="xjN-cQ-yAH">
+                            <items>
+                                <button width="1" alignment="center" verticalAlignment="center" title="Time Mode" id="ff1-ph-1ry">
+                                    <color key="titleColor" red="0.11437185850000001" green="0.36248782280000003" blue="0.49568670990000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <color key="backgroundColor" red="0.80130654570000004" green="0.58641731740000003" blue="0.458794117" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                    <fontDescription key="font" type="system" weight="semibold" pointSize="15"/>
+                                    <connections>
+                                        <action selector="goToTimeMode" destination="AgC-eL-Hgc" id="aVQ-Bm-kmt"/>
+                                    </connections>
+                                </button>
+                                <button width="1" alignment="center" verticalAlignment="center" title="Highscore Mode" id="FYP-qp-bUW">
+                                    <color key="titleColor" red="0.11437185850000001" green="0.36248782280000003" blue="0.49568670990000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <color key="backgroundColor" red="0.80130654570000004" green="0.58641731740000003" blue="0.458794117" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                    <fontDescription key="font" type="system" weight="semibold" pointSize="15"/>
+                                    <connections>
+                                        <action selector="goToHighscoreMode" destination="AgC-eL-Hgc" id="GMb-nq-4Hg"/>
+                                    </connections>
+                                </button>
+                            </items>
+                        </group>
+                    </items>
+                </controller>
+            </objects>
+            <point key="canvasLocation" x="78" y="232"/>
+        </scene>
+        <!--Time Mode-->
+        <scene sceneID="urs-hi-cBE">
+            <objects>
+                <controller identifier="timeMode" title="Time Mode" id="5P3-E7-7ud" customClass="TimeModeInterfaceController" customModule="QuickTapWE_Extension">
+                    <items>
+                        <button width="1" alignment="center" title="Back" id="L18-6Z-Lci">
+                            <color key="titleColor" red="0.11437185850000001" green="0.36248782280000003" blue="0.49568670990000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <color key="backgroundColor" red="0.80130654570000004" green="0.58641731740000003" blue="0.458794117" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                            <fontDescription key="font" type="system" weight="medium" pointSize="15"/>
+                            <connections>
+                                <action selector="back" destination="5P3-E7-7ud" id="LFW-f8-bHu"/>
+                            </connections>
+                        </button>
+                        <group width="1" alignment="center" verticalAlignment="center" layout="vertical" id="7Lj-Ue-InO">
+                            <items>
+                                <slider width="1" alignment="center" verticalAlignment="center" value="60" minimum="10" maximum="120" steps="11" id="wEj-wt-Qvx">
+                                    <color key="color" red="0.11437185850000001" green="0.36248782280000003" blue="0.49568670990000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <connections>
+                                        <action selector="sliderDidChange:" destination="5P3-E7-7ud" id="fUF-A8-krD"/>
+                                    </connections>
+                                </slider>
+                                <group width="1" alignment="center" verticalAlignment="center" id="h3J-Aa-fxX">
+                                    <items>
+                                        <label alignment="center" verticalAlignment="center" text="60" id="GT0-DZ-tk6">
+                                            <fontDescription key="font" type="system" weight="heavy" pointSize="15"/>
+                                        </label>
+                                        <label alignment="center" verticalAlignment="center" text="secs" id="ZEH-5v-y1D">
+                                            <fontDescription key="font" type="system" pointSize="15"/>
+                                        </label>
+                                    </items>
+                                </group>
+                                <button width="1" alignment="center" verticalAlignment="center" title="Start!" id="aZE-6Z-GBY">
+                                    <color key="titleColor" red="0.11437185850000001" green="0.36248782280000003" blue="0.49568670990000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <color key="backgroundColor" red="0.80130654570000004" green="0.58641731740000003" blue="0.458794117" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                    <fontDescription key="font" type="system" weight="semibold" pointSize="15"/>
+                                    <connections>
+                                        <action selector="startGame" destination="5P3-E7-7ud" id="uf6-ri-bWv"/>
+                                    </connections>
+                                </button>
+                            </items>
+                        </group>
+                    </items>
+                    <menu key="menu" id="9Gu-nV-oIc">
+                        <items>
+                            <menuItem title="Highscore Mode" icon="shuffle" id="0WD-cY-iWk">
+                                <connections>
+                                    <action selector="goToHM" destination="5P3-E7-7ud" id="AHa-tD-Dch"/>
+                                </connections>
+                            </menuItem>
+                        </items>
+                    </menu>
+                    <connections>
+                        <outlet property="secsLabel" destination="GT0-DZ-tk6" id="n1n-Tz-ALD"/>
+                        <outlet property="slider" destination="wEj-wt-Qvx" id="dbE-of-DCs"/>
+                    </connections>
+                </controller>
+            </objects>
+            <point key="canvasLocation" x="380" y="-5"/>
+        </scene>
+        <!--Highscore Mode-->
+        <scene sceneID="reU-5A-DPY">
+            <objects>
+                <controller identifier="highscoreMode" title="Highscore Mode" id="oET-nc-cSq" customClass="HighscoreModeInterfaceController" customModule="QuickTapWE_Extension">
+                    <items>
+                        <button width="1" alignment="center" title="Back" id="IDa-fV-36k">
+                            <color key="titleColor" red="0.11437185850000001" green="0.36248782280000003" blue="0.49568670990000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <color key="backgroundColor" red="0.80130654570000004" green="0.58641731740000003" blue="0.458794117" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                            <fontDescription key="font" type="system" weight="medium" pointSize="15"/>
+                            <connections>
+                                <action selector="back" destination="oET-nc-cSq" id="Imq-4U-O1q"/>
+                            </connections>
+                        </button>
+                        <group width="1" alignment="center" verticalAlignment="center" layout="vertical" id="0rq-Zh-5yi">
+                            <items>
+                                <group width="1" alignment="center" verticalAlignment="center" id="8IP-DA-B0L">
+                                    <items>
+                                        <label alignment="center" verticalAlignment="center" text="Highscore" id="1BO-M4-df7">
+                                            <fontDescription key="font" type="system" pointSize="15"/>
+                                        </label>
+                                        <label alignment="center" verticalAlignment="center" text="0" id="uSz-j7-RF7">
+                                            <fontDescription key="font" type="system" weight="heavy" pointSize="15"/>
+                                        </label>
+                                    </items>
+                                </group>
+                                <button width="1" alignment="center" verticalAlignment="center" title="Start!" id="gIR-rB-8Mh">
+                                    <color key="titleColor" red="0.11437185850000001" green="0.36248782280000003" blue="0.49568670990000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <color key="backgroundColor" red="0.80130654570000004" green="0.58641731740000003" blue="0.458794117" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                    <fontDescription key="font" type="system" weight="semibold" pointSize="15"/>
+                                    <connections>
+                                        <action selector="startGame" destination="oET-nc-cSq" id="0RI-KD-UG8"/>
+                                    </connections>
+                                </button>
+                            </items>
+                        </group>
+                    </items>
+                    <menu key="menu" id="VPS-wa-TjX">
+                        <items>
+                            <menuItem title="Time Mode" icon="shuffle" id="1ll-nM-Tv8">
+                                <connections>
+                                    <action selector="goToTM" destination="oET-nc-cSq" id="7zb-mS-X7E"/>
+                                </connections>
+                            </menuItem>
+                        </items>
+                    </menu>
+                    <connections>
+                        <outlet property="highscore" destination="uSz-j7-RF7" id="AgY-M0-3ua"/>
+                    </connections>
+                </controller>
+            </objects>
+            <point key="canvasLocation" x="380" y="474"/>
+        </scene>
+        <!--gameplay-->
+        <scene sceneID="Omk-kp-TUv">
+            <objects>
+                <controller identifier="gameplay" fullScreen="YES" id="zh3-IF-SLr" customClass="GameplayInterfaceController" customModule="QuickTapWE_Extension">
+                    <items>
+                        <group width="1" alignment="center" verticalAlignment="center" layout="overlap" id="4nx-Ji-6a2">
+                            <items>
+                                <button width="1" height="1" alignment="center" verticalAlignment="center" id="PpK-Ej-Na5">
+                                    <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <connections>
+                                        <action selector="tapped" destination="zh3-IF-SLr" id="6Vd-xE-50B"/>
+                                    </connections>
+                                </button>
+                                <group width="1" height="44" alignment="center" layout="vertical" id="UGy-2z-dvZ">
+                                    <items>
+                                        <label alignment="center" text="secs" id="6Cf-ny-Erj">
+                                            <fontDescription key="font" type="system" weight="black" pointSize="10"/>
+                                        </label>
+                                        <group width="134" alignment="left" id="A3X-CG-jfU">
+                                            <items>
+                                                <label alignment="left" text="Score" id="lg6-ue-5Gu">
+                                                    <fontDescription key="font" type="system" weight="black" pointSize="10"/>
+                                                </label>
+                                                <label alignment="right" verticalAlignment="center" text="0" textAlignment="right" id="kZH-0C-TuB">
+                                                    <fontDescription key="font" type="system" weight="heavy" pointSize="10"/>
+                                                </label>
+                                            </items>
+                                        </group>
+                                        <group width="134" alignment="left" id="9ET-YF-xmi">
+                                            <items>
+                                                <label alignment="left" text="Highscore" id="AoF-cH-pjQ">
+                                                    <fontDescription key="font" type="system" weight="black" pointSize="10"/>
+                                                </label>
+                                                <label width="7" alignment="right" verticalAlignment="center" text="0" textAlignment="right" id="Imi-2x-yqQ">
+                                                    <fontDescription key="font" type="system" weight="heavy" pointSize="10"/>
+                                                </label>
+                                            </items>
+                                        </group>
+                                    </items>
+                                </group>
+                            </items>
+                        </group>
+                    </items>
+                    <connections>
+                        <outlet property="countdown" destination="6Cf-ny-Erj" id="g3g-4P-GJZ"/>
+                        <outlet property="highscore" destination="Imi-2x-yqQ" id="BuD-sK-p48"/>
+                        <outlet property="highscoreGroup" destination="9ET-YF-xmi" id="jW9-U6-dkx"/>
+                        <outlet property="score" destination="kZH-0C-TuB" id="1pQ-UM-yzv"/>
+                    </connections>
+                </controller>
+            </objects>
+            <point key="canvasLocation" x="683" y="232"/>
+        </scene>
+        <!--gameOver-->
+        <scene sceneID="dF2-aD-2xN">
+            <objects>
+                <controller identifier="gameOver" fullScreen="YES" id="ivC-gF-Yr1" customClass="GameOverInterfaceController" customModule="QuickTapWE_Extension">
+                    <items>
+                        <group width="1" alignment="center" verticalAlignment="center" layout="vertical" id="MxM-yF-UGb">
+                            <items>
+                                <label alignment="center" verticalAlignment="center" text="Game Over" textAlignment="center" id="xVR-DW-AHe">
+                                    <fontDescription key="font" type="system" weight="black" pointSize="15"/>
+                                </label>
+                                <group width="1" alignment="center" verticalAlignment="center" id="fNk-W4-h9w">
+                                    <items>
+                                        <label alignment="left" text="Score" id="mAr-bf-B6U">
+                                            <fontDescription key="font" type="system" weight="heavy" pointSize="15"/>
+                                        </label>
+                                        <label alignment="right" text="0" textAlignment="right" id="hL9-V7-Mr0">
+                                            <fontDescription key="font" type="system" pointSize="15"/>
+                                        </label>
+                                    </items>
+                                </group>
+                                <group width="1" alignment="center" verticalAlignment="center" id="djH-i4-1wZ">
+                                    <items>
+                                        <label alignment="left" text="Highscore" id="2OI-pi-qud">
+                                            <fontDescription key="font" type="system" weight="heavy" pointSize="15"/>
+                                        </label>
+                                        <label alignment="right" text="0" textAlignment="right" id="GQ6-7B-Fsf">
+                                            <fontDescription key="font" type="system" pointSize="15"/>
+                                        </label>
+                                    </items>
+                                </group>
+                                <button width="1" alignment="center" verticalAlignment="center" title="Play again!" id="mRh-hy-YHF">
+                                    <color key="titleColor" red="0.11437185850000001" green="0.36248782280000003" blue="0.49568670990000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <color key="backgroundColor" red="0.80130654570000004" green="0.58641731740000003" blue="0.458794117" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                    <fontDescription key="font" type="system" weight="semibold" pointSize="15"/>
+                                    <connections>
+                                        <action selector="playAgain" destination="ivC-gF-Yr1" id="e7d-By-gcG"/>
+                                    </connections>
+                                </button>
+                                <button width="1" alignment="center" verticalAlignment="center" title="Menu" id="SeF-FH-sFD">
+                                    <color key="titleColor" red="0.11437185850000001" green="0.36248782280000003" blue="0.49568670990000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <color key="backgroundColor" red="0.80130654570000004" green="0.58641731740000003" blue="0.458794117" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                    <fontDescription key="font" type="system" weight="medium" pointSize="15"/>
+                                    <connections>
+                                        <action selector="goToMenu" destination="ivC-gF-Yr1" id="bYD-h2-jhE"/>
+                                    </connections>
+                                </button>
+                            </items>
+                        </group>
+                    </items>
+                    <connections>
+                        <outlet property="highscore" destination="GQ6-7B-Fsf" id="3GF-JX-ZYI"/>
+                        <outlet property="highscoreGroup" destination="djH-i4-1wZ" id="j48-1w-pgh"/>
+                        <outlet property="score" destination="hL9-V7-Mr0" id="gSl-AZ-rDV"/>
+                    </connections>
+                </controller>
+            </objects>
+            <point key="canvasLocation" x="944" y="232"/>
+        </scene>
+    </scenes>
+</document>

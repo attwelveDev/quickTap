@@ -22,7 +22,7 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
     @IBOutlet weak var tableView: UITableView!
     
     let tableItems = ["Tapedup Status", "Highscore", "Total Taps", "Total Seconds Played", "Total Games Played"]
-    var detailTableItems = ["\(NSUbiquitousKeyValueStore.default().object(forKey: "tapedupStatus")!)", "\(NSUbiquitousKeyValueStore.default().object(forKey: "Highscore")!)", "\(NSUbiquitousKeyValueStore.default().object(forKey: "totalTaps")!)", "\(NSUbiquitousKeyValueStore.default().object(forKey: "totalPlayTime")!) secs", "\(NSUbiquitousKeyValueStore.default().double(forKey: "timesPlayed").cleanValue)"]
+    var detailTableItems = ["\(NSUbiquitousKeyValueStore.default.object(forKey: "tapedupStatus")!)", "\(NSUbiquitousKeyValueStore.default.object(forKey: "Highscore")!)", "\(NSUbiquitousKeyValueStore.default.object(forKey: "totalTaps")!)", "\(NSUbiquitousKeyValueStore.default.object(forKey: "totalPlayTime")!) secs", "\(NSUbiquitousKeyValueStore.default.double(forKey: "timesPlayed").cleanValue)"]
     let cellIdentifier = "Cell"
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -102,7 +102,8 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
             let ivc = storyboard.instantiateViewController(withIdentifier: "status")
             ivc.modalPresentationStyle = .custom
             ivc.modalTransitionStyle = .crossDissolve
-            self.present(ivc, animated: true, completion: { _ in })
+            //        self.present(ivc, animated: true, completion: { _ in })
+            self.present(ivc, animated: true, completion: nil)
             
         } else if (indexPath.section == 0 && indexPath.row == 1) {
 
@@ -110,7 +111,8 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
             let ivc = storyboard.instantiateViewController(withIdentifier: "highscore")
             ivc.modalPresentationStyle = .custom
             ivc.modalTransitionStyle = .crossDissolve
-            self.present(ivc, animated: true, completion: { _ in })
+            //        self.present(ivc, animated: true, completion: { _ in })
+            self.present(ivc, animated: true, completion: nil)
             
         } else if (indexPath.section == 0 && indexPath.row == 4) {
             
@@ -118,7 +120,8 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
             let ivc = storyboard.instantiateViewController(withIdentifier: "games")
             ivc.modalPresentationStyle = .custom
             ivc.modalTransitionStyle = .crossDissolve
-            self.present(ivc, animated: true, completion: { _ in })
+            //        self.present(ivc, animated: true, completion: { _ in })
+            self.present(ivc, animated: true, completion: nil)
             
         }
     }
@@ -157,7 +160,7 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
     
     func configuredMailComposeViewController() -> MFMailComposeViewController {
         UINavigationBar.appearance().barTintColor = UIColor(red: 33.0/255.0, green: 93.0/255.0, blue: 125.0/255.0, alpha: 1.0)
-        UINavigationBar.appearance().titleTextAttributes = [NSForegroundColorAttributeName: UIColor(red: 230.0/255.0, green: 224.0/255.0, blue: 221.0/255.0, alpha: 1.0)]
+        UINavigationBar.appearance().titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor(red: 230.0/255.0, green: 224.0/255.0, blue: 221.0/255.0, alpha: 1.0)]
         UINavigationBar.appearance().tintColor = UIColor(red: 230.0/255.0, green: 224.0/255.0, blue: 221.0/255.0, alpha: 1.0)
         
         UIApplication.shared.statusBarStyle = UIStatusBarStyle.lightContent
@@ -167,7 +170,7 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
         
         mailComposerVC.setToRecipients([""])
         mailComposerVC.setSubject("My Tapedup Profile")
-        mailComposerVC.setMessageBody("I am currently \(NSUbiquitousKeyValueStore.default().string(forKey: "tapedupStatus")!) Tapedup Status. My highscore is \(NSUbiquitousKeyValueStore.default().object(forKey: "Highscore")!) and I have tapped \(NSUbiquitousKeyValueStore.default().object(forKey: "totalTaps")!) times. I have played for \(NSUbiquitousKeyValueStore.default().object(forKey: "totalPlayTime")!) secs and played \(NSUbiquitousKeyValueStore.default().double(forKey: "timesPlayed").cleanValue) games. QuickTap is all about tapping quickly, hence the name. With two modes in Singleplayer, 'Time Mode' and 'Highscore Mode' along side AcrossTable Mode and Territorial Mode. Download here: https://itunes.apple.com/us/app/quicktap/id1190851546?mt=8", isHTML: false)
+        mailComposerVC.setMessageBody("I am currently \(NSUbiquitousKeyValueStore.default.string(forKey: "tapedupStatus")!) Tapedup Status. My highscore is \(NSUbiquitousKeyValueStore.default.object(forKey: "Highscore")!) and I have tapped \(NSUbiquitousKeyValueStore.default.object(forKey: "totalTaps")!) times. I have played for \(NSUbiquitousKeyValueStore.default.object(forKey: "totalPlayTime")!) secs and played \(NSUbiquitousKeyValueStore.default.double(forKey: "timesPlayed").cleanValue) games. QuickTap is all about tapping quickly, hence the name. With two modes in Singleplayer, 'Time Mode' and 'Highscore Mode' along side AcrossTable Mode and Territorial Mode. Download here: https://itunes.apple.com/us/app/quicktap/id1190851546?mt=8", isHTML: false)
         
         return mailComposerVC
     }
@@ -226,7 +229,8 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
         let ivc = storyboard.instantiateViewController(withIdentifier: "Start")
         ivc.modalPresentationStyle = .custom
         ivc.modalTransitionStyle = .crossDissolve
-        self.present(ivc, animated: true, completion: { _ in })
+        //        self.present(ivc, animated: true, completion: { _ in })
+        self.present(ivc, animated: true, completion: nil)
     }
     
     @IBOutlet var changeImageView: UIView!
@@ -255,7 +259,7 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
         
         let defaultImage = UIImage(named: "anonymousTapper")
         let imageData = UIImageJPEGRepresentation(defaultImage!, 1.0)
-        NSUbiquitousKeyValueStore.default().set(imageData, forKey: "userAvatar")
+        NSUbiquitousKeyValueStore.default.set(imageData, forKey: "userAvatar")
         
     }
     @IBAction func changeViaCamera(_ sender: Any) {
@@ -301,7 +305,7 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
         imageAvatar.transform = CGAffineTransform.identity
         
         let imageData = UIImageJPEGRepresentation(newAvatar, 1.0)
-        NSUbiquitousKeyValueStore.default().set(imageData, forKey: "userAvatar")
+        NSUbiquitousKeyValueStore.default.set(imageData, forKey: "userAvatar")
         
     }
     
@@ -390,7 +394,7 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
 
         name.setTitle("\(usernameField.text!)", for: UIControlState.normal)
         
-        let usernameDefault = NSUbiquitousKeyValueStore.default()
+        let usernameDefault = NSUbiquitousKeyValueStore.default
         usernameDefault.set(usernameField.text!, forKey: "usernameDefault")
         usernameDefault.synchronize()
     }
@@ -444,7 +448,7 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
         
         whichFunction = 0
         
-        let ageDefault = NSUbiquitousKeyValueStore.default()
+        let ageDefault = NSUbiquitousKeyValueStore.default
         let UD = UserDefaults.standard
         let age = UD.integer(forKey: "ageForRow")
         if (ageDefault.object(forKey: "ageForRow") != nil){
@@ -465,7 +469,7 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
         let row = pickAge.selectedRow(inComponent: 0)
         age.setTitle("\(values[row]) yo", for: UIControlState.normal)
         animateOutA()
-        NSUbiquitousKeyValueStore.default().set(values[row], forKey: "ageForRow")
+        NSUbiquitousKeyValueStore.default.set(values[row], forKey: "ageForRow")
         UserDefaults.standard.set(values[row], forKey: "ageForRow")
     }
     
@@ -704,7 +708,7 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
 
         self.navigationItem.title = "My Tapedup Profile"
         navigationController?.navigationBar.barTintColor = UIColor(red: 33.0/255.0, green: 93.0/255.0, blue: 125.0/255.0, alpha: 1.0)
-        self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor(red: 230.0/255.0, green: 224.0/255.0, blue: 221.0/255.0, alpha: 1.0)]
+        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor(red: 230.0/255.0, green: 224.0/255.0, blue: 221.0/255.0, alpha: 1.0)]
         self.navigationController?.navigationBar.tintColor = UIColor(red: 230.0/255.0, green: 224.0/255.0, blue: 221.0/255.0, alpha: 1.0)
 
         navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
@@ -716,7 +720,7 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
             UserDefaults.standard.set(false, forKey: "userHasTouchIDAuth")
         }
         
-        if let savedUserAvatar = NSUbiquitousKeyValueStore.default().object(forKey: "userAvatar") as? NSData {
+        if let savedUserAvatar = NSUbiquitousKeyValueStore.default.object(forKey: "userAvatar") as? NSData {
             if let image = UIImage(data: savedUserAvatar as Data) {
                 imageAvatar.image = image
 
@@ -752,13 +756,13 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
         okBTN.layer.cornerRadius = 5.0
         okBTN.clipsToBounds = true
         
-        let usernameDefault = NSUbiquitousKeyValueStore.default()
+        let usernameDefault = NSUbiquitousKeyValueStore.default
         if (usernameDefault.object(forKey: "usernameDefault") != nil){
             name.setTitle("\(usernameDefault.object(forKey: "usernameDefault")!)", for: UIControlState.normal)
             usernameField.text = "\(usernameDefault.object(forKey: "usernameDefault")!)"
         }
         
-        let ageDefault = NSUbiquitousKeyValueStore.default()
+        let ageDefault = NSUbiquitousKeyValueStore.default
         if (ageDefault.object(forKey: "ageForRow") != nil){
             age.setTitle("\(ageDefault.object(forKey: "ageForRow")!) yo", for: UIControlState.normal)
         }

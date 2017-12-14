@@ -33,104 +33,104 @@ class GameOverViewController: UIViewController, MFMailComposeViewControllerDeleg
 
         // Do any additional setup after loading the view.
         
-        var timesPlayed = NSUbiquitousKeyValueStore.default().double(forKey: "timesPlayed")
+        var timesPlayed = NSUbiquitousKeyValueStore.default.double(forKey: "timesPlayed")
         
-        if NSUbiquitousKeyValueStore.default().object(forKey: "timesPlayed") == nil {
+        if NSUbiquitousKeyValueStore.default.object(forKey: "timesPlayed") == nil {
             
-            NSUbiquitousKeyValueStore.default().set(1, forKey: "timesPlayed")
+            NSUbiquitousKeyValueStore.default.set(1, forKey: "timesPlayed")
             
         } else {
             timesPlayed += 1
             
-            NSUbiquitousKeyValueStore.default().set(timesPlayed, forKey: "timesPlayed")
+            NSUbiquitousKeyValueStore.default.set(timesPlayed, forKey: "timesPlayed")
         }
         
-        var totalPlayTime = NSUbiquitousKeyValueStore.default().double(forKey: "totalPlayTime")
+        var totalPlayTime = NSUbiquitousKeyValueStore.default.double(forKey: "totalPlayTime")
         
-        if NSUbiquitousKeyValueStore.default().object(forKey: "totalPlayTime") == nil {
+        if NSUbiquitousKeyValueStore.default.object(forKey: "totalPlayTime") == nil {
             
             if ViewController.mode == 1 {
-                NSUbiquitousKeyValueStore.default().set(GameOverViewController.timePlayed, forKey: "totalPlayTime")
+                NSUbiquitousKeyValueStore.default.set(GameOverViewController.timePlayed, forKey: "totalPlayTime")
             } else if ViewController.mode == 0 {
-                NSUbiquitousKeyValueStore.default().set(60, forKey: "totalPlayTime")
+                NSUbiquitousKeyValueStore.default.set(60, forKey: "totalPlayTime")
             } else if ViewController.mode == 2 {
-                NSUbiquitousKeyValueStore.default().set(GameOverViewController.timePlayed, forKey: "totalPlayTime")
+                NSUbiquitousKeyValueStore.default.set(GameOverViewController.timePlayed, forKey: "totalPlayTime")
             } else if ViewController.mode == 3 {
-                NSUbiquitousKeyValueStore.default().set(MultiplayerViewController.timeDurationOfTM, forKey: "totalPlayTime")
+                NSUbiquitousKeyValueStore.default.set(MultiplayerViewController.timeDurationOfTM, forKey: "totalPlayTime")
             }
             
         } else {
             
             if ViewController.mode == 1 {
                 totalPlayTime += GameOverViewController.timePlayed
-                NSUbiquitousKeyValueStore.default().set(totalPlayTime, forKey: "totalPlayTime")
+                NSUbiquitousKeyValueStore.default.set(totalPlayTime, forKey: "totalPlayTime")
             } else if ViewController.mode == 0 {
                 totalPlayTime += 60
-                NSUbiquitousKeyValueStore.default().set(totalPlayTime, forKey: "totalPlayTime")
+                NSUbiquitousKeyValueStore.default.set(totalPlayTime, forKey: "totalPlayTime")
             } else if ViewController.mode == 2 {
                 totalPlayTime += GameOverViewController.timePlayed
-                NSUbiquitousKeyValueStore.default().set(totalPlayTime, forKey: "totalPlayTime")
+                NSUbiquitousKeyValueStore.default.set(totalPlayTime, forKey: "totalPlayTime")
             } else if ViewController.mode == 3 {
                 totalPlayTime += MultiplayerViewController.timeDurationOfTM
-                NSUbiquitousKeyValueStore.default().set(totalPlayTime, forKey: "totalPlayTime")
+                NSUbiquitousKeyValueStore.default.set(totalPlayTime, forKey: "totalPlayTime")
             }
             
         }
         
-        var totalTaps = NSUbiquitousKeyValueStore.default().double(forKey: "totalTaps")
+        var totalTaps = NSUbiquitousKeyValueStore.default.double(forKey: "totalTaps")
         
-        if NSUbiquitousKeyValueStore.default().object(forKey: "totalTaps") == nil {
+        if NSUbiquitousKeyValueStore.default.object(forKey: "totalTaps") == nil {
             
             if ViewController.mode == 1 {
-                NSUbiquitousKeyValueStore.default().set(ViewController.score, forKey: "totalTaps")
+                NSUbiquitousKeyValueStore.default.set(ViewController.score, forKey: "totalTaps")
             } else if ViewController.mode == 0 {
-                NSUbiquitousKeyValueStore.default().set(ViewController.score, forKey: "totalTaps")
+                NSUbiquitousKeyValueStore.default.set(ViewController.score, forKey: "totalTaps")
             } else if ViewController.mode == 2 {
-                NSUbiquitousKeyValueStore.default().set(MultiplayerViewController.whiteScore, forKey: "totalTaps")
+                NSUbiquitousKeyValueStore.default.set(MultiplayerViewController.whiteScore, forKey: "totalTaps")
             } else if ViewController.mode == 3 {
-                NSUbiquitousKeyValueStore.default().set(MultiplayerViewController.timesTapped, forKey: "totalTaps")
+                NSUbiquitousKeyValueStore.default.set(MultiplayerViewController.timesTapped, forKey: "totalTaps")
             }
             
         } else {
             
             if ViewController.mode == 1 {
                 totalTaps += ViewController.score
-                NSUbiquitousKeyValueStore.default().set(totalTaps, forKey: "totalTaps")
+                NSUbiquitousKeyValueStore.default.set(totalTaps, forKey: "totalTaps")
             } else if ViewController.mode == 0 {
                 totalTaps += ViewController.score
-                NSUbiquitousKeyValueStore.default().set(totalTaps, forKey: "totalTaps")
+                NSUbiquitousKeyValueStore.default.set(totalTaps, forKey: "totalTaps")
             } else if ViewController.mode == 2 {
                 totalTaps += MultiplayerViewController.whiteScore
-                NSUbiquitousKeyValueStore.default().set(totalTaps, forKey: "totalTaps")
+                NSUbiquitousKeyValueStore.default.set(totalTaps, forKey: "totalTaps")
             } else if ViewController.mode == 3 {
                 totalTaps += MultiplayerViewController.timesTapped
-                NSUbiquitousKeyValueStore.default().set(totalTaps, forKey: "totalTaps")
+                NSUbiquitousKeyValueStore.default.set(totalTaps, forKey: "totalTaps")
             }
             
         }
 
         
-        if NSUbiquitousKeyValueStore.default().double(forKey: "timesPlayed") >= 25 && NSUbiquitousKeyValueStore.default().double(forKey: "totalPlayTime") >= 600 && NSUbiquitousKeyValueStore.default().double(forKey: "totalTaps") >= 1200 {
+        if NSUbiquitousKeyValueStore.default.double(forKey: "timesPlayed") >= 25 && NSUbiquitousKeyValueStore.default.double(forKey: "totalPlayTime") >= 600 && NSUbiquitousKeyValueStore.default.double(forKey: "totalTaps") >= 1200 {
 
-            let defaults = NSUbiquitousKeyValueStore.default()
+            let defaults = NSUbiquitousKeyValueStore.default
             if defaults.object(forKey: "isFirstGoingAverage") == nil {
                 defaults.set("No", forKey:"isFirstGoingAverage")
                 defaults.synchronize()
                 GameOverViewController.newLevel = true
             }
             
-            NSUbiquitousKeyValueStore.default().set("Average", forKey: "tapedupStatus")
+            NSUbiquitousKeyValueStore.default.set("Average", forKey: "tapedupStatus")
         
-            if NSUbiquitousKeyValueStore.default().double(forKey: "timesPlayed") >= 50 && NSUbiquitousKeyValueStore.default().double(forKey: "totalPlayTime") >= 1200 && NSUbiquitousKeyValueStore.default().double(forKey: "totalTaps") >= 2400 {
+            if NSUbiquitousKeyValueStore.default.double(forKey: "timesPlayed") >= 50 && NSUbiquitousKeyValueStore.default.double(forKey: "totalPlayTime") >= 1200 && NSUbiquitousKeyValueStore.default.double(forKey: "totalTaps") >= 2400 {
                 
-                let defaults = NSUbiquitousKeyValueStore.default()
+                let defaults = NSUbiquitousKeyValueStore.default
                 if defaults.object(forKey: "isFirstGoingMaster") == nil {
                     defaults.set("No", forKey:"isFirstGoingMaster")
                     defaults.synchronize()
                     GameOverViewController.newLevel = true
                 }
                 
-                NSUbiquitousKeyValueStore.default().set("Master", forKey: "tapedupStatus")
+                NSUbiquitousKeyValueStore.default.set("Master", forKey: "tapedupStatus")
             
             }
         }
@@ -150,12 +150,12 @@ class GameOverViewController: UIViewController, MFMailComposeViewControllerDeleg
         
         scoreDisplay.text = "\(ViewController.score)"
         if ViewController.mode == 1 {
-            var timesPlayedTM = NSUbiquitousKeyValueStore.default().double(forKey: "timesPlayedTM")
-            if NSUbiquitousKeyValueStore.default().object(forKey: "timesPlayedTM") == nil {
-                NSUbiquitousKeyValueStore.default().set(1, forKey: "timesPlayedTM")
+            var timesPlayedTM = NSUbiquitousKeyValueStore.default.double(forKey: "timesPlayedTM")
+            if NSUbiquitousKeyValueStore.default.object(forKey: "timesPlayedTM") == nil {
+                NSUbiquitousKeyValueStore.default.set(1, forKey: "timesPlayedTM")
             } else {
                 timesPlayedTM += 1
-                NSUbiquitousKeyValueStore.default().set(timesPlayedTM, forKey: "timesPlayedTM")
+                NSUbiquitousKeyValueStore.default.set(timesPlayedTM, forKey: "timesPlayedTM")
             }
             
             let array = ["Game Over", "Go again!", "Keep going..."]
@@ -164,12 +164,12 @@ class GameOverViewController: UIViewController, MFMailComposeViewControllerDeleg
             highscoreDisplay.text = "\(GameOverViewController.timePlayed) secs"
             gameOver.text = "\(array[randomIndex])"
         } else if ViewController.mode == 0 {
-            var timesPlayedHS = NSUbiquitousKeyValueStore.default().double(forKey: "timesPlayedHS")
-            if NSUbiquitousKeyValueStore.default().object(forKey: "timesPlayedHS") == nil {
-                NSUbiquitousKeyValueStore.default().set(1, forKey: "timesPlayedHS")
+            var timesPlayedHS = NSUbiquitousKeyValueStore.default.double(forKey: "timesPlayedHS")
+            if NSUbiquitousKeyValueStore.default.object(forKey: "timesPlayedHS") == nil {
+                NSUbiquitousKeyValueStore.default.set(1, forKey: "timesPlayedHS")
             } else {
                 timesPlayedHS += 1
-                NSUbiquitousKeyValueStore.default().set(timesPlayedHS, forKey: "timesPlayedHS")
+                NSUbiquitousKeyValueStore.default.set(timesPlayedHS, forKey: "timesPlayedHS")
             }
             
             if ViewController.score < ViewController.highscore {
@@ -180,7 +180,7 @@ class GameOverViewController: UIViewController, MFMailComposeViewControllerDeleg
                 gameOver.text = "\(array[randomIndex])"
             } else {
                 
-                let defaults = NSUbiquitousKeyValueStore.default()
+                let defaults = NSUbiquitousKeyValueStore.default
                 if defaults.object(forKey: "checkDateNewHighscore") == nil {
                     
                     let date = Date()
@@ -213,12 +213,12 @@ class GameOverViewController: UIViewController, MFMailComposeViewControllerDeleg
                 }
             }
         } else if ViewController.mode == 2 {
-            var timesPlayedAT = NSUbiquitousKeyValueStore.default().double(forKey: "timesPlayedAT")
-            if NSUbiquitousKeyValueStore.default().object(forKey: "timesPlayedAT") == nil {
-                NSUbiquitousKeyValueStore.default().set(1, forKey: "timesPlayedAT")
+            var timesPlayedAT = NSUbiquitousKeyValueStore.default.double(forKey: "timesPlayedAT")
+            if NSUbiquitousKeyValueStore.default.object(forKey: "timesPlayedAT") == nil {
+                NSUbiquitousKeyValueStore.default.set(1, forKey: "timesPlayedAT")
             } else {
                 timesPlayedAT += 1
-                NSUbiquitousKeyValueStore.default().set(timesPlayedAT, forKey: "timesPlayedAT")
+                NSUbiquitousKeyValueStore.default.set(timesPlayedAT, forKey: "timesPlayedAT")
             }
             
             if GameOverViewController.multiplayerWinner == 0 {
@@ -251,12 +251,12 @@ class GameOverViewController: UIViewController, MFMailComposeViewControllerDeleg
                 gameOver.text = "\(array[randomIndex])"
             }
         } else if ViewController.mode == 3 {
-            var timesPlayedTRLM = NSUbiquitousKeyValueStore.default().double(forKey: "timesPlayedTRLM")
-            if NSUbiquitousKeyValueStore.default().object(forKey: "timesPlayedTRLM") == nil {
-                NSUbiquitousKeyValueStore.default().set(1, forKey: "timesPlayedTRLM")
+            var timesPlayedTRLM = NSUbiquitousKeyValueStore.default.double(forKey: "timesPlayedTRLM")
+            if NSUbiquitousKeyValueStore.default.object(forKey: "timesPlayedTRLM") == nil {
+                NSUbiquitousKeyValueStore.default.set(1, forKey: "timesPlayedTRLM")
             } else {
                 timesPlayedTRLM += 1
-                NSUbiquitousKeyValueStore.default().set(timesPlayedTRLM, forKey: "timesPlayedTRLM")
+                NSUbiquitousKeyValueStore.default.set(timesPlayedTRLM, forKey: "timesPlayedTRLM")
             }
             
             if GameOverViewController.multiplayerWinner == 0 {
@@ -316,7 +316,7 @@ class GameOverViewController: UIViewController, MFMailComposeViewControllerDeleg
     
     func configuredMailComposeViewController() -> MFMailComposeViewController {
         UINavigationBar.appearance().barTintColor = UIColor(red: 33.0/255.0, green: 93.0/255.0, blue: 125.0/255.0, alpha: 1.0)
-        UINavigationBar.appearance().titleTextAttributes = [NSForegroundColorAttributeName: UIColor(red: 230.0/255.0, green: 224.0/255.0, blue: 221.0/255.0, alpha: 1.0)]
+        UINavigationBar.appearance().titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor(red: 230.0/255.0, green: 224.0/255.0, blue: 221.0/255.0, alpha: 1.0)]
         UINavigationBar.appearance().tintColor = UIColor(red: 230.0/255.0, green: 224.0/255.0, blue: 221.0/255.0, alpha: 1.0)
         
         UIApplication.shared.statusBarStyle = UIStatusBarStyle.lightContent
@@ -405,7 +405,8 @@ class GameOverViewController: UIViewController, MFMailComposeViewControllerDeleg
                 let ivc = storyboard.instantiateViewController(withIdentifier: "Multi")
                 ivc.modalPresentationStyle = .custom
                 ivc.modalTransitionStyle = .crossDissolve
-                self.present(ivc, animated: true, completion: { _ in })
+                //        self.present(ivc, animated: true, completion: { _ in })
+                self.present(ivc, animated: true, completion: nil)
             }
         } else if ViewController.mode == 3 {
             (DispatchQueue.main).async{
@@ -413,7 +414,8 @@ class GameOverViewController: UIViewController, MFMailComposeViewControllerDeleg
                 let ivc = storyboard.instantiateViewController(withIdentifier: "Multi")
                 ivc.modalPresentationStyle = .custom
                 ivc.modalTransitionStyle = .crossDissolve
-                self.present(ivc, animated: true, completion: { _ in })
+                //        self.present(ivc, animated: true, completion: { _ in })
+                self.present(ivc, animated: true, completion: nil)
             }
         } else {
             (DispatchQueue.main).async{
@@ -421,7 +423,8 @@ class GameOverViewController: UIViewController, MFMailComposeViewControllerDeleg
                 let ivc = storyboard.instantiateViewController(withIdentifier: "Initial")
                 ivc.modalPresentationStyle = .custom
                 ivc.modalTransitionStyle = .crossDissolve
-                self.present(ivc, animated: true, completion: { _ in })
+                //        self.present(ivc, animated: true, completion: { _ in })
+                self.present(ivc, animated: true, completion: nil)
             }
         }
     }
@@ -431,7 +434,8 @@ class GameOverViewController: UIViewController, MFMailComposeViewControllerDeleg
             let ivc = storyboard.instantiateViewController(withIdentifier: "Start")
             ivc.modalPresentationStyle = .custom
             ivc.modalTransitionStyle = .crossDissolve
-            self.present(ivc, animated: true, completion: { _ in })
+            //        self.present(ivc, animated: true, completion: { _ in })
+            self.present(ivc, animated: true, completion: nil)
         }
     }
 

@@ -53,7 +53,8 @@ class PlayerNamesViewController: UIViewController, UITextFieldDelegate {
                 let ivc = storyboard.instantiateViewController(withIdentifier: "Multi")
                 ivc.modalPresentationStyle = .custom
                 ivc.modalTransitionStyle = .crossDissolve
-                self.present(ivc, animated: true, completion: { _ in })
+                //        self.present(ivc, animated: true, completion: { _ in })
+                self.present(ivc, animated: true, completion: nil)
             }
             
             if acModeSwitch.isOn == true {
@@ -64,7 +65,8 @@ class PlayerNamesViewController: UIViewController, UITextFieldDelegate {
                 let ivc = storyboard.instantiateViewController(withIdentifier: "Multi")
                 ivc.modalPresentationStyle = .custom
                 ivc.modalTransitionStyle = .crossDissolve
-                self.present(ivc, animated: true, completion: { _ in })
+                //        self.present(ivc, animated: true, completion: { _ in })
+                self.present(ivc, animated: true, completion: nil)
             }
             if trlModeSwitch.isOn == true {
                 MultiplayerViewController.bluePNV = playerOneTF.text!
@@ -74,14 +76,16 @@ class PlayerNamesViewController: UIViewController, UITextFieldDelegate {
                 let ivc = storyboard.instantiateViewController(withIdentifier: "Multi")
                 ivc.modalPresentationStyle = .custom
                 ivc.modalTransitionStyle = .crossDissolve
-                self.present(ivc, animated: true, completion: { _ in })
+                //        self.present(ivc, animated: true, completion: { _ in })
+                self.present(ivc, animated: true, completion: nil)
             }
             
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let ivc = storyboard.instantiateViewController(withIdentifier: "Multi")
             ivc.modalPresentationStyle = .custom
             ivc.modalTransitionStyle = .crossDissolve
-            self.present(ivc, animated: true, completion: { _ in })
+            //        self.present(ivc, animated: true, completion: { _ in })
+            self.present(ivc, animated: true, completion: nil)
         }
 
     }
@@ -90,7 +94,8 @@ class PlayerNamesViewController: UIViewController, UITextFieldDelegate {
         let ivc = storyboard.instantiateViewController(withIdentifier: "Start")
         ivc.modalPresentationStyle = .custom
         ivc.modalTransitionStyle = .crossDissolve
-        self.present(ivc, animated: true, completion: { _ in })
+        //        self.present(ivc, animated: true, completion: { _ in })
+        self.present(ivc, animated: true, completion: nil)
     }
     
     @IBOutlet weak var backBTN: UIButton!
@@ -292,7 +297,7 @@ class PlayerNamesViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var playerOneTF: UITextField!
     @IBOutlet weak var playerTwoTF: UITextField!
     
-    func changed() {
+    @objc func changed() {
         if playerOneTF.text?.isEmpty == false {
             MultiplayerViewController.brownPNV = playerOneTF.text!
             let playerOneDefault = UserDefaults.standard
@@ -404,7 +409,8 @@ class PlayerNamesViewController: UIViewController, UITextFieldDelegate {
                     let ivc = storyboard.instantiateViewController(withIdentifier: "Multi")
                     ivc.modalPresentationStyle = .custom
                     ivc.modalTransitionStyle = .crossDissolve
-                    self.present(ivc, animated: true, completion: { _ in })
+                    //        self.present(ivc, animated: true, completion: { _ in })
+                    self.present(ivc, animated: true, completion: nil)
                 }
                 if trlModeSwitch.isOn == true {
                     MultiplayerViewController.bluePNV = playerOneTF.text!
@@ -414,14 +420,16 @@ class PlayerNamesViewController: UIViewController, UITextFieldDelegate {
                     let ivc = storyboard.instantiateViewController(withIdentifier: "Multi")
                     ivc.modalPresentationStyle = .custom
                     ivc.modalTransitionStyle = .crossDissolve
-                    self.present(ivc, animated: true, completion: { _ in })
+                    //        self.present(ivc, animated: true, completion: { _ in })
+                    self.present(ivc, animated: true, completion: nil)
                 }
                 
                 let storyboard = UIStoryboard(name: "Main", bundle: nil)
                 let ivc = storyboard.instantiateViewController(withIdentifier: "Multi")
                 ivc.modalPresentationStyle = .custom
                 ivc.modalTransitionStyle = .crossDissolve
-                self.present(ivc, animated: true, completion: { _ in })
+                //        self.present(ivc, animated: true, completion: { _ in })
+                self.present(ivc, animated: true, completion: nil)
             }
 
         }

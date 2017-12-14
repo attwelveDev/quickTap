@@ -58,7 +58,7 @@ class MoreFromDeveloperTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
         if section == 0 {
-            return "TempConv is the simplest temperature converter you will ever find on the App Store yet allows you to convert from Celsius, Fahrenheit and Kelvin with one swipe, no text-fields or complicated things so hard to explain..."
+            return "TempConv the only temperature converter ever to be found on the App Store that combines a sleek design, simplicity and a friendly user-experience together..."
         }
         return ""
     }
@@ -94,7 +94,7 @@ class MoreFromDeveloperTableViewController: UITableViewController {
         
         self.navigationItem.title = "More from the Developer"
         navigationController?.navigationBar.barTintColor = UIColor(red: 33.0/255.0, green: 93.0/255.0, blue: 125.0/255.0, alpha: 1.0)
-        self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor(red: 230.0/255.0, green: 224.0/255.0, blue: 221.0/255.0, alpha: 1.0)]
+        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor(red: 230.0/255.0, green: 224.0/255.0, blue: 221.0/255.0, alpha: 1.0)]
         self.navigationController?.navigationBar.tintColor = UIColor(red: 230.0/255.0, green: 224.0/255.0, blue: 221.0/255.0, alpha: 1.0)
         
         tableContent.backgroundColor = UIColor(red: 33.0/255.0, green: 93.0/255.0, blue: 125.0/255.0, alpha: 1.0)
@@ -119,7 +119,8 @@ class MoreFromDeveloperTableViewController: UITableViewController {
         let ivc = storyboard.instantiateViewController(withIdentifier: "More")
         ivc.modalPresentationStyle = .custom
         ivc.modalTransitionStyle = .crossDissolve
-        self.present(ivc, animated: true, completion: { _ in })
+        //        self.present(ivc, animated: true, completion: { _ in })
+        self.present(ivc, animated: true, completion: nil)
     }
     
     /*
