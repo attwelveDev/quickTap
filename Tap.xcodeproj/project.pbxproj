@@ -205,11 +205,11 @@
 			children = (
 				040B10D91FE0E2F700B421A4 /* QuickTapWE Extension.entitlements */,
 				04A6B9891FDE8B8800EF6DFF /* InterfaceController.swift */,
+				04A6B98B1FDE8B8800EF6DFF /* ExtensionDelegate.swift */,
 				04A6B99B1FDE97C100EF6DFF /* TimeModeInterfaceController.swift */,
 				04A6B99D1FDE97D900EF6DFF /* HighscoreModeInterfaceController.swift */,
 				049DC34B1FDF516B00A5C2EF /* GameplayInterfaceController.swift */,
 				049DC34D1FDF832E00A5C2EF /* GameOverInterfaceController.swift */,
-				04A6B98B1FDE8B8800EF6DFF /* ExtensionDelegate.swift */,
 				04A6B98D1FDE8B8800EF6DFF /* Assets.xcassets */,
 				04A6B98F1FDE8B8800EF6DFF /* Info.plist */,
 			);
