@@ -25,7 +25,7 @@ class MoreTableViewController: UITableViewController, SFSafariViewControllerDele
     
     let share = [
         ("Rate & Review"),
-        ("Share via Mail")
+        ("Share QuickTap")
     ]
     
     let about = [
@@ -34,9 +34,12 @@ class MoreTableViewController: UITableViewController, SFSafariViewControllerDele
         ("More from the Developer"),
         ("About")
     ]
+    let settings = [
+        ("Settings")
+    ]
     
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return 3
+        return 4
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -44,8 +47,10 @@ class MoreTableViewController: UITableViewController, SFSafariViewControllerDele
             return version.count
         } else if section == 1 {
             return share.count
-        } else {
+        } else if section == 2 {
             return about.count
+        } else {
+            return settings.count
         }
     }
     
@@ -62,6 +67,9 @@ class MoreTableViewController: UITableViewController, SFSafariViewControllerDele
         } else if indexPath.section == 2 {
             let (aboutName) = about[indexPath.row]
             cell.textLabel?.text = aboutName
+        } else if indexPath.section == 3 {
+            let (settingsName) = settings[indexPath.row]
+            cell.textLabel?.text = settingsName
         }
         
         return cell
@@ -72,8 +80,10 @@ class MoreTableViewController: UITableViewController, SFSafariViewControllerDele
             return "Version and Build"
         } else if section == 1 {
             return "Share"
-        } else {
+        } else if section == 2 {
             return "About"
+        } else {
+            return "Settings"
         }
     }
     
@@ -108,7 +118,9 @@ class MoreTableViewController: UITableViewController, SFSafariViewControllerDele
         } else if (indexPath.section == 1 && indexPath.row == 1) {
             let mailComposeViewController = configuredMailComposeViewController()
             if MFMailComposeViewController.canSendMail() {
-                self.present(mailComposeViewController, animated: true, completion: nil)
+                self.present(mailComposeViewController, animated: true, completion: {
+                    UIApplication.shared.statusBarStyle = UIStatusBarStyle.lightContent
+                })
             } else {
                 self.showSendMailErrorAlert()
             }
@@ -167,9 +179,20 @@ class MoreTableViewController: UITableViewController, SFSafariViewControllerDele
             self.present(ivc, animated: true, completion: nil)
             
             tableView.deselectRow(at: indexPath, animated: true)
+        } else if (indexPath.section == 3 && indexPath.row == 0) {
+            
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let ivc = storyboard.instantiateViewController(withIdentifier: "settings")
+            ivc.modalPresentationStyle = .custom
+            ivc.modalTransitionStyle = .crossDissolve
+            //        self.present(ivc, animated: true, completion: { _ in })
+            self.present(ivc, animated: true, completion: nil)
+            
+            tableView.deselectRow(at: indexPath, animated: true)
         }
         
     }
+
     
     func configuredMailComposeViewController() -> MFMailComposeViewController {
         UINavigationBar.appearance().barTintColor = UIColor(red: 33.0/255.0, green: 93.0/255.0, blue: 125.0/255.0, alpha: 1.0)
@@ -183,7 +206,7 @@ class MoreTableViewController: UITableViewController, SFSafariViewControllerDele
         
         mailComposerVC.setToRecipients([""])
         mailComposerVC.setSubject("Download QuickTap!")
-        mailComposerVC.setMessageBody("Hello! I love QuickTap and I think you should check it out! QuickTap is all about tapping quickly, hence the name. With two modes in Singleplayer, 'Time Mode' and 'Highscore Mode' along side AcrossTable Mode and Territorial Mode. You'll always be engaged because of the huge range of choices. Download here: https://itunes.apple.com/us/app/quicktap/id1190851546?mt=8", isHTML: false)
+        mailComposerVC.setMessageBody("Hello! I love QuickTap and I think you should check it out! \n\nQuickTap is all about tapping quickly, hence the name. With two modes in Singleplayer, 'Time Mode' and 'Highscore Mode' sit along side Multiplayer's two modes: AcrossTable Mode and Territorial Mode. When you've become too tired, jump over to Tapedup World to check out other Tapedupers. You'll always be engaged because of the huge range of choices. Download here: https://itunes.apple.com/us/app/quicktap/id1190851546?mt=8", isHTML: false)
         
         return mailComposerVC
     }
@@ -209,7 +232,7 @@ class MoreTableViewController: UITableViewController, SFSafariViewControllerDele
     var visualEffectView: UIVisualEffectView!
     func animateIn() {
         self.view.addSubview(versionView)
-        versionView.center = self.view.center
+        versionView.center = CGPoint(x: self.view.center.x, y: self.view.center.y - (self.navigationController?.navigationBar.frame.height)!)
         
         versionView.transform = CGAffineTransform.init(scaleX: 1.3, y: 1.3)
         versionView.alpha = 0
@@ -235,7 +258,7 @@ class MoreTableViewController: UITableViewController, SFSafariViewControllerDele
     
     func animateIn2() {
         self.view.addSubview(mailErrorView)
-        mailErrorView.center = self.view.center
+        mailErrorView.center = CGPoint(x: self.view.center.x, y: self.view.center.y - (self.navigationController?.navigationBar.frame.height)!)
         
         mailErrorView.transform = CGAffineTransform.init(scaleX: 1.3, y: 1.3)
         mailErrorView.alpha = 0
@@ -280,16 +303,26 @@ class MoreTableViewController: UITableViewController, SFSafariViewControllerDele
         navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
         navigationController?.navigationBar.shadowImage = UIImage()
 
-        versionLabel.layer.cornerRadius = 5.0
+        versionLabel.layer.cornerRadius = 10.0
         versionLabel.clipsToBounds = true
-        dismissLabel.layer.cornerRadius = 5.0
+        dismissLabel.layer.cornerRadius = 10.0
         dismissLabel.clipsToBounds = true
-        versionView.layer.cornerRadius = 5.0
+        versionView.layer.cornerRadius = 10.0
         versionView.clipsToBounds = true
+        versionView.layer.shadowColor = UIColor.black.cgColor
+        versionView.layer.shadowOpacity = 1
+        versionView.layer.shadowOffset = CGSize.zero
+        versionView.layer.shadowRadius = 10
+        versionView.layer.shadowPath = UIBezierPath(rect: versionView.bounds).cgPath
         
-        mailErrorView.layer.cornerRadius = 5.0
+        mailErrorView.layer.shadowColor = UIColor.black.cgColor
+        mailErrorView.layer.shadowOpacity = 1
+        mailErrorView.layer.shadowOffset = CGSize.zero
+        mailErrorView.layer.shadowRadius = 10
+        mailErrorView.layer.shadowPath = UIBezierPath(rect: mailErrorView.bounds).cgPath
+        mailErrorView.layer.cornerRadius = 10.0
         mailErrorView.clipsToBounds = true
-        dismissBTN.layer.cornerRadius = 5.0
+        dismissBTN.layer.cornerRadius = 10.0
         dismissBTN.clipsToBounds = true
     
         if (tableContent.contentSize.height < tableContent.frame.size.height) {

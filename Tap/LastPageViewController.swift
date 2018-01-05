@@ -24,7 +24,7 @@ class LastPageViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        BTN.layer.cornerRadius = 5.0
+        BTN.layer.cornerRadius = 10.0
         BTN.clipsToBounds = true
         
         // Do any additional setup after loading the view.

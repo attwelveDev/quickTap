@@ -7,7 +7,10 @@
 //
 
 import UIKit
-import WatchConnectivity
+import Firebase
+import FirebaseAuth
+import FirebaseDatabase
+//import WatchConnectivity
 
 extension Float {
     var cleanValue: String {
@@ -15,23 +18,23 @@ extension Float {
     }
 }
 
-class ViewController: UIViewController, WCSessionDelegate {
-    
-    @available(iOS 9.3, *)
-    func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
-        
-    }
-    
-    func sessionDidBecomeInactive(_ session: WCSession) {
 
-    }
-    
-    func sessionDidDeactivate(_ session: WCSession) {
 
-    }
+class ViewController: UIViewController {
     
+//    @available(iOS 9.3, *)
+//    func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
+//
+//    }
+//    
+//    func sessionDidBecomeInactive(_ session: WCSession) {
+//
+//    }
+//
+//    func sessionDidDeactivate(_ session: WCSession) {
+//
+//    }
     
-    @IBOutlet weak var timeRemain: UILabel!
     @IBOutlet weak var score: UILabel!
     @IBOutlet weak var scoreDisplay: UILabel!
 
@@ -48,11 +51,13 @@ class ViewController: UIViewController, WCSessionDelegate {
     @IBOutlet weak var hsSwitch: UISwitch!
     @IBOutlet weak var highscoreDisplay: UILabel!
     
+    @IBOutlet weak var tmStack: UIStackView!
     @IBOutlet weak var tmLooks: UILabel!
     @IBOutlet weak var tapLooks: UILabel!
     @IBOutlet weak var valueLooks: UILabel!
     @IBOutlet weak var secLooks: UILabel!
     
+    @IBOutlet weak var hsStack: UIStackView!
     @IBOutlet weak var hsLooks: UILabel!
     @IBOutlet weak var beatLooks: UILabel!
     @IBOutlet weak var highLooks: UILabel!
@@ -62,6 +67,7 @@ class ViewController: UIViewController, WCSessionDelegate {
     @IBOutlet weak var startLooks: UIButton!
     
     @IBOutlet weak var countdownToEndStack: UIStackView!
+    @IBOutlet weak var highscoreStack: UIStackView!
     
     @IBOutlet var pickView: UIView!
     
@@ -76,8 +82,7 @@ class ViewController: UIViewController, WCSessionDelegate {
             UserDefaults.standard.set(timeSwitch.isOn, forKey: "timeSwitchState")
             UserDefaults.standard.set(hsSwitch.isOn, forKey: "hsSwitchState")
             ViewController.mode = 1
-            hs.isHidden = true
-            highscoreLabel.isHidden = true
+            highscoreStack.isHidden = true
             hsLooks.textColor = UIColor.lightText
             beatLooks.textColor = UIColor.lightText
             highLooks.textColor = UIColor.lightText
@@ -92,10 +97,8 @@ class ViewController: UIViewController, WCSessionDelegate {
             UserDefaults.standard.set(timeSwitch.isOn, forKey: "timeSwitchState")
             UserDefaults.standard.set(hsSwitch.isOn, forKey: "hsSwitchState")
             ViewController.mode = 0
-            hs.isHidden = false
-            hs.alpha = 0.0
-            highscoreLabel.isHidden = false
-            highscoreLabel.alpha = 0.0
+            highscoreStack.isHidden = false
+            highscoreStack.alpha = 0
             tmLooks.textColor = UIColor.lightText
             hsLooks.textColor = UIColor(red: 230.0/255.0, green: 224.0/255.0, blue: 221.0/255.0, alpha: 1.0)
             beatLooks.textColor = UIColor(red: 230.0/255.0, green: 224.0/255.0, blue: 221.0/255.0, alpha: 1.0)
@@ -113,10 +116,8 @@ class ViewController: UIViewController, WCSessionDelegate {
             UserDefaults.standard.set(timeSwitch.isOn, forKey: "timeSwitchState")
             UserDefaults.standard.set(hsSwitch.isOn, forKey: "hsSwitchState")
             ViewController.mode = 0
-            hs.isHidden = false
-            hs.alpha = 0.0
-            highscoreLabel.isHidden = false
-            highscoreLabel.alpha = 0.0
+            highscoreStack.isHidden = false
+            highscoreStack.alpha = 0
             hsLooks.textColor = UIColor(red: 230.0/255.0, green: 224.0/255.0, blue: 221.0/255.0, alpha: 1.0)
             beatLooks.textColor = UIColor(red: 230.0/255.0, green: 224.0/255.0, blue: 221.0/255.0, alpha: 1.0)
             highLooks.textColor = UIColor(red: 230.0/255.0, green: 224.0/255.0, blue: 221.0/255.0, alpha: 1.0)
@@ -131,8 +132,7 @@ class ViewController: UIViewController, WCSessionDelegate {
             UserDefaults.standard.set(timeSwitch.isOn, forKey: "timeSwitchState")
             UserDefaults.standard.set(hsSwitch.isOn, forKey: "hsSwitchState")
             ViewController.mode = 1
-            hs.isHidden = true
-            highscoreLabel.isHidden = true
+            highscoreStack.isHidden = true
             hsLooks.textColor = UIColor.lightText
             beatLooks.textColor = UIColor.lightText
             highLooks.textColor = UIColor.lightText
@@ -182,13 +182,12 @@ class ViewController: UIViewController, WCSessionDelegate {
     @IBAction func startGame(_ sender: Any) {
 
         animateOut()
+        
+        stackView.removeFromSuperview()
+        
         self.score.isHidden = false
         self.scoreDisplay.isHidden = false
         self.countdownToEndStack.isHidden = false
-        if self.hsSwitch.isOn == true {
-            self.hs.isHidden = false
-            self.highscoreLabel.isHidden = false
-        }
         
         if slider.value == 60 && UserDefaults.standard.value(forKey: "valueTextValue") == nil {
             print("Passed")
@@ -206,19 +205,26 @@ class ViewController: UIViewController, WCSessionDelegate {
         
         _ = Timer.scheduledTimer(timeInterval: TimeInterval(interval), target: self, selector: #selector(ViewController.update), userInfo: nil, repeats: true)
         tapBTN.isUserInteractionEnabled = true
-        timeRemain.text = "Time Remaining"
-        
-        if hsSwitch.isOn == true {
-            ViewController.mode = 0
-            time = 60
-            countdown.text = "60 secs"
-            countdown.textColor = UIColor(red: 230.0/255.0, green: 224.0/255.0, blue: 221.0/255.0, alpha: 1.0)
 
-            
-            hs.isHidden = false
-            hs.alpha = 1.0
-            highscoreLabel.isHidden = false
-            highscoreLabel.alpha = 1.0
+        if Auth.auth().currentUser == nil {
+            ViewController.mode = 1
+        } else {
+        
+            if hsSwitch.isOn == true {
+                ViewController.mode = 0
+                time = 60
+                countdown.text = "60 secs"
+                countdown.textColor = UIColor(red: 230.0/255.0, green: 224.0/255.0, blue: 221.0/255.0, alpha: 1.0)
+
+                highscoreStack.isHidden = false
+                highscoreStack.alpha = 1
+                
+                
+                if self.hsSwitch.isOn == true {
+                    highscoreStack.isHidden = false
+                    highscoreStack.alpha = 1
+                }
+            }
             
         }
         
@@ -241,6 +247,8 @@ class ViewController: UIViewController, WCSessionDelegate {
     static var highscore: Double = 0
     
     @IBOutlet var playView: UIView!
+    
+    var stackView = UIStackView()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -293,104 +301,194 @@ class ViewController: UIViewController, WCSessionDelegate {
         pickView.layer.shadowRadius = 10
         pickView.layer.shadowPath = UIBezierPath(rect: pickView.bounds).cgPath
         
-        pickView.layer.cornerRadius = 5.0
+        pickView.layer.cornerRadius = 10.0
         
         score.isHidden = true
         scoreDisplay.isHidden = true
         countdownToEndStack.isHidden = true
-        hs.isHidden = true
-        highscoreLabel.isHidden = true
-        
-        hsSwitch.setOn(false, animated: false)
-        hsLooks.textColor = UIColor.lightText
-        beatLooks.textColor = UIColor.lightText
-        highLooks.textColor = UIColor.lightText
-        inLooks.textColor = UIColor.lightText
-        
-        let highscoreDefault = NSUbiquitousKeyValueStore.default
-        if (highscoreDefault.object(forKey: "Highscore") != nil){
-            ViewController.highscore = highscoreDefault.object(forKey: "Highscore") as! Double!
-            highscoreDisplay.text = "\((ViewController.highscore).cleanValue)"
-        }
-        
-        hsSwitch.isOn = UserDefaults.standard.bool(forKey: "hsSwitchState")
-        timeSwitch.isOn = UserDefaults.standard.bool(forKey: "timeSwitchState")
-        
-        if UserDefaults.standard.value(forKey: "hsSwitchState") == nil {
-            (DispatchQueue.main).async{
-                self.timeSwitch.setOn(true, animated: false)
-                self.hsSwitch.setOn(false, animated: false)
-            }
-            UserDefaults.standard.set(timeSwitch.isOn, forKey: "timeSwitchState")
-            UserDefaults.standard.set(hsSwitch.isOn, forKey: "hsSwitchState")
-            ViewController.mode = 1
-            hs.isHidden = true
-            highscoreLabel.isHidden = true
-            hsLooks.textColor = UIColor.lightText
-            beatLooks.textColor = UIColor.lightText
-            highLooks.textColor = UIColor.lightText
-            inLooks.textColor = UIColor.lightText
-            slider.isUserInteractionEnabled = true
-            tmLooks.textColor = UIColor(red: 230.0/255.0, green: 224.0/255.0, blue: 221.0/255.0, alpha: 1.0)
-            tapLooks.textColor = UIColor(red: 230.0/255.0, green: 224.0/255.0, blue: 221.0/255.0, alpha: 1.0)
-            valueLooks.textColor = UIColor(red: 230.0/255.0, green: 224.0/255.0, blue: 221.0/255.0, alpha: 1.0)
-            secLooks.textColor = UIColor(red: 230.0/255.0, green: 224.0/255.0, blue: 221.0/255.0, alpha: 1.0)
-        }
-        
-        if timeSwitch.isOn == true {
-            time = UserDefaults.standard.integer(forKey: "valueTextValue")
-            ViewController.mode = 1
-            hs.isHidden = true
-            highscoreLabel.isHidden = true
-            hsLooks.textColor = UIColor.lightText
-            beatLooks.textColor = UIColor.lightText
-            highLooks.textColor = UIColor.lightText
-            inLooks.textColor = UIColor.lightText
-            slider.isUserInteractionEnabled = true
-            tmLooks.textColor = UIColor.white
-            tapLooks.textColor = UIColor.white
-            valueLooks.textColor = UIColor.white
-            secLooks.textColor = UIColor.white
-
-        } else if hsSwitch.isOn == true {
-            ViewController.mode = 0
-            hs.isHidden = false
-            hs.alpha = 0.0
-            highscoreLabel.isHidden = false
-            highscoreLabel.alpha = 0.0
-            hsLooks.textColor = UIColor.white
-            beatLooks.textColor = UIColor.white
-            highLooks.textColor = UIColor.white
-            inLooks.textColor = UIColor.white
-            tmLooks.textColor = UIColor.lightText
-            tapLooks.textColor = UIColor.lightText
-            valueLooks.textColor = UIColor.lightText
-            secLooks.textColor = UIColor.lightText
-            slider.isUserInteractionEnabled = false
-            time = 60
-            hs.text = "Highscore"
-            
-            let highscoreDefault = NSUbiquitousKeyValueStore.default
-            if (highscoreDefault.object(forKey: "Highscore") != nil){
-                ViewController.highscore = highscoreDefault.object(forKey: "Highscore") as! Double!
-                highscoreLabel.text = "\((ViewController.highscore).cleanValue)"
-            }
-        }
+        highscoreStack.isHidden = true
         
         ViewController.score = 0
-        scoreLabel.text = "\(ViewController.score)"
+        scoreLabel.text = "\(ViewController.score.cleanValue)"
         
         tapBTN.isUserInteractionEnabled = false
         
         interval = 1
         
-        processApplicationContext()
+        if Auth.auth().currentUser != nil {
         
-        if WCSession.isSupported() {
-            session = WCSession.default
-            session?.delegate = self
-            session?.activate()
+            hsSwitch.setOn(false, animated: false)
+            hsLooks.textColor = UIColor.lightText
+            beatLooks.textColor = UIColor.lightText
+            highLooks.textColor = UIColor.lightText
+            inLooks.textColor = UIColor.lightText
+            
+            hsSwitch.isOn = UserDefaults.standard.bool(forKey: "hsSwitchState")
+            timeSwitch.isOn = UserDefaults.standard.bool(forKey: "timeSwitchState")
+            
+            if UserDefaults.standard.value(forKey: "hsSwitchState") == nil {
+                (DispatchQueue.main).async{
+                    self.timeSwitch.setOn(true, animated: false)
+                    self.hsSwitch.setOn(false, animated: false)
+                }
+                UserDefaults.standard.set(timeSwitch.isOn, forKey: "timeSwitchState")
+                UserDefaults.standard.set(hsSwitch.isOn, forKey: "hsSwitchState")
+                ViewController.mode = 1
+                highscoreStack.isHidden = true
+                hsLooks.textColor = UIColor.lightText
+                beatLooks.textColor = UIColor.lightText
+                highLooks.textColor = UIColor.lightText
+                inLooks.textColor = UIColor.lightText
+                slider.isUserInteractionEnabled = true
+                tmLooks.textColor = UIColor(red: 230.0/255.0, green: 224.0/255.0, blue: 221.0/255.0, alpha: 1.0)
+                tapLooks.textColor = UIColor(red: 230.0/255.0, green: 224.0/255.0, blue: 221.0/255.0, alpha: 1.0)
+                valueLooks.textColor = UIColor(red: 230.0/255.0, green: 224.0/255.0, blue: 221.0/255.0, alpha: 1.0)
+                secLooks.textColor = UIColor(red: 230.0/255.0, green: 224.0/255.0, blue: 221.0/255.0, alpha: 1.0)
+            }
+            
+            if timeSwitch.isOn == true {
+                time = UserDefaults.standard.integer(forKey: "valueTextValue")
+                ViewController.mode = 1
+                highscoreStack.isHidden = true
+                hsLooks.textColor = UIColor.lightText
+                beatLooks.textColor = UIColor.lightText
+                highLooks.textColor = UIColor.lightText
+                inLooks.textColor = UIColor.lightText
+                slider.isUserInteractionEnabled = true
+                tmLooks.textColor = UIColor.white
+                tapLooks.textColor = UIColor.white
+                valueLooks.textColor = UIColor.white
+                secLooks.textColor = UIColor.white
+                
+            } else if hsSwitch.isOn == true {
+                ViewController.mode = 0
+                highscoreStack.isHidden = false
+                highscoreStack.alpha = 0
+                hsLooks.textColor = UIColor.white
+                beatLooks.textColor = UIColor.white
+                highLooks.textColor = UIColor.white
+                inLooks.textColor = UIColor.white
+                tmLooks.textColor = UIColor.lightText
+                tapLooks.textColor = UIColor.lightText
+                valueLooks.textColor = UIColor.lightText
+                secLooks.textColor = UIColor.lightText
+                slider.isUserInteractionEnabled = false
+                time = 60
+                hs.text = "Highscore"
+            }
+            
+            let userID = Auth.auth().currentUser?.uid
+            Database.database().reference().child("users").child(userID!).observeSingleEvent(of: .value, with: { (snapshot) in
+                if let value = snapshot.value as? NSDictionary {
+                    
+                    let Highscore = value["Highscore"] as? Int
+                    NSUbiquitousKeyValueStore.default.set(Highscore, forKey: "Highscore")
+                    
+                    let highscoreDefault = NSUbiquitousKeyValueStore.default
+                    if (highscoreDefault.object(forKey: "Highscore") != nil){
+                        ViewController.highscore = highscoreDefault.object(forKey: "Highscore") as! Double!
+                        self.highscoreDisplay.text = "\(String(describing: Highscore!))"
+                    }
+                    
+                    if self.hsSwitch.isOn == true {
+                        
+                        if (highscoreDefault.object(forKey: "Highscore") != nil){
+                            ViewController.highscore = highscoreDefault.object(forKey: "Highscore") as! Double!
+                            self.highscoreLabel.text = "\(String(describing: Highscore!))"
+                        }
+                        
+                    }
+                
+                } else {
+                    let highscoreDefault = NSUbiquitousKeyValueStore.default
+                    if (highscoreDefault.object(forKey: "Highscore") != nil){
+                        ViewController.highscore = highscoreDefault.object(forKey: "Highscore") as! Double!
+                        self.highscoreDisplay.text = "\(ViewController.highscore.cleanValue)"
+                    }
+                    
+                    if self.hsSwitch.isOn == true {
+                        
+                        if (highscoreDefault.object(forKey: "Highscore") != nil){
+                            ViewController.highscore = highscoreDefault.object(forKey: "Highscore") as! Double!
+                            self.highscoreLabel.text = "\(ViewController.highscore.cleanValue)"
+                        }
+                        
+                    }
+                }
+                
+            }) { (error) in
+                let highscoreDefault = NSUbiquitousKeyValueStore.default
+                if (highscoreDefault.object(forKey: "Highscore") != nil){
+                    ViewController.highscore = highscoreDefault.object(forKey: "Highscore") as! Double!
+                    self.highscoreDisplay.text = "\(ViewController.highscore.cleanValue)"
+                }
+                
+                if self.hsSwitch.isOn == true {
+                    
+                    if (highscoreDefault.object(forKey: "Highscore") != nil){
+                        ViewController.highscore = highscoreDefault.object(forKey: "Highscore") as! Double!
+                        self.highscoreLabel.text = "\(ViewController.highscore.cleanValue)"
+                    }
+                    
+                }
+            }
+            
+        } else {
+            ViewController.mode = 1
+            
+            timeSwitch.isHidden = true
+            hsSwitch.isHidden = true
+            highLooks.isHidden = true
+            inLooks.isHidden = true
+            
+            hsLooks.textColor = .lightText
+            beatLooks.textColor = .lightText
+            
+            beatLooks.text = "Login to play"
+            
+            highscoreStack.isHidden = true
+            
+            let combinedHeight = tmLooks.frame.height + slider.frame.height + tmStack.frame.height + hsLooks.frame.height + beatLooks.frame.height + 20
+            
+            stackView = UIStackView(frame: CGRect(x: 0, y: 0, width: pickView.frame.width, height: combinedHeight))
+            
+            stackView.axis = .vertical
+            stackView.distribution = .fill
+            stackView.alignment = .center
+            stackView.spacing = 5.0
+            
+            stackView.addArrangedSubview(tmLooks)
+            stackView.addArrangedSubview(slider)
+            stackView.addArrangedSubview(tmStack)
+            stackView.addArrangedSubview(hsLooks)
+            stackView.addArrangedSubview(beatLooks)
+            
+            self.view.addSubview(stackView)
+            
+            stackView.center = pickView.center
+            
+            
+            
         }
+        //When Watch is Ready
+        
+//        processApplicationContext()
+//
+//        if WCSession.isSupported() {
+//            session = WCSession.default
+//            session?.delegate = self
+//            session?.activate()
+//        }
+//
+//        if let validSession = session {
+//            let iPhoneAppContext = ["highscore": ViewController.highscore.cleanValue]
+//
+//            do {
+//                try validSession.updateApplicationContext(iPhoneAppContext)
+//            } catch {
+//                print("error.")
+//            }
+//        }
 
     }
 
@@ -417,10 +515,11 @@ class ViewController: UIViewController, WCSessionDelegate {
         if(time < 11) {
             countdown.textColor = UIColor.red
         }
-        if(time <= 1) {
+        if(time == 1) {
             countdown.text = "\(time) sec"
         }
         if time == 0 {
+            countdown.text = "\(time) secs"
             (DispatchQueue.main).async{
                 let storyboard = UIStoryboard(name: "Main", bundle: nil)
                 let ivc = storyboard.instantiateViewController(withIdentifier: "GameOver")
@@ -432,33 +531,41 @@ class ViewController: UIViewController, WCSessionDelegate {
             }
         }
     }
-    
-    var session: WCSession?
-    let session2 = WCSession.default
-    
-    func session(_ session: WCSession, didReceiveApplicationContext applicationContext: [String : Any]) {
-        DispatchQueue.main.async() {
-            self.processApplicationContext()
-        }
-    }
-    
-    func processApplicationContext() {
-        if let watchContext = session2.receivedApplicationContext as? [String : Double] {
-            if watchContext["highscore"] != nil {
-                highscoreLabel.text = (String(describing: watchContext["highscore"]!.cleanValue))
-                highscoreDisplay.text = (String(describing: watchContext["highscore"]!.cleanValue))
-                
-                let storedHighscore = Int(watchContext["highscore"]!.cleanValue)!
-                ViewController.highscore = Double(storedHighscore)
-                
-                let highscoreDefault = NSUbiquitousKeyValueStore.default
-                highscoreDefault.set(storedHighscore, forKey: "Highscore")
-                highscoreDefault.synchronize()
-            }
-        }
-    }
+//When watch is ready
+//    var session: WCSession?
+//    let session2 = WCSession.default
+//
+//    func session(_ session: WCSession, didReceiveApplicationContext applicationContext: [String : Any]) {
+//        DispatchQueue.main.async() {
+//            self.processApplicationContext()
+//        }
+//    }
+//
+//    func processApplicationContext() {
+//        if let watchContext = session2.receivedApplicationContext as? [String : Double] {
+//            if watchContext["highscore"] != nil {
+//                highscoreLabel.text = (String(describing: watchContext["highscore"]!.cleanValue))
+//                highscoreDisplay.text = (String(describing: watchContext["highscore"]!.cleanValue))
+//
+//                let storedHighscore = Int(watchContext["highscore"]!.cleanValue)!
+//                ViewController.highscore = Double(storedHighscore)
+//
+//                let highscoreDefault = NSUbiquitousKeyValueStore.default
+//                highscoreDefault.set(storedHighscore, forKey: "Highscore")
+//                highscoreDefault.synchronize()
+//            }
+//        }
+//    }
     
     @IBAction func tapped(_ sender: Any) {
+        
+        if #available(iOS 10.0, *) {
+            if SettingsTableViewController.isHFeedbackEnabled == true {
+                let generator = UIImpactFeedbackGenerator(style: .light)
+                generator.prepare()
+                generator.impactOccurred()
+            }
+        }
         
         ViewController.score += 1
         scoreLabel.text = "\((ViewController.score).cleanValue)"
@@ -474,26 +581,42 @@ class ViewController: UIViewController, WCSessionDelegate {
                 highscoreDefault.set(ViewController.highscore, forKey: "Highscore")
                 highscoreDefault.synchronize()
 
-                if let validSession = session {
-                    let iPhoneAppContext = ["highscore": ViewController.highscore.cleanValue]
-                    
-                    do {
-                        try validSession.updateApplicationContext(iPhoneAppContext)
-                    } catch {
-                        print("error")
-                    }
+                let user = Auth.auth().currentUser
+                
+                let highscore = highscoreDefault.object(forKey: "Highscore")
+                
+                guard let uid = user?.uid else {
+                    return
                 }
+                
+                let ref = Database.database().reference(fromURL: "https://quicktap-155512.firebaseio.com/")
+                let usersRef = ref.child("users").child(uid)
+                let value = ["Highscore": highscore]
+                usersRef.updateChildValues(value as Any as! [AnyHashable : Any])
+                
+                // When watch is ready
+                
+//                if let validSession = session {
+//                    let iPhoneAppContext = ["highscore": ViewController.highscore.cleanValue]
+//
+//                    do {
+//                        try validSession.updateApplicationContext(iPhoneAppContext)
+//                    } catch {
+//                        print("error")
+//                    }
+//                }
             }
         }
         
     }
     
-    let label = UILabel(frame: CGRect(x: 0, y: 0, width: 25, height: 25))
-    
     @IBAction func locationTapped(_ sender: Any, forEvent event: UIEvent) {
         
         guard let touch = event.allTouches?.first else { return }
         let point = touch.location(in: tapBTN)
+        
+        let label = UILabel(frame: CGRect(x: 0, y: 0, width: 25, height: 25))
+        
         label.center = CGPoint(x: point.x, y: point.y - 30)
         label.alpha = 1
         label.textAlignment = .center
@@ -501,19 +624,36 @@ class ViewController: UIViewController, WCSessionDelegate {
         label.text = "+1"
         label.textColor = UIColor.green
         
-//        let circlePath = UIBezierPath(arcCenter: CGPoint(x: point.x, y: point.y - 30), radius: CGFloat(20), startAngle: CGFloat(0), endAngle: CGFloat(Double.pi * 2), clockwise: true)
-//        let shapeLayer = CAShapeLayer()
-//        shapeLayer.path = circlePath.cgPath
-//        
-//        shapeLayer.fillColor = UIColor.clear.cgColor
-//        //you can change the stroke color
-//        shapeLayer.strokeColor = UIColor.green.cgColor
-//        //you can change the line width
-//        shapeLayer.lineWidth = 5.0
-//        
-//        view.layer.addSublayer(shapeLayer)
-        
         self.view.addSubview(label)
+        
+        let shapeLayer = CAShapeLayer()
+        
+        if SettingsTableViewController.isCircleTrailsEnabled == true {
+        
+            let circlePath = UIBezierPath(arcCenter: CGPoint(x: point.x, y: point.y - 30), radius: CGFloat(20), startAngle: CGFloat(0), endAngle: CGFloat(Double.pi * 2), clockwise: true)
+            shapeLayer.path = circlePath.cgPath
+            
+            shapeLayer.fillColor = UIColor.clear.cgColor
+            shapeLayer.strokeColor = UIColor.green.cgColor
+            shapeLayer.lineWidth = 5.0
+            
+            view.layer.addSublayer(shapeLayer)
+        
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1) {
+            UIView.animate(withDuration: 1, animations: {
+                if SettingsTableViewController.isCircleTrailsEnabled == true {
+                    shapeLayer.opacity = 0
+                }
+                label.alpha = 0
+            }) { _ in
+                if SettingsTableViewController.isCircleTrailsEnabled == true {
+                    shapeLayer.removeFromSuperlayer()
+                }
+                label.removeFromSuperview()
+            }
+        }
         
     }
 }

@@ -20,6 +20,9 @@ class TutorialPageViewController: UIPageViewController, UIPageViewControllerData
         let pageTMP = storyboard.instantiateViewController(withIdentifier: "trlModePage")
         let page4 = storyboard.instantiateViewController(withIdentifier: "fourthPage")
         let page5 = storyboard.instantiateViewController(withIdentifier: "fifthPage")
+        let pageYa = storyboard.instantiateViewController(withIdentifier: "yourAccount")
+        let pageYs = storyboard.instantiateViewController(withIdentifier: "yourStats")
+        let pageVp = storyboard.instantiateViewController(withIdentifier: "viewPlayers")
         let page6 = storyboard.instantiateViewController(withIdentifier: "lastPage")
         
         let defaults = UserDefaults.standard
@@ -30,13 +33,13 @@ class TutorialPageViewController: UIPageViewController, UIPageViewControllerData
             self.barBTN?.title = "Skip"
             self.barBTN.image = nil
             
-            return [welcomePage, page1, page2, page3, pageTMP, page4, page5, page6]
+            return [welcomePage, page1, page2, page3, pageTMP, page4, page5, pageYa, pageYs, pageVp, page6]
             
         } else {
             
             self.barBTN.image = UIImage(named: "Back")
             
-            return [page1, page2, page3, pageTMP, page4, page5, page6]
+            return [page1, page2, page3, pageTMP, page4, page5, pageYa, pageYs, pageVp, page6]
             
         }
         

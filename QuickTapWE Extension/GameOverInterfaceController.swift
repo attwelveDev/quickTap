@@ -8,47 +8,47 @@
 
 import WatchKit
 import Foundation
-import WatchConnectivity
+//import WatchConnectivity
 
-class GameOverInterfaceController: WKInterfaceController, WCSessionDelegate {
+class GameOverInterfaceController: WKInterfaceController {
     
-    @available(watchOSApplicationExtension 2.2, *)
-    func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
-        
-    }
+//    @available(watchOSApplicationExtension 2.2, *)
+//    func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
+//
+//    }
+//
+//    let session = WCSession.default
+//
+//    private func session(_ session: WCSession, didReceiveApplicationContext applicationContext: [String : AnyObject]) {
+//        DispatchQueue.main.async() {
+//            self.processApplicationContext()
+//        }
+//    }
+//
+//    func processApplicationContext() {
+//        if let iPhoneContext = session.receivedApplicationContext as? [String : Double] {
+//            if iPhoneContext["highscore"] != nil {
+//                highscore.setText(String(describing: iPhoneContext["highscore"]!.cleanValue))
+//            }
+//        }
+//    }
     
-    let session = WCSession.default
+    @IBOutlet var group: WKInterfaceGroup!
     
-    private func session(_ session: WCSession, didReceiveApplicationContext applicationContext: [String : AnyObject]) {
-        DispatchQueue.main.async() {
-            self.processApplicationContext()
-        }
-    }
-    
-    func processApplicationContext() {
-        if let iPhoneContext = session.receivedApplicationContext as? [String : Double] {
-            if iPhoneContext["highscore"] != nil {
-                highscore.setText(String(describing: iPhoneContext["highscore"]!.cleanValue))
-            }
-        }
-    }
-
     @IBOutlet var score: WKInterfaceLabel!
     @IBOutlet var highscore: WKInterfaceLabel!
+    @IBOutlet var leftHighscoreLbl: WKInterfaceLabel!
     @IBOutlet var highscoreGroup: WKInterfaceGroup!
     
     @IBAction func playAgain() {
         if InterfaceController.modeSelection == "time" {
-            presentController(withName: "timeMode", context: nil)
             WKInterfaceController.reloadRootControllers(withNames: ["timeMode"], contexts: ["timeMode"])
         } else if InterfaceController.modeSelection == "highscore" {
-            presentController(withName: "highscoreMode", context: nil)
             WKInterfaceController.reloadRootControllers(withNames: ["highscoreMode"], contexts: ["highscoreMode"])
         }
     }
     
     @IBAction func goToMenu() {
-        presentController(withName: "home", context: nil)
         WKInterfaceController.reloadRootControllers(withNames: ["home"], contexts: ["home"])
     }
     
@@ -57,10 +57,10 @@ class GameOverInterfaceController: WKInterfaceController, WCSessionDelegate {
         
         // Configure interface objects here.
         
-        processApplicationContext()
-        
-        session.delegate = self
-        session.activate()
+//        processApplicationContext()
+//
+//        session.delegate = self
+//        session.activate()
         
     }
 
@@ -68,10 +68,17 @@ class GameOverInterfaceController: WKInterfaceController, WCSessionDelegate {
         // This method is called when watch view controller is about to be visible to user
         super.willActivate()
 
+        self.group.setAlpha(0)
+        
+        animate(withDuration: 0.2) {
+            self.group.setAlpha(1)
+        }
+        
         if InterfaceController.modeSelection == "time" {
-            highscoreGroup.setHidden(true)
+            leftHighscoreLbl.setText("Time")
+            highscore.setText("\(TimeModeInterfaceController.time) secs")
         } else if InterfaceController.modeSelection == "highscore" {
-            highscoreGroup.setHidden(false)
+            leftHighscoreLbl.setText("Highscore")
         }
         
         score.setText("\(GameplayInterfaceController.playerScore)")

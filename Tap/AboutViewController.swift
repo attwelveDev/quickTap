@@ -34,7 +34,7 @@ class AboutViewController: UIViewController {
         
         self.automaticallyAdjustsScrollViewInsets = false
         
-        textView.layer.cornerRadius = 5.0
+        textView.layer.cornerRadius = 10.0
         textView.clipsToBounds = true
         
         // Do any additional setup after loading the view.

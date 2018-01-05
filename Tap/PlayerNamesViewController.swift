@@ -7,6 +7,9 @@
 //
 
 import UIKit
+import Firebase
+import FirebaseAuth
+import FirebaseDatabase
 
 class PlayerNamesViewController: UIViewController, UITextFieldDelegate {
     
@@ -19,7 +22,7 @@ class PlayerNamesViewController: UIViewController, UITextFieldDelegate {
             playerOneDefault.setValue(MultiplayerViewController.brownPNV, forKey: "playerOneName")
             playerOneDefault.synchronize()
         } else if playerOneTF.text?.isEmpty == true {
-            MultiplayerViewController.brownPNV = "Username"
+            MultiplayerViewController.brownPNV = "Brown"
             let playerOneDefault = UserDefaults.standard
             playerOneDefault.setValue(MultiplayerViewController.brownPNV, forKey: "playerOneName")
             playerOneDefault.synchronize()
@@ -230,12 +233,58 @@ class PlayerNamesViewController: UIViewController, UITextFieldDelegate {
         //    playerOneTF.text = "\(MultiplayerViewController.brownPNV)"
         //}
         
-        let usernameDefault = UserDefaults.standard
-        if (usernameDefault.value(forKey: "usernameDefault") != nil){
-            playerOneTF.text = "\(usernameDefault.value(forKey: "usernameDefault")!)"
-            playerOneTF.isUserInteractionEnabled = false
-        } else {
+        if Auth.auth().currentUser != nil {
             
+            let userID = Auth.auth().currentUser?.uid
+            Database.database().reference().child("users").child(userID!).observeSingleEvent(of: .value, with: { (snapshot) in
+                if let value = snapshot.value as? NSDictionary {
+                    
+                    let usernameDefault = NSUbiquitousKeyValueStore.default
+                    let username = value["username"] as? String ?? ""
+                    usernameDefault.set(username, forKey: "usernameDefault")
+
+                    MultiplayerViewController.brownPNV = usernameDefault.object(forKey: "usernameDefault")! as! String
+                    
+                    if (usernameDefault.object(forKey: "usernameDefault") != nil){
+                        self.playerOneTF.text = "\(usernameDefault.object(forKey: "usernameDefault")!)"
+                        self.playerOneTF.isUserInteractionEnabled = false
+                    }
+                    
+                    self.playerOneTF.backgroundColor = .clear
+                    self.playerOneTF.textColor = UIColor(red: 48.0/255.0, green: 90.0/255.0, blue: 123.0/255.0, alpha: 1.0)
+                   
+                } else {
+                    let usernameDefault = NSUbiquitousKeyValueStore.default
+                    
+                    MultiplayerViewController.brownPNV = usernameDefault.object(forKey: "usernameDefault")! as! String
+                    
+                    if (usernameDefault.object(forKey: "usernameDefault") != nil){
+                        self.playerOneTF.text = "\(usernameDefault.object(forKey: "usernameDefault")!)"
+                        self.playerOneTF.isUserInteractionEnabled = false
+                    }
+                    
+                    self.playerOneTF.backgroundColor = .clear
+                    self.playerOneTF.textColor = UIColor(red: 48.0/255.0, green: 90.0/255.0, blue: 123.0/255.0, alpha: 1.0)
+                }
+            }) { (error) in
+                let usernameDefault = NSUbiquitousKeyValueStore.default
+                
+                MultiplayerViewController.brownPNV = usernameDefault.object(forKey: "usernameDefault")! as! String
+                
+                if (usernameDefault.object(forKey: "usernameDefault") != nil){
+                    self.playerOneTF.text = "\(usernameDefault.object(forKey: "usernameDefault")!)"
+                    self.playerOneTF.isUserInteractionEnabled = false
+                }
+                
+                self.playerOneTF.backgroundColor = .clear
+                self.playerOneTF.textColor = UIColor(red: 48.0/255.0, green: 90.0/255.0, blue: 123.0/255.0, alpha: 1.0)
+            }
+        } else {
+            let usernameDefault = NSUbiquitousKeyValueStore.default
+            if (usernameDefault.object(forKey: "usernameDefault") != nil){
+                self.playerOneTF.text = "\(usernameDefault.object(forKey: "usernameDefault")!)"
+                self.playerOneTF.isUserInteractionEnabled = true
+            }
         }
         
         let playerTwoDefault = UserDefaults.standard
@@ -259,11 +308,11 @@ class PlayerNamesViewController: UIViewController, UITextFieldDelegate {
         
         GameOverViewController.timePlayed = Double(Int(slider.value))
         
-        backBTN.layer.cornerRadius = 5.0
+        backBTN.layer.cornerRadius = 10.0
         backBTN.clipsToBounds = true
-        bottomBTN.layer.cornerRadius = 5.0
+        bottomBTN.layer.cornerRadius = 10.0
         bottomBTN.clipsToBounds = true
-        startBTN.layer.cornerRadius = 5.0
+        startBTN.layer.cornerRadius = 10.0
         startBTN.clipsToBounds = true
 
         self.playerOneTF.delegate = self
@@ -274,7 +323,7 @@ class PlayerNamesViewController: UIViewController, UITextFieldDelegate {
         playerOneTF.addGestureRecognizer(tap)
         playerTwoTF.addGestureRecognizer(tap)
         
-        if MultiplayerViewController.brownPNV == MultiplayerViewController.bluePNV {
+        if String(describing: NSUbiquitousKeyValueStore.default.object(forKey: "usernameDefault")!) == MultiplayerViewController.bluePNV {
             
             startBTN.setTitleColor(UIColor.red, for: .normal)
             startBTN.setTitle("Please input two different names.", for: .normal)
@@ -322,13 +371,13 @@ class PlayerNamesViewController: UIViewController, UITextFieldDelegate {
             playerTwoDefault.synchronize()
         }
         
-        if MultiplayerViewController.brownPNV == MultiplayerViewController.bluePNV {
+        if String(describing: NSUbiquitousKeyValueStore.default.object(forKey: "usernameDefault")!) == MultiplayerViewController.bluePNV {
             
             startBTN.setTitleColor(UIColor.red, for: .normal)
             startBTN.setTitle("Please input two different names.", for: .normal)
             startBTN.isUserInteractionEnabled = false
             
-        } else if MultiplayerViewController.brownPNV != MultiplayerViewController.bluePNV {
+        } else if String(describing: NSUbiquitousKeyValueStore.default.object(forKey: "usernameDefault")!) != MultiplayerViewController.bluePNV {
             
             startBTN.setTitleColor(UIColor(red: 33.0/255.0, green: 93.0/255.0, blue: 125.0/255.0, alpha: 1.0)
                 , for: .normal)
@@ -338,7 +387,7 @@ class PlayerNamesViewController: UIViewController, UITextFieldDelegate {
         }
     }
     
-    func dismissKeyboard() {
+    @objc func dismissKeyboard() {
         
         self.view.endEditing(true)
         
@@ -389,21 +438,21 @@ class PlayerNamesViewController: UIViewController, UITextFieldDelegate {
                 playerTwoDefault.synchronize()
             }
             
-            if MultiplayerViewController.brownPNV == MultiplayerViewController.bluePNV {
+            if String(describing: NSUbiquitousKeyValueStore.default.object(forKey: "usernameDefault")!) == MultiplayerViewController.bluePNV {
                 
                 startBTN.setTitleColor(UIColor.red, for: .normal)
                 startBTN.setTitle("Please input two different names.",for: .normal)
                 startBTN.isUserInteractionEnabled = false
                 
-            } else if MultiplayerViewController.brownPNV != MultiplayerViewController.bluePNV {
+            } else if String(describing: NSUbiquitousKeyValueStore.default.object(forKey: "usernameDefault")!) != MultiplayerViewController.bluePNV {
                 
                 if UserDefaults.standard.value(forKey: "acModeSwitchState") == nil {
                     MultiplayerViewController.differentMode = 1
                 }
                 
                 if acModeSwitch.isOn == true {
-                    MultiplayerViewController.bluePNV = playerOneTF.text!
-                    MultiplayerViewController.brownPNV = playerTwoTF.text!
+                    MultiplayerViewController.bluePNV = playerTwoTF.text!
+                    MultiplayerViewController.brownPNV = playerOneTF.text!
                     MultiplayerViewController.differentMode = 1
                     let storyboard = UIStoryboard(name: "Main", bundle: nil)
                     let ivc = storyboard.instantiateViewController(withIdentifier: "Multi")
@@ -413,8 +462,8 @@ class PlayerNamesViewController: UIViewController, UITextFieldDelegate {
                     self.present(ivc, animated: true, completion: nil)
                 }
                 if trlModeSwitch.isOn == true {
-                    MultiplayerViewController.bluePNV = playerOneTF.text!
-                    MultiplayerViewController.brownPNV = playerTwoTF.text!
+                    MultiplayerViewController.bluePNV = playerTwoTF.text!
+                    MultiplayerViewController.brownPNV = playerOneTF.text!
                     MultiplayerViewController.differentMode = 2
                     let storyboard = UIStoryboard(name: "Main", bundle: nil)
                     let ivc = storyboard.instantiateViewController(withIdentifier: "Multi")
@@ -465,13 +514,13 @@ class PlayerNamesViewController: UIViewController, UITextFieldDelegate {
             playerTwoDefault.synchronize()
         }
         
-        if MultiplayerViewController.brownPNV == MultiplayerViewController.bluePNV {
+        if String(describing: NSUbiquitousKeyValueStore.default.object(forKey: "usernameDefault")!) == MultiplayerViewController.bluePNV {
             
             startBTN.setTitleColor(UIColor.red, for: .normal)
             startBTN.setTitle("Please input two different names.", for: .normal)
             startBTN.isUserInteractionEnabled = false
             
-        } else if MultiplayerViewController.brownPNV != MultiplayerViewController.bluePNV {
+        } else if String(describing: NSUbiquitousKeyValueStore.default.object(forKey: "usernameDefault")!) != MultiplayerViewController.bluePNV {
             
             startBTN.setTitleColor(UIColor(red: 33.0/255.0, green: 93.0/255.0, blue: 125.0/255.0, alpha: 1.0)
 , for: .normal)

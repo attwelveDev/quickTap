@@ -54,8 +54,13 @@ class MultiplayerViewController: UIViewController {
             
         }) { (success: Bool) in
             self.playerNameView.removeFromSuperview()
+            
+            self.blueBTN.isUserInteractionEnabled = true
+            self.brownBTN.isUserInteractionEnabled = true
+            
         }
     }
+
     
     @IBOutlet weak var score: UILabel!
     @IBOutlet weak var score2: UILabel!
@@ -72,19 +77,11 @@ class MultiplayerViewController: UIViewController {
         whiteTimeStack.isHidden = true
         blueTimeStack.isHidden = true
         
+        blueBTN.isUserInteractionEnabled = false
+        brownBTN.isUserInteractionEnabled = false
+        
         self.view.addSubview(self.playerNameView)
         playerNameView.center = self.view.center
-        
-        whiteCountdown.text = "\(MultiplayerViewController.time) secs"
-        blueCountdown.text = "\(MultiplayerViewController.time) secs"
-        
-        if (MultiplayerViewController.time <= 10) {
-            whiteCountdown.textColor = UIColor.red
-            blueCountdown.textColor = UIColor.red
-        } else if (MultiplayerViewController.time >= 11) {
-            whiteCountdown.textColor = UIColor(red: 33.0/255.0, green: 93.0/255.0, blue: 125.0/255.0, alpha: 1.0)
-            blueCountdown.textColor = UIColor(red: 213.0/255.0, green: 147.0/255.0, blue: 114.0/255.0, alpha: 1.0)
-        }
         
         UIView.animate(withDuration: 2.0, animations: {
             self.playerNameView.alpha = 0
@@ -94,10 +91,18 @@ class MultiplayerViewController: UIViewController {
         
         if MultiplayerViewController.differentMode == 1 {
             
-            ViewController.mode = 2
+            whiteCountdown.text = "\(MultiplayerViewController.time) secs"
+            blueCountdown.text = "\(MultiplayerViewController.time) secs"
             
-            spaceToBTN.constant = 50
-            spaceToBTN2.constant = 50
+            if (MultiplayerViewController.time <= 10) {
+                whiteCountdown.textColor = UIColor.red
+                blueCountdown.textColor = UIColor.red
+            } else if (MultiplayerViewController.time >= 11) {
+                whiteCountdown.textColor = UIColor(red: 33.0/255.0, green: 93.0/255.0, blue: 125.0/255.0, alpha: 1.0)
+                blueCountdown.textColor = UIColor(red: 213.0/255.0, green: 147.0/255.0, blue: 114.0/255.0, alpha: 1.0)
+            }
+            
+            ViewController.mode = 2
             
             animateOut()
             brownPN.isHidden = false
@@ -117,25 +122,19 @@ class MultiplayerViewController: UIViewController {
             
             ViewController.mode = 3
             
-            spaceToBTN.constant = 1
-            spaceToBTN2.constant = 1
-            
             animateOut()
             
             brownPN.isHidden = false
             bluePN.isHidden = false
             
-            whiteScoreStack.isHidden = false
-            blueScoreStack.isHidden = false
+            whiteScoreStack.isHidden = true
+            blueScoreStack.isHidden = true
             
-            score.text = "Match Duration"
-            score2.text = "Match Duration"
+            whiteCountdown.text = "0 secs"
+            blueCountdown.text = "0 secs"
             
-            whiteScoreLabel.text = "0 secs"
-            blueScoreLabel.text = "0 secs"
-            
-            whiteTimeStack.isHidden = true
-            blueTimeStack.isHidden = true
+            whiteTimeStack.isHidden = false
+            blueTimeStack.isHidden = false
             
             timer.invalidate()
             stopwatch.invalidate()
@@ -153,7 +152,7 @@ class MultiplayerViewController: UIViewController {
         playerNameView.layer.shadowOffset = CGSize.zero
         playerNameView.layer.shadowRadius = 10
         playerNameView.layer.shadowPath = UIBezierPath(rect: containerView.bounds).cgPath
-        playerNameView.layer.cornerRadius = 5.0
+        playerNameView.layer.cornerRadius = 10.0
         playerNameView.layer.masksToBounds = false
         
         // Do any additional setup after loading the view.
@@ -161,13 +160,15 @@ class MultiplayerViewController: UIViewController {
         whiteTimeStack.transform = CGAffineTransform(rotationAngle: 3.14)
         brownPN.transform = CGAffineTransform(rotationAngle: 3.14)
         
-        if UserDefaults.standard.value(forKey: "usernameDefault") == nil {
-            UserDefaults.standard.set("Username", forKey: "usernameDefault")
+        if NSUbiquitousKeyValueStore.default.object(forKey: "usernameDefault") == nil {
+            NSUbiquitousKeyValueStore.default.set("Username", forKey: "usernameDefault")
             AccountViewController.defaultUsername = "Username"
+            MultiplayerViewController.brownPNV = "Username"
+        } else {
+            MultiplayerViewController.brownPNV = NSUbiquitousKeyValueStore.default.object(forKey: "usernameDefault")! as! String
         }
-        MultiplayerViewController.brownPNV = AccountViewController.defaultUsername
         
-        brownPN.text = "\(AccountViewController.defaultUsername)"
+        brownPN.text = "\(MultiplayerViewController.brownPNV)"
         bluePN.text = "\(MultiplayerViewController.bluePNV)"
         
         MultiplayerViewController.whiteScore = 0
@@ -186,9 +187,16 @@ class MultiplayerViewController: UIViewController {
     static var timeDurationOfTM: Double = 0
     
     @objc func stopwatchUpdate() {
+        
+        
         MultiplayerViewController.timeDurationOfTM += 1
-        whiteScoreLabel.text = "\(MultiplayerViewController.timeDurationOfTM) secs"
-        blueScoreLabel.text = "\(MultiplayerViewController.timeDurationOfTM) secs"
+        whiteCountdown.text = "\(MultiplayerViewController.timeDurationOfTM.cleanValue) secs"
+        blueCountdown.text = "\(MultiplayerViewController.timeDurationOfTM.cleanValue) secs"
+        
+        if MultiplayerViewController.timeDurationOfTM == 1 {
+            whiteCountdown.text = "\(MultiplayerViewController.timeDurationOfTM.cleanValue) sec"
+            blueCountdown.text = "\(MultiplayerViewController.timeDurationOfTM.cleanValue) sec"
+        }
         
         if brownBTN.bounds.height >= self.view.bounds.height {
             
@@ -255,6 +263,14 @@ class MultiplayerViewController: UIViewController {
     @IBOutlet weak var blueBTNHeight: NSLayoutConstraint!
     @IBAction func whiteTapped(_ sender: Any) {
         
+        if #available(iOS 10.0, *) {
+            if SettingsTableViewController.isHFeedbackEnabled == true {
+                let generator = UIImpactFeedbackGenerator(style: .light)
+                generator.prepare()
+                generator.impactOccurred()
+            }
+        }
+        
         if MultiplayerViewController.differentMode == 2 {
             brownBTNHeight.constant += 5
             blueBTNHeight.constant -= 5
@@ -290,7 +306,7 @@ class MultiplayerViewController: UIViewController {
         } else {
         
             MultiplayerViewController.whiteScore += 1
-            whiteScoreLabel.text = "\(MultiplayerViewController.whiteScore)"
+            whiteScoreLabel.text = "\(MultiplayerViewController.whiteScore.cleanValue)"
         
             if MultiplayerViewController.whiteScore > MultiplayerViewController.blueScore {
                 whiteScoreLabel.textColor = UIColor.green
@@ -304,7 +320,63 @@ class MultiplayerViewController: UIViewController {
             }
         }
     }
+    
+    @IBAction func brownLocationTapped(_ sender: Any, forEvent event: UIEvent) {
+        guard let touch = event.allTouches?.first else { return }
+        let point = touch.location(in: brownBTN)
+        
+        let labelA = UILabel(frame: CGRect(x: 0, y: 0, width: 25, height: 25))
+        
+        labelA.center = CGPoint(x: point.x, y: point.y + 50)
+        labelA.alpha = 1
+        labelA.textAlignment = .center
+        labelA.font = UIFont.boldSystemFont(ofSize: 18)
+        labelA.text = "+1"
+        labelA.textColor = UIColor.green
+        
+        labelA.transform = CGAffineTransform(rotationAngle: 3.14)
+        
+        self.view.addSubview(labelA)
+        
+        let shapeLayerA = CAShapeLayer()
+        
+        if SettingsTableViewController.isCircleTrailsEnabled == true {
+            
+            let circlePath = UIBezierPath(arcCenter: CGPoint(x: point.x, y: point.y + 50), radius: CGFloat(20), startAngle: CGFloat(0), endAngle: CGFloat(Double.pi * 2), clockwise: true)
+            shapeLayerA.path = circlePath.cgPath
+            
+            shapeLayerA.fillColor = UIColor.clear.cgColor
+            shapeLayerA.strokeColor = UIColor.green.cgColor
+            shapeLayerA.lineWidth = 5.0
+            
+            view.layer.addSublayer(shapeLayerA)
+            
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1) {
+            UIView.animate(withDuration: 1, animations: {
+                if SettingsTableViewController.isCircleTrailsEnabled == true {
+                    shapeLayerA.opacity = 0
+                }
+                labelA.alpha = 0
+            }) { _ in
+                if SettingsTableViewController.isCircleTrailsEnabled == true {
+                    shapeLayerA.removeFromSuperlayer()
+                }
+                labelA.removeFromSuperview()
+            }
+        }
+    }
+    
     @IBAction func blueTapped(_ sender: Any) {
+        
+        if #available(iOS 10.0, *) {
+            if SettingsTableViewController.isHFeedbackEnabled == true {
+                let generator = UIImpactFeedbackGenerator(style: .light)
+                generator.prepare()
+                generator.impactOccurred()
+            }
+        }
         
         if MultiplayerViewController.differentMode == 2 {
             brownBTNHeight.constant -= 5
@@ -339,7 +411,7 @@ class MultiplayerViewController: UIViewController {
         } else {
         
             MultiplayerViewController.blueScore += 1
-            blueScoreLabel.text = "\(MultiplayerViewController.blueScore)"
+            blueScoreLabel.text = "\(MultiplayerViewController.blueScore.cleanValue)"
         
             if MultiplayerViewController.whiteScore < MultiplayerViewController.blueScore {
                 whiteScoreLabel.textColor = UIColor(red: 33.0/255.0, green: 93.0/255.0, blue: 125.0/255.0, alpha: 1.0)
@@ -353,9 +425,50 @@ class MultiplayerViewController: UIViewController {
             }
         }
     }
-    
-    
-    
+    @IBAction func blueLocationTapped(_ sender: Any, forEvent event: UIEvent) {
+        guard let touch = event.allTouches?.first else { return }
+        let point = touch.location(in: blueBTN)
+        
+        let label = UILabel(frame: CGRect(x: 0, y: 0, width: 25, height: 25))
+        
+        label.center = CGPoint(x: point.x, y: point.y + brownBTN.frame.height - 30)
+        label.alpha = 1
+        label.textAlignment = .center
+        label.font = UIFont.boldSystemFont(ofSize: 18)
+        label.text = "+1"
+        label.textColor = UIColor.green
+        
+        self.view.addSubview(label)
+        
+        let shapeLayer = CAShapeLayer()
+        
+        if SettingsTableViewController.isCircleTrailsEnabled == true {
+            
+            let circlePath = UIBezierPath(arcCenter: CGPoint(x: point.x, y: point.y + brownBTN.frame.height - 30), radius: CGFloat(20), startAngle: CGFloat(0), endAngle: CGFloat(Double.pi * 2), clockwise: true)
+            shapeLayer.path = circlePath.cgPath
+            
+            shapeLayer.fillColor = UIColor.clear.cgColor
+            shapeLayer.strokeColor = UIColor.green.cgColor
+            shapeLayer.lineWidth = 5.0
+            
+            view.layer.addSublayer(shapeLayer)
+            
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1) {
+            UIView.animate(withDuration: 1, animations: {
+                if SettingsTableViewController.isCircleTrailsEnabled == true {
+                    shapeLayer.opacity = 0
+                }
+                label.alpha = 0
+            }) { _ in
+                if SettingsTableViewController.isCircleTrailsEnabled == true {
+                    shapeLayer.removeFromSuperlayer()
+                }
+                label.removeFromSuperview()
+            }
+        }
+    }
     /*
     // MARK: - Navigation
 

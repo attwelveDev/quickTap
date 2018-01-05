@@ -15,6 +15,9 @@ class TimeModeInterfaceController: WKInterfaceController {
     @IBOutlet var secsLabel: WKInterfaceLabel!
     @IBOutlet var slider: WKInterfaceSlider!
     
+    @IBOutlet var backBtn: WKInterfaceButton!
+    @IBOutlet var group: WKInterfaceGroup!
+    
     static var time = 60
     
     @IBAction func sliderDidChange(_ value: Float) {
@@ -23,15 +26,16 @@ class TimeModeInterfaceController: WKInterfaceController {
         
         TimeModeInterfaceController.time = finalValue
         
+        UserDefaults.standard.set(finalValue, forKey: "sliderValue")
+        
     }
     
-    @IBAction func goToHM() {
-        presentController(withName: "highscoreMode", context: nil)
-        WKInterfaceController.reloadRootControllers(withNames: ["highscoreMode"], contexts: ["highscoreMode"])
-    }
+//    @IBAction func goToHM() {
+//        presentController(withName: "highscoreMode", context: nil)
+//        WKInterfaceController.reloadRootControllers(withNames: ["highscoreMode"], contexts: ["highscoreMode"])
+//    }
     
     @IBAction func back() {
-        presentController(withName: "home", context: nil)
         WKInterfaceController.reloadRootControllers(withNames: ["home"], contexts: ["home"])
     }
     
@@ -39,23 +43,41 @@ class TimeModeInterfaceController: WKInterfaceController {
         InterfaceController.modeSelection = "time"
         
         GameplayInterfaceController.playerScore = 0
-        
-        presentController(withName: "gameplay", context: nil)
+
         WKInterfaceController.reloadRootControllers(withNames: ["gameplay"], contexts: ["gameplay"])
     }
     
     override func awake(withContext context: Any?) {
         super.awake(withContext: context)
         
-        // Configure interface objects here.
-        
-        TimeModeInterfaceController.time = 60
+        // Configure interface objects here
         
     }
 
     override func willActivate() {
         // This method is called when watch view controller is about to be visible to user
         super.willActivate()
+        
+        TimeModeInterfaceController.time = 60
+        
+        self.backBtn.setAlpha(0)
+        self.group.setAlpha(0)
+        
+        animate(withDuration: 0.2) {
+            self.backBtn.setAlpha(1)
+            self.group.setAlpha(1)
+        }
+        
+        if UserDefaults.standard.value(forKey: "sliderValue") == nil {
+            slider.setValue(60)
+            TimeModeInterfaceController.time = 60
+            secsLabel.setText("60")
+            UserDefaults.standard.set(60, forKey: "sliderValue")
+        } else {
+            slider.setValue(UserDefaults.standard.value(forKey: "sliderValue") as! Float)
+            TimeModeInterfaceController.time = UserDefaults.standard.value(forKey: "sliderValue") as! Int
+            secsLabel.setText("\(String(describing: UserDefaults.standard.value(forKey: "sliderValue")!))")
+        }
         
     }
 

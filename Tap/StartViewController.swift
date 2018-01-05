@@ -7,7 +7,11 @@
 //
 
 import UIKit
-import LocalAuthentication
+import Firebase
+import FirebaseAuth
+import FirebaseDatabase
+//import LocalAuthentication
+
 
 class StartViewController: UIViewController {
 
@@ -18,75 +22,73 @@ class StartViewController: UIViewController {
     @IBOutlet weak var moreDisplay: UIButton!
     
     @IBOutlet weak var quickTapTitle: UILabel!
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
         
-        if UserDefaults.standard.bool(forKey: "userHasTouchIDAuth") == true {
-            
-        } else {
-            UserDefaults.standard.set(false, forKey: "userHasTouchIDAuth")
-        }
+//        if UserDefaults.standard.bool(forKey: "userHasTouchIDAuth") == true {
+//
+//        } else {
+//            UserDefaults.standard.set(false, forKey: "userHasTouchIDAuth")
+//        }
         
-        if NSUbiquitousKeyValueStore.default.object(forKey: "usernameDefault") == nil {
-            NSUbiquitousKeyValueStore.default.set("Username", forKey: "usernameDefault")
-            AccountViewController.defaultUsername = NSUbiquitousKeyValueStore.default.object(forKey: "usernameDefault") as! String
-        }
+//        if NSUbiquitousKeyValueStore.default.object(forKey: "usernameDefault") == nil {
+//            NSUbiquitousKeyValueStore.default.set("Username", forKey: "usernameDefault")
+//            AccountViewController.defaultUsername = NSUbiquitousKeyValueStore.default.object(forKey: "usernameDefault") as! String
+//        }
         
-        if NSUbiquitousKeyValueStore.default.object(forKey: "timesPlayed") == nil {
-            
-            NSUbiquitousKeyValueStore.default.set(0, forKey: "timesPlayed")
-            
-        }
-        
-        if NSUbiquitousKeyValueStore.default.object(forKey: "Highscore") == nil {
-            
-            NSUbiquitousKeyValueStore.default.set(0, forKey: "Highscore")
-            
-        }
-        
-        if NSUbiquitousKeyValueStore.default.object(forKey: "totalPlayTime") == nil {
-
-            print("isNil")
-            
-            NSUbiquitousKeyValueStore.default.set(0, forKey: "totalPlayTime")
-
-        }
-        
-        if NSUbiquitousKeyValueStore.default.object(forKey: "totalTaps") == nil {
-
-            NSUbiquitousKeyValueStore.default.set(0, forKey: "totalTaps")
-
-        }
-        
-        if NSUbiquitousKeyValueStore.default.object(forKey: "tapedupStatus") == nil {
-            
-            NSUbiquitousKeyValueStore.default.set("Beginner", forKey: "tapedupStatus")
-            
-        }
-        
-        accountDisplay.layer.cornerRadius = 5.0
+        accountDisplay.layer.cornerRadius = 10.0
         accountDisplay.clipsToBounds = true
-        singleplayerDisplay.layer.cornerRadius = 5.0
+        singleplayerDisplay.layer.cornerRadius = 10.0
         singleplayerDisplay.clipsToBounds = true
-        multiplayerDisplay.layer.cornerRadius = 5.0
+        multiplayerDisplay.layer.cornerRadius = 10.0
         multiplayerDisplay.clipsToBounds = true
-        instructionsDisplay.layer.cornerRadius = 5.0
+        instructionsDisplay.layer.cornerRadius = 10.0
         instructionsDisplay.clipsToBounds = true
-        moreDisplay.layer.cornerRadius = 5.0
+        moreDisplay.layer.cornerRadius = 10.0
         moreDisplay.clipsToBounds = true
     
         quickTapTitle.layer.shadowOpacity = 0.5
         
-        EnableTouchIDView.layer.cornerRadius = 5.0
-        EnableTouchIDView.clipsToBounds = true
-        cancelBTN.layer.cornerRadius = 5.0
-        cancelBTN.clipsToBounds = true
-        okBTN.layer.cornerRadius = 5.0
-        okBTN.clipsToBounds = true
+//        EnableTouchIDView.layer.cornerRadius = 10.0
+//        EnableTouchIDView.clipsToBounds = true
+//        cancelBTN.layer.cornerRadius = 10.0
+//        cancelBTN.clipsToBounds = true
+//        okBTN.layer.cornerRadius = 10.0
+//        okBTN.clipsToBounds = true
         
+//        accountDisplay.layer.shadowColor = UIColor.black.cgColor
+//        accountDisplay.layer.shadowOpacity = 1
+//        accountDisplay.layer.shadowOffset = CGSize.zero
+//        accountDisplay.layer.shadowRadius = 10
+//        accountDisplay.layer.shadowPath = UIBezierPath(rect: accountDisplay.bounds).cgPath
+//        
+//        singleplayerDisplay.layer.shadowColor = UIColor.black.cgColor
+//        singleplayerDisplay.layer.shadowOpacity = 1
+//        singleplayerDisplay.layer.shadowOffset = CGSize.zero
+//        singleplayerDisplay.layer.shadowRadius = 10
+//        singleplayerDisplay.layer.shadowPath = UIBezierPath(rect: singleplayerDisplay.bounds).cgPath
+//        
+//        multiplayerDisplay.layer.shadowColor = UIColor.black.cgColor
+//        multiplayerDisplay.layer.shadowOpacity = 1
+//        multiplayerDisplay.layer.shadowOffset = CGSize.zero
+//        multiplayerDisplay.layer.shadowRadius = 10
+//        multiplayerDisplay.layer.shadowPath = UIBezierPath(rect: multiplayerDisplay.bounds).cgPath
+//        
+//        instructionsDisplay.layer.shadowColor = UIColor.black.cgColor
+//        instructionsDisplay.layer.shadowOpacity = 1
+//        instructionsDisplay.layer.shadowOffset = CGSize.zero
+//        instructionsDisplay.layer.shadowRadius = 10
+//        instructionsDisplay.layer.shadowPath = UIBezierPath(rect: instructionsDisplay.bounds).cgPath
+//        
+//        moreDisplay.layer.shadowColor = UIColor.black.cgColor
+//        moreDisplay.layer.shadowOpacity = 1
+//        moreDisplay.layer.shadowOffset = CGSize.zero
+//        moreDisplay.layer.shadowRadius = 10
+//        moreDisplay.layer.shadowPath = UIBezierPath(rect: moreDisplay.bounds).cgPath
+//        
     }
 
     override func didReceiveMemoryWarning() {
@@ -94,105 +96,116 @@ class StartViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    @IBOutlet weak var cancelBTN: UIButton!
-    @IBOutlet weak var okBTN: UIButton!
-    @IBOutlet weak var errorTitle: UILabel!
-    @IBAction func dismissEnabling(_ sender: Any) {
-        animateOutTID()
-    }
-    @IBAction func touchIDAuth(_ sender: Any) {
-        if UserDefaults.standard.bool(forKey: "userHasTouchIDAuth") == true {
-            self.authenitcateUser()
-        }
-        let context = LAContext()
-        
-        var error: NSError?
-        
-        if context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) {
-            
-        } else {
-            animateOutTID()
-        }
-    }
-    @IBOutlet weak var errorAndStuffTID: UILabel!
-    var effect: UIVisualEffect!
-    var visualEffectView: UIVisualEffectView!
-    @IBOutlet var EnableTouchIDView: UIView!
-    func animateInTID() {
-        self.view.addSubview(EnableTouchIDView)
-        EnableTouchIDView.center = self.view.center
-        
-        self.errorTitle.text = "Touch ID Authentication"
-        self.errorAndStuffTID.text = "To access your Tapedup Profile, press 'OK' then input your Touch ID"
-        
-        EnableTouchIDView.transform = CGAffineTransform.init(scaleX: 1.3, y: 1.3)
-        EnableTouchIDView.alpha = 0
-        
-        UIView.animate(withDuration: 0.5) {
-            self.visualEffectView?.effect = self.effect
-            self.EnableTouchIDView.alpha = 1
-            self.EnableTouchIDView.transform = CGAffineTransform.identity
-        }
-    }
+    //Authentication foundation for the future
     
-    func animateOutTID() {
-        UIView.animate(withDuration: 0.5, animations: {
-            self.EnableTouchIDView.transform = CGAffineTransform.init(scaleX: 1.3, y: 1.3)
-            self.EnableTouchIDView.alpha = 0
-            
-            self.visualEffectView?.effect = nil
-            
-        }) { (success: Bool) in
-            self.EnableTouchIDView.removeFromSuperview()
-        }
-    }
-    
-    func authenitcateUser() {
-        let context = LAContext()
-        
-        var error: NSError?
-        
-        
-        if context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) {
-            let displayedPermissionString = "You chose to lock your account \(AccountViewController.defaultUsername). In order to access it, input your Touch ID"
-            context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: displayedPermissionString) {
-                [unowned self] success, authenticationError in
-                DispatchQueue.main.async {
-                    if success {
-                        self.animateOutTID()
-                        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-                        let ivc = storyboard.instantiateViewController(withIdentifier: "accountVC")
-                        ivc.modalPresentationStyle = .custom
-                        ivc.modalTransitionStyle = .crossDissolve
-                        //        self.present(ivc, animated: true, completion: { _ in })
-                        self.present(ivc, animated: true, completion: nil)
-                        
-                    } else {
-                        self.errorTitle.text = "Error"
-                        self.errorAndStuffTID.text = "Access to Tapedup Failed. Please try again."
-                    }
-                }
-            }
-            
-        } else {
-            animateInTID()
-            self.errorTitle.text = "Touch ID Authentication"
-            self.errorAndStuffTID.text = "To access your Tapedup Profile, press 'OK' then input your Touch ID"
-        }
-    }
+//    @IBOutlet weak var cancelBTN: UIButton!
+//    @IBOutlet weak var okBTN: UIButton!
+//    @IBOutlet weak var errorTitle: UILabel!
+//    @IBAction func dismissEnabling(_ sender: Any) {
+//        animateOutTID()
+//    }
+//    @IBAction func touchIDAuth(_ sender: Any) {
+//        if UserDefaults.standard.bool(forKey: "userHasTouchIDAuth") == true {
+//            self.authenitcateUser()
+//        }
+//        let context = LAContext()
+//
+//        var error: NSError?
+//
+//        if context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) {
+//
+//        } else {
+//            animateOutTID()
+//        }
+//    }
+//    @IBOutlet weak var errorAndStuffTID: UILabel!
+//    var effect: UIVisualEffect!
+//    var visualEffectView: UIVisualEffectView!
+//    @IBOutlet var EnableTouchIDView: UIView!
+//    func animateInTID() {
+//        self.view.addSubview(EnableTouchIDView)
+//        EnableTouchIDView.center = self.view.center
+//
+//        self.errorTitle.text = "Touch ID Authentication"
+//        self.errorAndStuffTID.text = "To access your Tapedup Profile, press 'OK' then input your Touch ID"
+//
+//        EnableTouchIDView.transform = CGAffineTransform.init(scaleX: 1.3, y: 1.3)
+//        EnableTouchIDView.alpha = 0
+//
+//        UIView.animate(withDuration: 0.5) {
+//            self.visualEffectView?.effect = self.effect
+//            self.EnableTouchIDView.alpha = 1
+//            self.EnableTouchIDView.transform = CGAffineTransform.identity
+//        }
+//    }
+//
+//    func animateOutTID() {
+//        UIView.animate(withDuration: 0.5, animations: {
+//            self.EnableTouchIDView.transform = CGAffineTransform.init(scaleX: 1.3, y: 1.3)
+//            self.EnableTouchIDView.alpha = 0
+//
+//            self.visualEffectView?.effect = nil
+//
+//        }) { (success: Bool) in
+//            self.EnableTouchIDView.removeFromSuperview()
+//        }
+//    }
+//
+//    func authenitcateUser() {
+//        let context = LAContext()
+//
+//        var error: NSError?
+//
+//
+//        if context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) {
+//            let displayedPermissionString = "You chose to lock your account \(AccountViewController.defaultUsername). In order to access it, input your Touch ID"
+//            context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: displayedPermissionString) {
+//                [unowned self] success, authenticationError in
+//                DispatchQueue.main.async {
+//                    if success {
+//                        self.animateOutTID()
+//                        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+//                        let ivc = storyboard.instantiateViewController(withIdentifier: "accountVC")
+//                        ivc.modalPresentationStyle = .custom
+//                        ivc.modalTransitionStyle = .crossDissolve
+//                        //        self.present(ivc, animated: true, completion: { _ in })
+//                        self.present(ivc, animated: true, completion: nil)
+//
+//                    } else {
+//                        self.errorTitle.text = "Error"
+//                        self.errorAndStuffTID.text = "Access to Tapedup Failed. Please try again."
+//                    }
+//                }
+//            }
+//
+//        } else {
+//            animateInTID()
+//            self.errorTitle.text = "Touch ID Authentication"
+//            self.errorAndStuffTID.text = "To access your Tapedup Profile, press 'OK' then input your Touch ID"
+//        }
+//    }
     
     @IBAction func accountAction(_ sender: Any) {
-        if UserDefaults.standard.bool(forKey: "userHasTouchIDAuth") == true {
-            animateInTID()
-        } else {
-            UserDefaults.standard.set(false, forKey: "userHasTouchIDAuth")
+//        if UserDefaults.standard.bool(forKey: "userHasTouchIDAuth") == true {
+//            animateInTID()
+//        } else {
+//            UserDefaults.standard.set(false, forKey: "userHasTouchIDAuth")
+        if Auth.auth().currentUser != nil {
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let ivc = storyboard.instantiateViewController(withIdentifier: "accountVC")
             ivc.modalPresentationStyle = .custom
             ivc.modalTransitionStyle = .crossDissolve
             //        self.present(ivc, animated: true, completion: { _ in })
             self.present(ivc, animated: true, completion: nil)
+        } else {
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let ivc = storyboard.instantiateViewController(withIdentifier: "loginVC")
+            ivc.modalPresentationStyle = .custom
+            ivc.modalTransitionStyle = .crossDissolve
+            //        self.present(ivc, animated: true, completion: { _ in })
+            self.present(ivc, animated: true, completion: nil)
         }
+//        }
     }
     @IBAction func singleplayerAction(_ sender: Any) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)

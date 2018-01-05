@@ -17,7 +17,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>2.38</string>
+	<string>5.93</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
@@ -44,13 +44,13 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>2</string>
+	<string>3</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-	<string>You chose to take a picture with your camera to set as your Tapedup profile pic. In order to do so, QuickTap needs your consent.</string>
+	<string>To change your Profile Pic from your Camera, QuickTap requires access to your camera.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>You chose to pick an image from your photo library to set as your Tapedup profile pic. In order to do so, QuickTap needs your consent.</string>
+	<string>To change your Profile Pic from your Photo Library, QuickTap requires access to your Photo Library.</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>

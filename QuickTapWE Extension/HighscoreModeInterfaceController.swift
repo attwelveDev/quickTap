@@ -27,16 +27,22 @@ class HighscoreModeInterfaceController: WKInterfaceController, WCSessionDelegate
     
     let session = WCSession.default
     
-    private func session(_ session: WCSession, didReceiveApplicationContext applicationContext: [String : AnyObject]) {
+    func session(_ session: WCSession, didReceiveApplicationContext applicationContext: [String : Any]) {
+        print("didRAC")
         DispatchQueue.main.async() {
             self.processApplicationContext()
         }
     }
     
     func processApplicationContext() {
+        print("pAC")
         if let iPhoneContext = session.receivedApplicationContext as? [String : Double] {
+            print("2")
             if iPhoneContext["highscore"] != nil {
+                print("!= nil")
                 highscore.setText(String(describing: iPhoneContext["highscore"]!.cleanValue))
+            } else {
+                print("nil")
             }
         }
     }
@@ -68,7 +74,7 @@ class HighscoreModeInterfaceController: WKInterfaceController, WCSessionDelegate
         // Configure interface objects here.
         
         processApplicationContext()
-        
+
         session.delegate = self
         session.activate()
         

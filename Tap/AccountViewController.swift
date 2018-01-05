@@ -8,7 +8,11 @@
 
 import UIKit
 import MessageUI
-import LocalAuthentication
+import Firebase
+import FirebaseAuth
+import FirebaseDatabase
+import FirebaseStorage
+//import LocalAuthentication
 
 extension Double {
     var cleanValue: String {
@@ -16,13 +20,70 @@ extension Double {
     }
 }
 
+public extension UIDevice {
+    
+    var modelName: String {
+        var systemInfo = utsname()
+        uname(&systemInfo)
+        let machineMirror = Mirror(reflecting: systemInfo.machine)
+        let identifier = machineMirror.children.reduce("") { identifier, element in
+            guard let value = element.value as? Int8, value != 0 else { return identifier }
+            return identifier + String(UnicodeScalar(UInt8(value)))
+        }
+        
+        switch identifier {
+        case "iPod5,1":                                 return "iPod Touch 5th Generation"
+        case "iPod7,1":                                 return "iPod Touch 6th Generation"
+        case "iPhone3,1", "iPhone3,2", "iPhone3,3":     return "iPhone 4"
+        case "iPhone4,1":                               return "iPhone 4s"
+        case "iPhone5,1", "iPhone5,2":                  return "iPhone 5"
+        case "iPhone5,3", "iPhone5,4":                  return "iPhone 5c"
+        case "iPhone6,1", "iPhone6,2":                  return "iPhone 5s"
+        case "iPhone7,2":                               return "iPhone 6"
+        case "iPhone7,1":                               return "iPhone 6 Plus"
+        case "iPhone8,1":                               return "iPhone 6s"
+        case "iPhone8,2":                               return "iPhone 6s Plus"
+        case "iPhone9,1", "iPhone9,3":                  return "iPhone 7"
+        case "iPhone9,2", "iPhone9,4":                  return "iPhone 7 Plus"
+        case "iPhone8,4":                               return "iPhone SE"
+        case "iPhone10,1", "iPhone10,4":                return "iPhone 8"
+        case "iPhone10,2", "iPhone10,5":                return "iPhone 8 Plus"
+        case "iPhone10,3", "iPhone10,6":                return "iPhone X"
+        case "iPad2,1", "iPad2,2", "iPad2,3", "iPad2,4":return "iPad 2"
+        case "iPad3,1", "iPad3,2", "iPad3,3":           return "iPad 3"
+        case "iPad3,4", "iPad3,5", "iPad3,6":           return "iPad 4"
+        case "iPad4,1", "iPad4,2", "iPad4,3":           return "iPad Air"
+        case "iPad5,3", "iPad5,4":                      return "iPad Air 2"
+        case "iPad6,11", "iPad6,12":                    return "iPad 5"
+        case "iPad2,5", "iPad2,6", "iPad2,7":           return "iPad Mini"
+        case "iPad4,4", "iPad4,5", "iPad4,6":           return "iPad Mini 2"
+        case "iPad4,7", "iPad4,8", "iPad4,9":           return "iPad Mini 3"
+        case "iPad5,1", "iPad5,2":                      return "iPad Mini 4"
+        case "iPad6,3", "iPad6,4":                      return "iPad Pro 9.7 Inch"
+        case "iPad6,7", "iPad6,8":                      return "iPad Pro 12.9 Inch"
+        case "iPad7,1", "iPad7,2":                      return "iPad Pro 12.9 Inch 2nd Generation"
+        case "iPad7,3", "iPad7,4":                      return "iPad Pro 10.5 Inch"
+        case "AppleTV5,3":                              return "Apple TV"
+        case "AppleTV6,2":                              return "Apple TV 4K"
+        case "AudioAccessory1,1":                       return "HomePod"
+        case "i386", "x86_64":                          return "Simulator"
+        default:                                        return identifier
+        }
+    }
+    
+}
+
 class AccountViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate, UIPickerViewDataSource, UIPickerViewDelegate, UITableViewDataSource, UITableViewDelegate, MFMailComposeViewControllerDelegate {
 
-    @IBOutlet weak var lockBTN: UIButton!
+//    @IBOutlet weak var lockBTN: UIBarButtonItem!
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var background: UIView!
+    @IBOutlet weak var infoStack: UIStackView!
+    @IBOutlet weak var statsLbl: UILabel!
+    @IBOutlet weak var dateJoinedLbl: UILabel!
     
     let tableItems = ["Tapedup Status", "Highscore", "Total Taps", "Total Seconds Played", "Total Games Played"]
-    var detailTableItems = ["\(NSUbiquitousKeyValueStore.default.object(forKey: "tapedupStatus")!)", "\(NSUbiquitousKeyValueStore.default.object(forKey: "Highscore")!)", "\(NSUbiquitousKeyValueStore.default.object(forKey: "totalTaps")!)", "\(NSUbiquitousKeyValueStore.default.object(forKey: "totalPlayTime")!) secs", "\(NSUbiquitousKeyValueStore.default.double(forKey: "timesPlayed").cleanValue)"]
+    var detailTableItems = ["", "", "", "", "",]
     let cellIdentifier = "Cell"
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -43,12 +104,14 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath)
 
+        
+        
         if GameOverViewController.newLevel == true {
             if (indexPath.section == 0 && indexPath.row == 0) {
                 cell.textLabel?.textColor = UIColor.green
                 cell.detailTextLabel?.textColor = UIColor.green
             } else if (indexPath.section == 0 && indexPath.row == 1) {
-                cell.textLabel?.textColor = UIColor(red: 230.0/255.0, green: 224.0/255.0, blue: 221.0/255.0, alpha: 1.0)
+                cell.textLabel?.textColor = UIColor(red: 204.0/255.0, green: 224.0/255.0, blue: 221.0/255.0, alpha: 1.0)
                 cell.detailTextLabel?.textColor = UIColor(red: 230.0/255.0, green: 224.0/255.0, blue: 221.0/255.0, alpha: 1.0)
             } else if (indexPath.section == 0 && indexPath.row == 2) {
                 cell.textLabel?.textColor = UIColor(red: 230.0/255.0, green: 224.0/255.0, blue: 221.0/255.0, alpha: 1.0)
@@ -74,7 +137,11 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
         cell.backgroundColor = UIColor.clear
         
         if (indexPath.section == 0 && indexPath.row == 0) {
-            cell.selectionStyle = UITableViewCellSelectionStyle.default
+            if WorldContentTableViewController.isViewOtherUsers == false {
+                cell.selectionStyle = UITableViewCellSelectionStyle.default
+            } else {
+                cell.selectionStyle = UITableViewCellSelectionStyle.none
+            }
         } else if (indexPath.section == 0 && indexPath.row == 1) {
             cell.selectionStyle = UITableViewCellSelectionStyle.default
         } else if (indexPath.section == 0 && indexPath.row == 2) {
@@ -88,6 +155,7 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
         let row = indexPath.row
         cell.textLabel?.text = tableItems[row]
         cell.detailTextLabel?.text = detailTableItems[row]
+
         
         return cell
     }
@@ -98,12 +166,14 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
         
         if (indexPath.section == 0 && indexPath.row == 0) {
             
-            let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            let ivc = storyboard.instantiateViewController(withIdentifier: "status")
-            ivc.modalPresentationStyle = .custom
-            ivc.modalTransitionStyle = .crossDissolve
-            //        self.present(ivc, animated: true, completion: { _ in })
-            self.present(ivc, animated: true, completion: nil)
+            if WorldContentTableViewController.isViewOtherUsers == false {
+                let storyboard = UIStoryboard(name: "Main", bundle: nil)
+                let ivc = storyboard.instantiateViewController(withIdentifier: "status")
+                ivc.modalPresentationStyle = .custom
+                ivc.modalTransitionStyle = .crossDissolve
+                //        self.present(ivc, animated: true, completion: { _ in })
+                self.present(ivc, animated: true, completion: nil)
+            }
             
         } else if (indexPath.section == 0 && indexPath.row == 1) {
 
@@ -128,7 +198,12 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
     
     func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
         if (indexPath.section == 0 && indexPath.row == 0) {
-            return indexPath
+            if WorldContentTableViewController.isViewOtherUsers == false {
+                return indexPath
+            } else {
+                return nil
+            }
+            
         } else if (indexPath.section == 0 && indexPath.row == 1) {
             return indexPath
         } else if (indexPath.section == 0 && indexPath.row == 2) {
@@ -152,9 +227,13 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
     @IBAction func shareAction(_ sender: Any) {
         let mailComposeViewController = configuredMailComposeViewController()
         if MFMailComposeViewController.canSendMail() {
-            self.present(mailComposeViewController, animated: true, completion: nil)
+            self.present(mailComposeViewController, animated: true, completion: {
+                UIApplication.shared.statusBarStyle = UIStatusBarStyle.lightContent
+            })
         } else {
             self.showSendMailErrorAlert()
+            errorTitle.text = "Cannot share"
+            errorDescription.text = "Please check mail configuration and try again."
         }
     }
     
@@ -170,7 +249,7 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
         
         mailComposerVC.setToRecipients([""])
         mailComposerVC.setSubject("My Tapedup Profile")
-        mailComposerVC.setMessageBody("I am currently \(NSUbiquitousKeyValueStore.default.string(forKey: "tapedupStatus")!) Tapedup Status. My highscore is \(NSUbiquitousKeyValueStore.default.object(forKey: "Highscore")!) and I have tapped \(NSUbiquitousKeyValueStore.default.object(forKey: "totalTaps")!) times. I have played for \(NSUbiquitousKeyValueStore.default.object(forKey: "totalPlayTime")!) secs and played \(NSUbiquitousKeyValueStore.default.double(forKey: "timesPlayed").cleanValue) games. QuickTap is all about tapping quickly, hence the name. With two modes in Singleplayer, 'Time Mode' and 'Highscore Mode' along side AcrossTable Mode and Territorial Mode. Download here: https://itunes.apple.com/us/app/quicktap/id1190851546?mt=8", isHTML: false)
+        mailComposerVC.setMessageBody("I am currently \(NSUbiquitousKeyValueStore.default.string(forKey: "tapedupStatus")!) Tapedup Status. My highscore is \(NSUbiquitousKeyValueStore.default.object(forKey: "Highscore")!) and I have tapped \(NSUbiquitousKeyValueStore.default.object(forKey: "totalTaps")!) times. I have played for \(NSUbiquitousKeyValueStore.default.object(forKey: "totalPlayTime")!) secs and played \(NSUbiquitousKeyValueStore.default.double(forKey: "timesPlayed").cleanValue) games. \n\nQuickTap is all about tapping quickly, hence the name. With two modes in Singleplayer, 'Time Mode' and 'Highscore Mode' sit along side Multiplayer's two modes: AcrossTable Mode and Territorial Mode. When you've become too tired, jump over to Tapedup World to check out other Tapedupers. You'll always be engaged because of the huge range of choices. Download here: https://itunes.apple.com/us/app/quicktap/id1190851546?mt=8", isHTML: false)
         
         return mailComposerVC
     }
@@ -186,8 +265,7 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
         animateOutCE()
         animateOutUN()
         animateOutA()
-        animateOutD()
-        animateOutTID()
+//        animateOutTID()
 
         
     }
@@ -197,6 +275,9 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
     }
 
     @IBOutlet var mailErrorView: UIView!
+    @IBOutlet weak var errorOkBtn: UIButton!
+    @IBOutlet weak var errorTitle: UILabel!
+    @IBOutlet weak var errorDescription: UILabel!
     
     func animateInME() {
         self.view.addSubview(mailErrorView)
@@ -225,12 +306,21 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
     }
     
     @IBAction func backAction(_ sender: Any) {
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let ivc = storyboard.instantiateViewController(withIdentifier: "Start")
-        ivc.modalPresentationStyle = .custom
-        ivc.modalTransitionStyle = .crossDissolve
-        //        self.present(ivc, animated: true, completion: { _ in })
-        self.present(ivc, animated: true, completion: nil)
+        if WorldContentTableViewController.isViewOtherUsers == false {
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let ivc = storyboard.instantiateViewController(withIdentifier: "Start")
+            ivc.modalPresentationStyle = .custom
+            ivc.modalTransitionStyle = .crossDissolve
+            //        self.present(ivc, animated: true, completion: { _ in })
+            self.present(ivc, animated: true, completion: nil)
+        } else {
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let ivc = storyboard.instantiateViewController(withIdentifier: "worldContentVC")
+            ivc.modalPresentationStyle = .custom
+            ivc.modalTransitionStyle = .crossDissolve
+            //        self.present(ivc, animated: true, completion: { _ in })
+            self.present(ivc, animated: true, completion: nil)
+        }
     }
     
     @IBOutlet var changeImageView: UIView!
@@ -246,8 +336,7 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
         animateOutCE()
         animateOutUN()
         animateOutA()
-        animateOutD()
-        animateOutTID()
+//        animateOutTID()
 
     }
     
@@ -260,6 +349,30 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
         let defaultImage = UIImage(named: "anonymousTapper")
         let imageData = UIImageJPEGRepresentation(defaultImage!, 1.0)
         NSUbiquitousKeyValueStore.default.set(imageData, forKey: "userAvatar")
+        
+        let user = Auth.auth().currentUser
+        
+        guard let uid = user?.uid else {
+            return
+        }
+        
+        let storageRef = Storage.storage().reference().child("\(uid)")
+        
+        if let uploadData = UIImageJPEGRepresentation(defaultImage!, 1.0) {
+            storageRef.putData(uploadData, metadata: nil, completion: { (metadata, error) in
+                
+                if let profileImageUrl = metadata?.downloadURL()?.absoluteString {
+                    
+                    let ref = Database.database().reference(fromURL: "https://quicktap-155512.firebaseio.com/")
+                    let usersRef = ref.child("users").child(uid)
+                    let values = ["profileImageUrl": profileImageUrl]
+                    usersRef.updateChildValues(values as Any as! [AnyHashable : Any])
+                    
+                }
+                
+            })
+            
+        }
         
     }
     @IBAction func changeViaCamera(_ sender: Any) {
@@ -304,10 +417,36 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
         
         imageAvatar.transform = CGAffineTransform.identity
         
-        let imageData = UIImageJPEGRepresentation(newAvatar, 1.0)
+        let imageData = UIImageJPEGRepresentation(newAvatar, 0.1)
         NSUbiquitousKeyValueStore.default.set(imageData, forKey: "userAvatar")
         
+        let user = Auth.auth().currentUser
+        
+        guard let uid = user?.uid else {
+            return
+        }
+        
+        let storageRef = Storage.storage().reference().child("\(uid)")
+        
+        if let uploadData = UIImageJPEGRepresentation(newAvatar, 0.1) {
+            storageRef.putData(uploadData, metadata: nil, completion: { (metadata, error) in
+                
+                if let profileImageUrl = metadata?.downloadURL()?.absoluteString {
+                    
+                    let ref = Database.database().reference(fromURL: "https://quicktap-155512.firebaseio.com/")
+                    let usersRef = ref.child("users").child(uid)
+                    let values = ["profileImageUrl": profileImageUrl]
+                    usersRef.updateChildValues(values as Any as! [AnyHashable : Any])
+                    
+                }
+                
+            })
+            
+        }
+        
     }
+    
+    
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         picker.dismiss(animated: true, completion: nil)
@@ -376,8 +515,7 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
         animateOutCE()
         animateOut()
         animateOutA()
-        animateOutD()
-        animateOutTID()
+//        animateOutTID()
 
     }
     @IBAction func cancelUsernameEditing(_ sender: Any) {
@@ -386,20 +524,99 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
         
         animateOutUN()
     }
+    
+    static var usernameForRef = ""
+    
+    @objc func changed() {
+        if usernameField.text == AccountViewController.usernameForRef {
+            okBTN.isUserInteractionEnabled = false
+            okBTN.isEnabled = false
+        } else {
+            okBTN.isUserInteractionEnabled = true
+            okBTN.isEnabled = true
+        }
+    }
+    
     @IBAction func changeUsername(_ sender: Any) {
         
         self.view.endEditing(true)
         
-        animateOutUN()
+        let charSet = CharacterSet(charactersIn: ".#$[]")
+        if usernameField.text?.rangeOfCharacter(from: charSet) == nil {
 
-        name.setTitle("\(usernameField.text!)", for: UIControlState.normal)
-        
-        let usernameDefault = NSUbiquitousKeyValueStore.default
-        usernameDefault.set(usernameField.text!, forKey: "usernameDefault")
-        usernameDefault.synchronize()
+            let usernamesRef = Database.database().reference().child("usernamesTaken")
+            let usernameValue = self.usernameField.text
+            usernamesRef.child(usernameValue!).observeSingleEvent(of: .value, with: { (snapshot) in
+                if snapshot.exists() {
+                    self.view.endEditing(true)
+                    
+                    self.animateInME()
+                    
+                    self.errorTitle.text = "Error"
+                    self.errorDescription.text = "This username is taken."
+                } else {
+                    self.view.endEditing(true)
+                    
+                    let user = Auth.auth().currentUser
+                    
+                    let username = self.usernameField.text
+                    
+                    guard let uid = user?.uid else {
+                        return
+                    }
+                    
+                    let ref = Database.database().reference(fromURL: "https://quicktap-155512.firebaseio.com/")
+                    
+                    var usernamesRef = ref.child("usernamesTaken").child(AccountViewController.usernameForRef)
+                    usernamesRef.removeValue(completionBlock: { (error, reference) in
+                        if error != nil {
+                            self.animateInME()
+                            
+                            self.errorTitle.text = "Error"
+                            self.errorDescription.text = "\(String(describing: error?.localizedDescription))"
+                        } else {
+                            
+                            self.animateOutUN()
+                            
+                            self.name.setTitle("\(self.usernameField.text!)", for: UIControlState.normal)
+                            
+                            let usernameDefault = NSUbiquitousKeyValueStore.default
+                            usernameDefault.set(self.usernameField.text!, forKey: "usernameDefault")
+                            usernameDefault.synchronize()
+                            
+                            let usersRef = ref.child("users").child(uid)
+                            let values = ["username": username]
+                            usersRef.updateChildValues(values as Any as! [AnyHashable : Any])
+                            
+                            let value = ["\(String(describing: username!))": "\(uid)"]
+                            usernamesRef = ref.child("usernamesTaken")
+                            usernamesRef.updateChildValues(value)
+                            
+                            AccountViewController.usernameForRef = username!
+                            
+                        }
+                    })
+                    
+                }
+            }, withCancel: { (error) in
+                self.view.endEditing(true)
+                
+                self.animateInME()
+                
+                self.errorTitle.text = "Error"
+                self.errorDescription.text = "\(error.localizedDescription)"
+            })
+        } else {
+            self.view.endEditing(true)
+            
+            self.animateInME()
+            
+            self.errorTitle.text = "Error"
+            self.errorDescription.text = "'.', '#', '$', '[' or ']' are not allowed"
+        }
     }
     
-    func dismissKeyboard() {
+    @objc func dismissKeyboard() {
         
         self.view.endEditing(true)
         
@@ -433,11 +650,13 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
             self.visualEffectView?.effect = nil
             
         }) { (success: Bool) in
+            self.okBTN.isUserInteractionEnabled = false
+            self.okBTN.isEnabled = false
+            self.usernameField.text = AccountViewController.usernameForRef
+            
             self.changeUsernameView.removeFromSuperview()
         }
     }
-    
-    var whichFunction = 0
     
     let values = (1...100).map{$0}
     @IBOutlet var changeAgeView: UIView!
@@ -446,21 +665,11 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
     @IBOutlet weak var changeAge: UIButton!
     @IBAction func startChangeAge(_ sender: Any) {
         
-        whichFunction = 0
-        
-        let ageDefault = NSUbiquitousKeyValueStore.default
-        let UD = UserDefaults.standard
-        let age = UD.integer(forKey: "ageForRow")
-        if (ageDefault.object(forKey: "ageForRow") != nil){
-            pickAge.selectRow((UD.integer(forKey: "ageForRow") - 1), inComponent: 0, animated: false)
-            ageDefault.set(age, forKey: "ageForRow")
-        }
         animateInA()
         animateOutCE()
         animateOut()
         animateOutUN()
-        animateOutD()
-        animateOutTID()
+//        animateOutTID()
     }
     @IBAction func cancelAction(_ sender: Any) {
         animateOutA()
@@ -471,6 +680,19 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
         animateOutA()
         NSUbiquitousKeyValueStore.default.set(values[row], forKey: "ageForRow")
         UserDefaults.standard.set(values[row], forKey: "ageForRow")
+        
+        let user = Auth.auth().currentUser
+        
+        let ageValue = values[row]
+        
+        guard let uid = user?.uid else {
+            return
+        }
+        
+        let ref = Database.database().reference(fromURL: "https://quicktap-155512.firebaseio.com/")
+        let usersRef = ref.child("users").child(uid)
+        let value = ["age": ageValue]
+        usersRef.updateChildValues(value as Any as! [AnyHashable : Any])
     }
     
     func animateInA() {
@@ -498,210 +720,133 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
             self.changeAgeView.removeFromSuperview()
         }
     }
-    
-    var size = ""
-    var deviceArray = ["iPod Touch 5G", "iPod Touch 6 Gen", "iPad Mini", "iPad Mini 2", "iPad Mini 3", "iPad Mini 4", "iPad 2", "iPad 3", "iPad 4", "iPad Air", "iPad Air 2", "iPad Pro 9.7 Inches", "iPad Pro 12.9 Inches", "iPhone 4s", "iPhone 5", "iPhone 5C", "iPhone 5s", "iPhone 6", "iPhone 6 Plus", "iPhone 6s", "iPhone 6s Plus", "iPhone SE", "iPhone 7", "iPhone 7 Plus"]
-    
-    var threePointFiveInchesDevices = ["iPhone 4s"]
-    var fourInchesDevices = ["iPhone 5", "iPhone 5C", "iPhone 5s", "iPhone SE", "iPod Touch 5G", "iPod Touch 6 Gen"]
-    var fourPointSevenInchesDevices = ["iPhone 6", "iPhone 6s", "iPhone 7"]
-    var fivePointFiveInchesDevices = ["iPhone 6 Plus", "iPhone 6s Plus", "iPhone 7 Plus"]
-    var sevenPointNineInchesDevices = ["iPad Mini", "iPad Mini 2", "iPad Mini 3", "iPad Mini 4"]
-    var ninePointSevenInchesDevices = ["iPad 2", "iPad 3", "iPad 4", "iPad Air", "iPad Air 2", "iPad Pro 9.7 Inches"]
-    var twelvePointNineInchesDevices = ["iPad Pro 12.9 Inches"]
-    
-    @IBOutlet var changeDeviceView: UIView!
-    @IBOutlet weak var pickDevice: UIPickerView!
-    @IBOutlet weak var cancelPickingDevice: UIButton!
-    @IBOutlet weak var changeDevice: UIButton!
-    @IBAction func startChangeDevice(_ sender: Any) {
-        
-        whichFunction = 1
-        
-        let deviceDefault = UserDefaults.standard
-        if (deviceDefault.value(forKey: "deviceForRow") != nil){
-            pickDevice.selectRow(deviceDefault.integer(forKey: "deviceForRow"), inComponent: 0, animated: false)
-        }
-        
-        animateInD()
-        animateOutCE()
-        animateOut()
-        animateOutUN()
-        animateOutA()
-        animateOutTID()
-    }
-    @IBAction func cancelChangingDevice(_ sender: Any) {
-        animateOutD()
-    }
-    @IBAction func changeDeviceAction(_ sender: Any) {
-        
-        let row = pickDevice.selectedRow(inComponent: 0)
-        
-        if threePointFiveInchesDevices.contains(deviceArray[row]) {
-            screenSize.setTitle("3.5 Inch Device", for: UIControlState.normal)
-        } else if fourInchesDevices.contains(deviceArray[row]) {
-            screenSize.setTitle("4 Inch Device", for: UIControlState.normal)
-        } else if fourPointSevenInchesDevices.contains(deviceArray[row]) {
-            screenSize.setTitle("4.7 Inch Device", for: UIControlState.normal)
-        } else if fivePointFiveInchesDevices.contains(deviceArray[row]) {
-            screenSize.setTitle("5.5 Inch Device", for: UIControlState.normal)
-        } else if sevenPointNineInchesDevices.contains(deviceArray[row]) {
-            screenSize.setTitle("7.9 Inch Device", for: UIControlState.normal)
-        } else if ninePointSevenInchesDevices.contains(deviceArray[row]) {
-            screenSize.setTitle("9.7 Inch Device", for: UIControlState.normal)
-        } else if twelvePointNineInchesDevices.contains(deviceArray[row]) {
-            screenSize.setTitle("12.9 Inch Device", for: UIControlState.normal)
-        } else {
-            print("No such device")
-        }
-        
-        UserDefaults.standard.set(pickDevice.selectedRow(inComponent: 0), forKey: "deviceForRow")
-        UserDefaults.standard.set(screenSize.currentTitle, forKey: "device")
-        
-        animateOutD()
-    }
-    
-    func animateInD() {
-        self.view.addSubview(changeDeviceView)
-        changeDeviceView.center = self.view.center
-        
-        changeDeviceView.transform = CGAffineTransform.init(scaleX: 1.3, y: 1.3)
-        changeDeviceView.alpha = 0
-        
-        UIView.animate(withDuration: 0.5) {
-            self.visualEffectView?.effect = self.effect
-            self.changeDeviceView.alpha = 1
-            self.changeDeviceView.transform = CGAffineTransform.identity
-        }
-    }
-    
-    func animateOutD() {
-        UIView.animate(withDuration: 0.5, animations: {
-            self.changeDeviceView.transform = CGAffineTransform.init(scaleX: 1.3, y: 1.3)
-            self.changeDeviceView.alpha = 0
-            
-            self.visualEffectView?.effect = nil
-            
-        }) { (success: Bool) in
-            self.changeDeviceView.removeFromSuperview()
-        }
-    }
-    
+
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
     }
-    
+
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        if whichFunction == 0 {
             return values.count
-        } else {
-            return deviceArray.count
-        }
+
     }
-    
+
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        if whichFunction == 0 {
             let ageValues = values[row]
             return "\(ageValues)"
-        } else {
-            return deviceArray[row]
-        }
-    }
-    @IBOutlet var EnableTouchIDView: UIView!
-    @IBOutlet weak var cancelEnabling: UIButton!
-    @IBOutlet weak var enableTouchID: UIButton!
-    @IBOutlet weak var errorTitle: UILabel!
-    @IBOutlet weak var errorAndStuffTID: UILabel!
-    @IBAction func dismissEnablingView(_ sender: Any) {
-        animateOutTID()
-    }
-    @IBAction func enableTouchIDAuth(_ sender: Any) {
-        if UserDefaults.standard.bool(forKey: "userHasTouchIDAuth") == true {
-            
-            UserDefaults.standard.set(false, forKey: "userHasTouchIDAuth")
-            animateOutTID()
-        } else {
-            authenitcateUser()
-        }
-    }
-    @IBAction func startEnableTouchID(_ sender: Any) {
-        if UserDefaults.standard.bool(forKey: "userHasTouchIDAuth") == false {
-        animateInTID()
-        animateOutCE()
-        animateOut()
-        animateOutUN()
-        animateOutA()
-        animateOutD()
-        } else {
-            animateInTID()
-            animateOutCE()
-            animateOut()
-            animateOutUN()
-            animateOutA()
-            animateOutD()
-            
-            errorTitle.text = "Disable Touch ID Authentication"
-            errorAndStuffTID.text = "You're about to disable Touch ID access to this Tapedup Profile. Press 'OK to continue."
-            
-        }
     }
     
-    func animateInTID() {
-        self.view.addSubview(EnableTouchIDView)
-        EnableTouchIDView.center = self.view.center
+    func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
+        let view = UIView(frame: CGRect(x: 0, y: 0, width: 295, height: 116))
         
-        self.errorTitle.text = "Enable Touch ID Authentication"
-        self.errorAndStuffTID.text = "You must have a Touch ID fingerprint stored on your Touch ID compatible device to enable Touch ID authentication."
+        let label = UILabel(frame: CGRect(x: 0, y: 0, width: 295, height: 116))
+        let ageValues = values[row]
+        label.text = "\(ageValues)"
+        label.textColor = UIColor.white
+        label.textAlignment = .center
+        label.font = UIFont.boldSystemFont(ofSize: 18)
+        view.addSubview(label)
         
-        EnableTouchIDView.transform = CGAffineTransform.init(scaleX: 1.3, y: 1.3)
-        EnableTouchIDView.alpha = 0
+        return view
         
-        UIView.animate(withDuration: 0.5) {
-            self.visualEffectView?.effect = self.effect
-            self.EnableTouchIDView.alpha = 1
-            self.EnableTouchIDView.transform = CGAffineTransform.identity
-        }
     }
     
-    func animateOutTID() {
-        UIView.animate(withDuration: 0.5, animations: {
-            self.EnableTouchIDView.transform = CGAffineTransform.init(scaleX: 1.3, y: 1.3)
-            self.EnableTouchIDView.alpha = 0
-            
-            self.visualEffectView?.effect = nil
-            
-        }) { (success: Bool) in
-            self.EnableTouchIDView.removeFromSuperview()
-        }
-    }
+    // Authentication foundation for the future
     
-    func authenitcateUser() {
-        let context = LAContext()
-        
-        var error: NSError?
-        
-        
-        if context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) {
-            let displayedPermissionString = "You chose to lock your account \(AccountViewController.defaultUsername). In order to access it, input your Touch ID"
-            context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: displayedPermissionString) {
-                    [unowned self] success, authenticationError in
-                DispatchQueue.main.async {
-                    if success {
-                        self.animateOutTID()
-                        UserDefaults.standard.set(true, forKey: "userHasTouchIDAuth")
-                        
-                    } else {
-                        self.errorTitle.text = "Error"
-                        self.errorAndStuffTID.text = "Access to Tapedup Failed. Please try again."
-                    }
-                }
-            }
-            
-        } else {
-            self.errorTitle.text = "Error"
-            self.errorAndStuffTID.text = "Your device is not compatible with Touch ID authentication"
-        }
-    }
+//    @IBOutlet var EnableTouchIDView: UIView!
+//    @IBOutlet weak var cancelEnabling: UIButton!
+//    @IBOutlet weak var enableTouchID: UIButton!
+//    @IBOutlet weak var errorTitle: UILabel!
+//    @IBOutlet weak var errorAndStuffTID: UILabel!
+//    @IBAction func dismissEnablingView(_ sender: Any) {
+//        animateOutTID()
+//    }
+//    @IBAction func enableTouchIDAuth(_ sender: Any) {
+//        if UserDefaults.standard.bool(forKey: "userHasTouchIDAuth") == true {
+//
+//            UserDefaults.standard.set(false, forKey: "userHasTouchIDAuth")
+//            animateOutTID()
+//        } else {
+//            authenitcateUser()
+//        }
+//    }
+//    @IBAction func startEnableTouchID(_ sender: Any) {
+//        if UserDefaults.standard.bool(forKey: "userHasTouchIDAuth") == false {
+//        animateInTID()
+//        animateOutCE()
+//        animateOut()
+//        animateOutUN()
+//        animateOutA()
+//        } else {
+//            animateInTID()
+//            animateOutCE()
+//            animateOut()
+//            animateOutUN()
+//            animateOutA()
+//
+//            errorTitle.text = "Disable Touch ID Authentication"
+//            errorAndStuffTID.text = "Press 'OK', then input Touch ID"
+//
+//        }
+//    }
+//
+//    func animateInTID() {
+//        self.view.addSubview(EnableTouchIDView)
+//        EnableTouchIDView.center = self.view.center
+//
+//        self.errorTitle.text = "Enable Touch ID Authentication"
+//        self.errorAndStuffTID.text = "You must have a Touch ID fingerprint stored on your Touch ID compatible device to enable Touch ID authentication."
+//
+//        EnableTouchIDView.transform = CGAffineTransform.init(scaleX: 1.3, y: 1.3)
+//        EnableTouchIDView.alpha = 0
+//
+//        UIView.animate(withDuration: 0.5) {
+//            self.visualEffectView?.effect = self.effect
+//            self.EnableTouchIDView.alpha = 1
+//            self.EnableTouchIDView.transform = CGAffineTransform.identity
+//        }
+//    }
+//
+//    func animateOutTID() {
+//        UIView.animate(withDuration: 0.5, animations: {
+//            self.EnableTouchIDView.transform = CGAffineTransform.init(scaleX: 1.3, y: 1.3)
+//            self.EnableTouchIDView.alpha = 0
+//
+//            self.visualEffectView?.effect = nil
+//
+//        }) { (success: Bool) in
+//            self.EnableTouchIDView.removeFromSuperview()
+//        }
+//    }
+//
+//    func authenitcateUser() {
+//        let context = LAContext()
+//
+//        var error: NSError?
+//
+//
+//        if context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) {
+//            let displayedPermissionString = "You chose to lock your account \(AccountViewController.defaultUsername). In order to access it, input your Touch ID"
+//            context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: displayedPermissionString) {
+//                    [unowned self] success, authenticationError in
+//                DispatchQueue.main.async {
+//                    if success {
+//                        self.animateOutTID()
+//                        UserDefaults.standard.set(true, forKey: "userHasTouchIDAuth")
+//
+//                    } else {
+//                        self.errorTitle.text = "Error"
+//                        self.errorAndStuffTID.text = "Access to Tapedup Failed. Please try again."
+//                    }
+//                }
+//            }
+//
+//        } else {
+//            self.errorTitle.text = "Error"
+//            self.errorAndStuffTID.text = "Your device is not compatible with Touch ID authentication"
+//        }
+//    }
+
+    var shouldGoBackIfError = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -714,58 +859,484 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
         navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
         navigationController?.navigationBar.shadowImage = UIImage()
         
-        if UserDefaults.standard.bool(forKey: "userHasTouchIDAuth") == true {
-            
-        } else {
-            UserDefaults.standard.set(false, forKey: "userHasTouchIDAuth")
-        }
+//        if UserDefaults.standard.bool(forKey: "userHasTouchIDAuth") == true {
+//
+//        } else {
+//            UserDefaults.standard.set(false, forKey: "userHasTouchIDAuth")
+//        }
         
-        if let savedUserAvatar = NSUbiquitousKeyValueStore.default.object(forKey: "userAvatar") as? NSData {
-            if let image = UIImage(data: savedUserAvatar as Data) {
-                imageAvatar.image = image
+        if Auth.auth().currentUser != nil {
+        
+            if WorldContentTableViewController.isViewOtherUsers == false {
+                let userID = Auth.auth().currentUser?.uid
+                Database.database().reference().child("users").child(userID!).observeSingleEvent(of: .value, with: { (snapshot) in
+                    if let value = snapshot.value as? NSDictionary {
+                        
+                        
+                        let UD = UserDefaults.standard
+                        
+                        if let age = value["age"] as! Int? {
+                            NSUbiquitousKeyValueStore.default.set(age, forKey: "ageForRow")
+                            UD.set(age, forKey: "ageForRow")
+                            
+                            let ageDefault = NSUbiquitousKeyValueStore.default
+                            let ageValue = UD.integer(forKey: "ageForRow")
+                            if (ageDefault.object(forKey: "ageForRow") != nil){
+                                self.pickAge.selectRow((UD.integer(forKey: "ageForRow") - 1), inComponent: 0, animated: false)
+                                ageDefault.set(ageValue, forKey: "ageForRow")
+                            }
+                            
+                            UIView.performWithoutAnimation {
+                                self.age.setTitle("\(String(describing: age)) yo", for: .normal)
+                                self.age.layoutIfNeeded()
+                            }
+                        }
+                        
+                        let profileImageUrl = value["profileImageUrl"] as? String? ?? ""
+                        
+                        if snapshot.hasChild("profileImageUrl") {
+                        
+                            Storage.storage().reference(forURL: profileImageUrl!).downloadURL(completion: { (url, error) in
+                                
+                                let session = URLSession(configuration: .default)
+                                let getImageFromUrl = session.dataTask(with: url!) { (data, response, error) in
 
+                                    if error != nil {
+                                        if let savedUserAvatar = NSUbiquitousKeyValueStore.default.object(forKey: "userAvatar") as? NSData {
+                                            if let image = UIImage(data: savedUserAvatar as Data) {
+                                                DispatchQueue.main.async(execute: {
+                                                    self.imageAvatar.image = image
+                                                })
+                                            }
+                                        }
+                                    } else {
+                                        if response as? HTTPURLResponse != nil {
+                                            if let imageData = data {
+                                                
+                                                DispatchQueue.main.async(execute: {
+                                                    let image = UIImage(data: imageData)
+                                                    self.imageAvatar.image = image
+                                                })
+                                                
+                                            } else {
+                                                if let savedUserAvatar = NSUbiquitousKeyValueStore.default.object(forKey: "userAvatar") as? NSData {
+                                                    if let image = UIImage(data: savedUserAvatar as Data) {
+                                                        self.imageAvatar.image = image
+                                                    }
+                                                }
+                                            }
+                                        } else {
+                                            if let savedUserAvatar = NSUbiquitousKeyValueStore.default.object(forKey: "userAvatar") as? NSData {
+                                                if let image = UIImage(data: savedUserAvatar as Data) {
+                                                    DispatchQueue.main.async(execute: {
+                                                        self.imageAvatar.image = image
+                                                    })
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                
+                                getImageFromUrl.resume()
+                                
+                                
+                            })
+                        
+                        } else {
+                            let defaultImage = UIImage(named: "anonymousTapper")
+                            let imageData = UIImageJPEGRepresentation(defaultImage!, 1.0)
+                            NSUbiquitousKeyValueStore.default.set(imageData, forKey: "userAvatar")
+                            
+                            let user = Auth.auth().currentUser
+                            
+                            guard let uid = user?.uid else {
+                                return
+                            }
+                            
+                            let storageRef = Storage.storage().reference().child("\(uid)")
+                            
+                            if let uploadData = UIImageJPEGRepresentation(defaultImage!, 1.0) {
+                                storageRef.putData(uploadData, metadata: nil, completion: { (metadata, error) in
+                                    
+                                    if let profileImageUrl = metadata?.downloadURL()?.absoluteString {
+                                        
+                                        let ref = Database.database().reference(fromURL: "https://quicktap-155512.firebaseio.com/")
+                                        let usersRef = ref.child("users").child(uid)
+                                        let values = ["profileImageUrl": profileImageUrl]
+                                        usersRef.updateChildValues(values as Any as! [AnyHashable : Any])
+                                        
+                                    }
+                                    
+                                })
+                                
+                            }
+                        }
+                        
+                        
+                        let username = value["username"] as? String? ?? ""
+                        NSUbiquitousKeyValueStore.default.set(username, forKey: "usernameDefault")
+                        
+                        let Highscore = value["Highscore"] as! Int?
+                        NSUbiquitousKeyValueStore.default.set(Highscore as Any, forKey: "Highscore")
+                        
+                        let tapedupStatus = value["tapedupStatus"] as? String? ?? ""
+                        NSUbiquitousKeyValueStore.default.set(tapedupStatus, forKey: "tapedupStatus")
+                        
+                        let timesPlayed = value["timesPlayed"] as! Int?
+                        NSUbiquitousKeyValueStore.default.set(timesPlayed as Any, forKey: "timesPlayed")
+                        
+                        let totalPlayTime = value["totalPlayTime"] as! Int?
+                        NSUbiquitousKeyValueStore.default.set(totalPlayTime as Any, forKey: "totalPlayTime")
+                        
+                        let totalTaps = value["totalTaps"] as! Int?
+                        NSUbiquitousKeyValueStore.default.set(totalTaps as Any, forKey: "totalTaps")
+                        
+                        let joinDate = value["joinDate"] as? String? ?? ""
+                        NSUbiquitousKeyValueStore.default.set(joinDate, forKey: "joinDate")
+                        
+                        UIView.performWithoutAnimation {
+                            self.name.setTitle(username, for: .normal)
+                            self.name.layoutIfNeeded()
+                            
+                        }
+                        
+                        if username != nil {
+                            AccountViewController.usernameForRef = username!
+                        }
+                        
+                        self.usernameField.text = username
+                        self.dateJoinedLbl.text = joinDate
+                        
+                        if tapedupStatus != nil {
+                            self.detailTableItems.insert(tapedupStatus!, at: 0)
+                        } else {
+                            self.detailTableItems.insert("", at: 0)
+                        }
+                        
+                        if Highscore != nil {
+                            self.detailTableItems.insert(String(describing: Highscore!), at: 1)
+                        } else {
+                            self.detailTableItems.insert("", at: 1)
+                        }
+                        
+                        if totalTaps != nil {
+                            self.detailTableItems.insert(String(describing: totalTaps!), at: 2)
+                        } else {
+                            self.detailTableItems.insert("", at: 2)
+                        }
+                        
+                        if totalPlayTime != nil {
+                            self.detailTableItems.insert("\(String(describing: totalPlayTime!)) secs", at: 3)
+                        } else {
+                            self.detailTableItems.insert("", at: 3)
+                        }
+                        
+                        if timesPlayed != nil {
+                            self.detailTableItems.insert(String(describing: timesPlayed!), at: 4)
+                        } else {
+                            self.detailTableItems.insert("", at: 4)
+                        }
+
+                        self.tableView.reloadData()
+                        
+                    } else {
+                        let UD = UserDefaults.standard
+                        let age = NSUbiquitousKeyValueStore.default.object(forKey: "ageForRow")
+                        UD.set(age, forKey: "ageForRow")
+                        
+                        let ageDefault = NSUbiquitousKeyValueStore.default
+                        let ageValue = UD.integer(forKey: "ageForRow")
+                        if (ageDefault.object(forKey: "ageForRow") != nil){
+                            self.pickAge.selectRow((UD.integer(forKey: "ageForRow") - 1), inComponent: 0, animated: false)
+                            ageDefault.set(ageValue, forKey: "ageForRow")
+                        }
+                        
+                        if let profilePicture = NSUbiquitousKeyValueStore.default.object(forKey: "userAvatar") as? NSData {
+                            if let image = UIImage(data: profilePicture as Data) {
+                                self.imageAvatar.image = image
+                            }
+                        }
+                        let username = NSUbiquitousKeyValueStore.default.object(forKey: "usernameDefault")
+                        let Highscore = NSUbiquitousKeyValueStore.default.object(forKey: "Highscore")
+                        let tapedupStatus = NSUbiquitousKeyValueStore.default.object(forKey: "tapedupStatus")
+                        let timesPlayed = NSUbiquitousKeyValueStore.default.object(forKey: "timesPlayed")
+                        let totalPlayTime = NSUbiquitousKeyValueStore.default.object(forKey: "totalPlayTime")
+                        let totalTaps = NSUbiquitousKeyValueStore.default.object(forKey: "totalTaps")
+                        
+                        UIView.performWithoutAnimation {
+                            self.name.setTitle(username as? String, for: .normal)
+                            self.name.layoutIfNeeded()
+                            
+                            self.age.setTitle("\(String(describing: age!)) yo", for: .normal)
+                            self.age.layoutIfNeeded()
+                        }
+                        self.usernameField.text = username as? String
+                        AccountViewController.usernameForRef = username as! String
+                        
+                        self.detailTableItems = [tapedupStatus as! String, String(describing: Highscore!), String(describing: totalTaps!), "\(String(describing: totalPlayTime!)) secs", String(describing: timesPlayed!)]
+                        
+                        self.tableView.reloadData()
+                    }
+                }) { (error) in
+                    let UD = UserDefaults.standard
+                    let age = NSUbiquitousKeyValueStore.default.object(forKey: "ageForRow")
+                    UD.set(age, forKey: "ageForRow")
+                    
+                    let ageDefault = NSUbiquitousKeyValueStore.default
+                    let ageValue = UD.integer(forKey: "ageForRow")
+                    if (ageDefault.object(forKey: "ageForRow") != nil){
+                        self.pickAge.selectRow((UD.integer(forKey: "ageForRow") - 1), inComponent: 0, animated: false)
+                        ageDefault.set(ageValue, forKey: "ageForRow")
+                    }
+                    
+                    if let profilePicture = NSUbiquitousKeyValueStore.default.object(forKey: "userAvatar") as? NSData {
+                        if let image = UIImage(data: profilePicture as Data) {
+                            self.imageAvatar.image = image
+                        }
+                    }
+                    let username = NSUbiquitousKeyValueStore.default.object(forKey: "usernameDefault")
+                    let Highscore = NSUbiquitousKeyValueStore.default.object(forKey: "Highscore")
+                    let tapedupStatus = NSUbiquitousKeyValueStore.default.object(forKey: "tapedupStatus")
+                    let timesPlayed = NSUbiquitousKeyValueStore.default.object(forKey: "timesPlayed")
+                    let totalPlayTime = NSUbiquitousKeyValueStore.default.object(forKey: "totalPlayTime")
+                    let totalTaps = NSUbiquitousKeyValueStore.default.object(forKey: "totalTaps")
+                    
+                    UIView.performWithoutAnimation {
+                        self.name.setTitle(username as? String, for: .normal)
+                        self.name.layoutIfNeeded()
+                        
+                        self.age.setTitle("\(String(describing: age!)) yo", for: .normal)
+                        self.age.layoutIfNeeded()
+                    }
+                    self.usernameField.text = username as? String
+                    AccountViewController.usernameForRef = username as! String
+                    
+                    self.detailTableItems = [tapedupStatus as! String, String(describing: Highscore!), String(describing: totalTaps!), "\(String(describing: totalPlayTime!)) secs", String(describing: timesPlayed!)]
+                    
+                    self.tableView.reloadData()
+                }
+            } else {
+                let usernamesRef = Database.database().reference().child("usernamesTaken")
+                usernamesRef.observeSingleEvent(of: .value, with: { (snapshot) in
+                    if snapshot.exists() {
+                        if let value = snapshot.value as? NSDictionary {
+
+                            if WorldContentTableViewController.nameOfUserViewing != nil || WorldContentTableViewController.nameOfUserViewing?.isEmpty == false {
+                                
+                                Database.database().reference().child("users").child((value["\(String(describing: WorldContentTableViewController.nameOfUserViewing!))"] as? String? ?? "")!).observeSingleEvent(of: .value, with: { (snapshot) in
+                                    if let value = snapshot.value as? NSDictionary {
+                                        
+                                        let profileImageUrl = value["profileImageUrl"] as? String? ?? ""
+                                        
+                                        if snapshot.hasChild("profileImageUrl") {
+                                            
+                                            Storage.storage().reference(forURL: profileImageUrl!).downloadURL(completion: { (url, error) in
+                                                
+                                                let session = URLSession(configuration: .default)
+                                                let getImageFromUrl = session.dataTask(with: url!) { (data, response, error) in
+                                                    
+                                                    if error != nil {
+                                                        print("error")
+                                                    } else {
+                                                        if response as? HTTPURLResponse != nil {
+                                                            if let imageData = data {
+                                                                
+                                                                DispatchQueue.main.async(execute: {
+                                                                    let image = UIImage(data: imageData)
+                                                                    self.imageAvatar.image = image
+                                                                })
+                                                                
+                                                            } else {
+                                                                if let savedUserAvatar = NSUbiquitousKeyValueStore.default.object(forKey: "userAvatar") as? NSData {
+                                                                    if let image = UIImage(data: savedUserAvatar as Data) {
+                                                                        self.imageAvatar.image = image
+                                                                    }
+                                                                }
+                                                            }
+                                                        } else {
+                                                            self.animateInME()
+                                                            
+                                                            self.errorTitle.text = "Error"
+                                                            self.errorDescription.text = "Couldn't retrieve profile pic"
+                                                        }
+                                                    }
+                                                }
+                                                
+                                                getImageFromUrl.resume()
+                                                
+                                                
+                                            })
+                                            
+                                        }
+                                        
+                                        let username = value["username"] as? String? ?? ""
+
+                                        let Highscore = value["Highscore"] as! Int?
+               
+                                        let tapedupStatus = value["tapedupStatus"] as? String? ?? ""
+                      
+                                        let timesPlayed = value["timesPlayed"] as! Int?
+                                   
+                                        let totalPlayTime = value["totalPlayTime"] as! Int?
+                        
+                                        let totalTaps = value["totalTaps"] as! Int?
+
+                                        let joinDate = value["joinDate"] as? String? ?? ""
+                                        
+                                        UIView.performWithoutAnimation {
+                                            self.name.setTitle(username, for: .normal)
+                                            self.name.layoutIfNeeded()
+                                        }
+                                        self.usernameField.text = username
+                                        self.dateJoinedLbl.text = joinDate
+                                        
+                                        self.age.isHidden = true
+                                        self.screenSize.isHidden = true
+                                        self.shareButton.isHidden = true
+                                        self.viewOtherUsersBtn.isEnabled = false
+                                        self.viewOtherUsersBtn.title = ""
+                                        self.imageAvatar.isUserInteractionEnabled = false
+                                        self.name.isUserInteractionEnabled = false
+                                        
+                                        if username != nil {
+                                            self.statsLbl.text = "\(String(describing: username!))'s Stats"
+                                            
+                                            self.navigationItem.title = "\(String(describing: username!))'s Profile"
+                                        }
+
+                                        if tapedupStatus != nil {
+                                            self.detailTableItems.insert(tapedupStatus!, at: 0)
+                                        } else {
+                                            self.detailTableItems.insert("", at: 0)
+                                        }
+                                        
+                                        if Highscore != nil {
+                                            self.detailTableItems.insert(String(describing: Highscore!), at: 1)
+                                        } else {
+                                            self.detailTableItems.insert("", at: 1)
+                                        }
+                                        
+                                        if totalTaps != nil {
+                                            self.detailTableItems.insert(String(describing: totalTaps!), at: 2)
+                                        } else {
+                                            self.detailTableItems.insert("", at: 2)
+                                        }
+                                        
+                                        if totalPlayTime != nil {
+                                            self.detailTableItems.insert("\(String(describing: totalPlayTime!)) secs", at: 3)
+                                        } else {
+                                            self.detailTableItems.insert("", at: 3)
+                                        }
+                                        
+                                        if timesPlayed != nil {
+                                            self.detailTableItems.insert(String(describing: timesPlayed!), at: 4)
+                                        } else {
+                                            self.detailTableItems.insert("", at: 4)
+                                        }
+                                        
+                                        self.tableView.reloadData()
+                                    } else {
+                                        self.animateInME()
+                                        
+                                        self.errorTitle.text = "Error"
+                                        self.errorDescription.text = "Couldn't find user"
+                                    }
+                                }, withCancel: { (error) in
+                                    self.animateInME()
+                                    
+                                    self.errorTitle.text = "Error"
+                                    self.errorDescription.text = "\(String(describing: error.localizedDescription))"
+                                    
+                                })
+
+                            } else {
+                                self.animateInME()
+                                
+                                self.errorTitle.text = "Error"
+                                self.errorDescription.text = "Couldn't find user"
+                            }
+                        } else {
+                            self.animateInME()
+                            
+                            self.errorTitle.text = "Error"
+                            self.errorDescription.text = "Couldn't find user"
+                        }
+                    } else {
+                        self.animateInME()
+                        
+                        self.errorTitle.text = "Error"
+                        self.errorDescription.text = "Couldn't find user"
+                    }
+                }, withCancel: { (error) in
+                    self.animateInME()
+                    
+                    self.errorTitle.text = "Error"
+                    self.errorDescription.text = "\(String(describing: error.localizedDescription))"
+                })
             }
         }
-        
         AccountViewController.defaultUsername = name.currentTitle!
+        
+        okBTN.isUserInteractionEnabled = false
+        okBTN.isEnabled = false
+        usernameField.addTarget(self, action: #selector(AccountViewController.changed), for: UIControlEvents.editingChanged)
         
         imageAvatar.layer.cornerRadius = self.imageAvatar.frame.size.width / 2
         imageAvatar.clipsToBounds = true
         
-        imageAvatar.layer.borderWidth = 3.0
-        imageAvatar.layer.borderColor = UIColor(red: 230.0/255.0, green: 224.0/255.0, blue: 221.0/255.0, alpha: 1.0).cgColor
+        imageAvatar.layer.borderWidth = 5.0
+        imageAvatar.layer.borderColor = UIColor(red: 204.0/255.0, green: 150.0/255.0, blue: 117.0/255.0, alpha: 1.0).cgColor
         
-        shareButton.layer.cornerRadius = 5.0
+        shareButton.layer.cornerRadius = 10.0
         shareButton.clipsToBounds = true
         
-        changeImageView.layer.cornerRadius = 5.0
+        changeImageView.layer.shadowColor = UIColor.black.cgColor
+        changeImageView.layer.shadowOpacity = 1
+        changeImageView.layer.shadowOffset = CGSize.zero
+        changeImageView.layer.shadowRadius = 10
+        changeImageView.layer.shadowPath = UIBezierPath(rect: changeImageView.bounds).cgPath
+        changeImageView.layer.cornerRadius = 10.0
         changeImageView.clipsToBounds = true
-        defaultBTN.layer.cornerRadius = 5.0
+        defaultBTN.layer.cornerRadius = 10.0
         defaultBTN.clipsToBounds = true
-        cameraBTN.layer.cornerRadius = 5.0
+        cameraBTN.layer.cornerRadius = 10.0
         cameraBTN.clipsToBounds = true
-        photoBTN.layer.cornerRadius = 5.0
+        photoBTN.layer.cornerRadius = 10.0
         photoBTN.clipsToBounds = true
-        cancelBTN.layer.cornerRadius = 5.0
+        cancelBTN.layer.cornerRadius = 10.0
         cancelBTN.clipsToBounds = true
         
-        changeUsernameView.layer.cornerRadius = 5.0
+        changeUsernameView.layer.shadowColor = UIColor.black.cgColor
+        changeUsernameView.layer.shadowOpacity = 1
+        changeUsernameView.layer.shadowOffset = CGSize.zero
+        changeUsernameView.layer.shadowRadius = 10
+        changeUsernameView.layer.shadowPath = UIBezierPath(rect: changeUsernameView.bounds).cgPath
+        changeUsernameView.layer.cornerRadius = 10.0
         changeUsernameView.clipsToBounds = true
-        cancelUsernameBTN.layer.cornerRadius = 5.0
+        cancelUsernameBTN.layer.cornerRadius = 10.0
         cancelUsernameBTN.clipsToBounds = true
-        okBTN.layer.cornerRadius = 5.0
+        okBTN.layer.cornerRadius = 10.0
         okBTN.clipsToBounds = true
         
-        let usernameDefault = NSUbiquitousKeyValueStore.default
-        if (usernameDefault.object(forKey: "usernameDefault") != nil){
-            name.setTitle("\(usernameDefault.object(forKey: "usernameDefault")!)", for: UIControlState.normal)
-            usernameField.text = "\(usernameDefault.object(forKey: "usernameDefault")!)"
-        }
+        mailErrorView.layer.shadowColor = UIColor.black.cgColor
+        mailErrorView.layer.shadowOpacity = 1
+        mailErrorView.layer.shadowOffset = CGSize.zero
+        mailErrorView.layer.shadowRadius = 10
+        mailErrorView.layer.shadowPath = UIBezierPath(rect: mailErrorView.bounds).cgPath
+        mailErrorView.layer.cornerRadius = 10.0
+        mailErrorView.clipsToBounds = true
+        errorOkBtn.layer.cornerRadius = 10.0
+        errorOkBtn.clipsToBounds = true
         
-        let ageDefault = NSUbiquitousKeyValueStore.default
-        if (ageDefault.object(forKey: "ageForRow") != nil){
-            age.setTitle("\(ageDefault.object(forKey: "ageForRow")!) yo", for: UIControlState.normal)
-        }
+        changeErrorView.layer.shadowColor = UIColor.black.cgColor
+        changeErrorView.layer.shadowOpacity = 1
+        changeErrorView.layer.shadowOffset = CGSize.zero
+        changeErrorView.layer.shadowRadius = 10
+        changeErrorView.layer.shadowPath = UIBezierPath(rect: changeErrorView.bounds).cgPath
+        changeErrorView.layer.cornerRadius = 10.0
+        changeErrorView.clipsToBounds = true
+        dismissBTN.layer.cornerRadius = 10.0
+        dismissBTN.clipsToBounds = true
         
         self.usernameField.delegate = self
         
@@ -775,33 +1346,21 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
         
         pickAge.dataSource = self
         pickAge.delegate = self
-        pickAge.showsSelectionIndicator = false
-        
-        changeAgeView.layer.cornerRadius = 5.0
+
+        changeAgeView.layer.shadowColor = UIColor.black.cgColor
+        changeAgeView.layer.shadowOpacity = 1
+        changeAgeView.layer.shadowOffset = CGSize.zero
+        changeAgeView.layer.shadowRadius = 10
+        changeAgeView.layer.shadowPath = UIBezierPath(rect: changeAgeView.bounds).cgPath
+        changeAgeView.layer.cornerRadius = 10.0
         changeAgeView.clipsToBounds = true
-        cancelChangingAge.layer.cornerRadius = 5.0
+        cancelChangingAge.layer.cornerRadius = 10.0
         cancelChangingAge.clipsToBounds = true
-        changeAge.layer.cornerRadius = 5.0
+        changeAge.layer.cornerRadius = 10.0
         changeAge.clipsToBounds = true
         
-        pickDevice.dataSource = self
-        pickDevice.delegate = self
-        pickDevice.showsSelectionIndicator = false
-        
-        let deviceDefault = UserDefaults.standard
-        if (deviceDefault.value(forKey: "device") != nil){
-            
-            screenSize.setTitle("\(deviceDefault.value(forKey: "device")!)", for: UIControlState.normal)
-            
-        }
-        
-        changeDeviceView.layer.cornerRadius = 5.0
-        changeDeviceView.clipsToBounds = true
-        cancelPickingDevice.layer.cornerRadius = 5.0
-        cancelPickingDevice.clipsToBounds = true
-        changeDevice.layer.cornerRadius = 5.0
-        changeDevice.clipsToBounds = true
-        
+        screenSize.setTitle("\(UIDevice.current.modelName)", for: UIControlState.normal)
+
         tableView.delegate = self
         tableView.dataSource = self
         
@@ -814,18 +1373,17 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
             tableView.isScrollEnabled = true
         }
         
-        let image = lockBTN.currentImage
-        let tintedImage = image?.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
-        lockBTN.setImage(tintedImage, for: .normal)
-        lockBTN.setImage(tintedImage, for: .selected)
-        lockBTN.tintColor = UIColor(red: 230.0/255.0, green: 224.0/255.0, blue: 221.0/255.0, alpha: 1.0)
+//        let image = lockBTN.image
+//        let tintedImage = image?.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
+//        lockBTN.image = tintedImage
+//        lockBTN.tintColor = UIColor(red: 230.0/255.0, green: 224.0/255.0, blue: 221.0/255.0, alpha: 1.0)
         
-        EnableTouchIDView.layer.cornerRadius = 5.0
-        EnableTouchIDView.clipsToBounds = false
-        cancelEnabling.layer.cornerRadius = 5.0
-        cancelEnabling.clipsToBounds = false
-        enableTouchID.layer.cornerRadius = 5.0
-        enableTouchID.clipsToBounds = false
+//        EnableTouchIDView.layer.cornerRadius = 10.0
+//        EnableTouchIDView.clipsToBounds = false
+//        cancelEnabling.layer.cornerRadius = 10.0
+//        cancelEnabling.clipsToBounds = false
+//        enableTouchID.layer.cornerRadius = 10.0
+//        enableTouchID.clipsToBounds = false
         
         // Do any additional setup after loading the view.
     }
@@ -835,6 +1393,39 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
         // Dispose of any resources that can be recreated.
     }
 
+    override func viewDidLayoutSubviews() {
+        for subview in pickAge.subviews{
+            if subview.frame.origin.y != 0 {
+                subview.isHidden = true
+            }
+        }
+        
+        background.layer.shadowColor = UIColor.black.cgColor
+        background.layer.shadowOpacity = 1
+        background.layer.shadowOffset = CGSize.zero
+        background.layer.shadowRadius = 10
+        background.layer.shadowPath = UIBezierPath(rect: background.bounds).cgPath
+    }
+    @IBOutlet weak var viewOtherUsersBtn: UIBarButtonItem!
+    @IBAction func goToCreateAccount(_ sender: Any) {
+        if Auth.auth().currentUser != nil {
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let ivc = storyboard.instantiateViewController(withIdentifier: "worldContentVC")
+            ivc.modalPresentationStyle = .custom
+            ivc.modalTransitionStyle = .crossDissolve
+            //        self.present(ivc, animated: true, completion: { _ in })
+            self.present(ivc, animated: true, completion: nil)
+        } else {
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let ivc = storyboard.instantiateViewController(withIdentifier: "signUpVC")
+            ivc.modalPresentationStyle = .custom
+            ivc.modalTransitionStyle = .crossDissolve
+            //        self.present(ivc, animated: true, completion: { _ in })
+            self.present(ivc, animated: true, completion: nil)
+        }
+        
+    }
+    
     /*
     // MARK: - Navigation
 
