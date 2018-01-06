@@ -272,6 +272,23 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
     
     @IBAction func dismissMailError(_ sender: Any) {
         animateOutME()
+        if shouldGoBackIfError == true {
+            if WorldContentTableViewController.isViewOtherUsers == false {
+                let storyboard = UIStoryboard(name: "Main", bundle: nil)
+                let ivc = storyboard.instantiateViewController(withIdentifier: "Start")
+                ivc.modalPresentationStyle = .custom
+                ivc.modalTransitionStyle = .crossDissolve
+                //        self.present(ivc, animated: true, completion: { _ in })
+                self.present(ivc, animated: true, completion: nil)
+            } else {
+                let storyboard = UIStoryboard(name: "Main", bundle: nil)
+                let ivc = storyboard.instantiateViewController(withIdentifier: "worldContentVC")
+                ivc.modalPresentationStyle = .custom
+                ivc.modalTransitionStyle = .crossDissolve
+                //        self.present(ivc, animated: true, completion: { _ in })
+                self.present(ivc, animated: true, completion: nil)
+            }
+        }
     }
 
     @IBOutlet var mailErrorView: UIView!
@@ -554,6 +571,8 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
                     
                     self.errorTitle.text = "Error"
                     self.errorDescription.text = "This username is taken."
+                    
+                    self.shouldGoBackIfError = false
                 } else {
                     self.view.endEditing(true)
                     
@@ -573,7 +592,11 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
                             self.animateInME()
                             
                             self.errorTitle.text = "Error"
-                            self.errorDescription.text = "\(String(describing: error?.localizedDescription))"
+                            if let unwrappedError = error {
+                                self.errorDescription.text = "\(unwrappedError.localizedDescription)"
+                            }
+                            
+                            self.shouldGoBackIfError = false
                         } else {
                             
                             self.animateOutUN()
@@ -593,7 +616,7 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
                             usernamesRef.updateChildValues(value)
                             
                             AccountViewController.usernameForRef = username!
-                            
+                        
                         }
                     })
                     
@@ -605,6 +628,8 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
                 
                 self.errorTitle.text = "Error"
                 self.errorDescription.text = "\(error.localizedDescription)"
+                
+                self.shouldGoBackIfError = false
             })
         } else {
             self.view.endEditing(true)
@@ -613,6 +638,8 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
             
             self.errorTitle.text = "Error"
             self.errorDescription.text = "'.', '#', '$', '[' or ']' are not allowed"
+            
+            self.shouldGoBackIfError = false
         }
     }
     
@@ -1124,122 +1151,158 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
                             if WorldContentTableViewController.nameOfUserViewing != nil || WorldContentTableViewController.nameOfUserViewing?.isEmpty == false {
                                 
                                 Database.database().reference().child("users").child((value["\(String(describing: WorldContentTableViewController.nameOfUserViewing!))"] as? String? ?? "")!).observeSingleEvent(of: .value, with: { (snapshot) in
-                                    if let value = snapshot.value as? NSDictionary {
-                                        
-                                        let profileImageUrl = value["profileImageUrl"] as? String? ?? ""
-                                        
-                                        if snapshot.hasChild("profileImageUrl") {
+                                    
+                                    if snapshot.exists() {
+                                    
+                                        if let value = snapshot.value as? NSDictionary {
                                             
-                                            Storage.storage().reference(forURL: profileImageUrl!).downloadURL(completion: { (url, error) in
+                                            let profileImageUrl = value["profileImageUrl"] as? String? ?? ""
+                                            
+                                            if snapshot.hasChild("profileImageUrl") {
                                                 
-                                                let session = URLSession(configuration: .default)
-                                                let getImageFromUrl = session.dataTask(with: url!) { (data, response, error) in
+                                                Storage.storage().reference(forURL: profileImageUrl!).downloadURL(completion: { (url, error) in
                                                     
-                                                    if error != nil {
-                                                        print("error")
-                                                    } else {
-                                                        if response as? HTTPURLResponse != nil {
-                                                            if let imageData = data {
-                                                                
-                                                                DispatchQueue.main.async(execute: {
-                                                                    let image = UIImage(data: imageData)
-                                                                    self.imageAvatar.image = image
-                                                                })
-                                                                
-                                                            } else {
-                                                                if let savedUserAvatar = NSUbiquitousKeyValueStore.default.object(forKey: "userAvatar") as? NSData {
-                                                                    if let image = UIImage(data: savedUserAvatar as Data) {
-                                                                        self.imageAvatar.image = image
-                                                                    }
-                                                                }
-                                                            }
-                                                        } else {
+                                                    let session = URLSession(configuration: .default)
+                                                    let getImageFromUrl = session.dataTask(with: url!) { (data, response, error) in
+                                                        
+                                                        if error != nil {
                                                             self.animateInME()
                                                             
                                                             self.errorTitle.text = "Error"
                                                             self.errorDescription.text = "Couldn't retrieve profile pic"
+                                                            
+                                                            self.shouldGoBackIfError = false
+                                                        } else {
+                                                            if response as? HTTPURLResponse != nil {
+                                                                if let imageData = data {
+                                                                    
+                                                                    DispatchQueue.main.async(execute: {
+                                                                        let image = UIImage(data: imageData)
+                                                                        self.imageAvatar.image = image
+                                                                    })
+                                                                    
+                                                                } else {
+                                                                    self.animateInME()
+                                                                    
+                                                                    self.errorTitle.text = "Error"
+                                                                    self.errorDescription.text = "Couldn't retrieve profile pic"
+                                                                    
+                                                                    self.shouldGoBackIfError = false
+                                                                }
+                                                            } else {
+                                                                self.animateInME()
+                                                                
+                                                                self.errorTitle.text = "Error"
+                                                                self.errorDescription.text = "Couldn't retrieve profile pic"
+                                                                
+                                                                self.shouldGoBackIfError = false
+                                                            }
                                                         }
                                                     }
-                                                }
+                                                    
+                                                    getImageFromUrl.resume()
+                                                    
+                                                    
+                                                })
                                                 
-                                                getImageFromUrl.resume()
-                                                
-                                                
-                                            })
+                                            }
                                             
-                                        }
-                                        
-                                        let username = value["username"] as? String? ?? ""
+                                            let username = value["username"] as? String? ?? ""
 
-                                        let Highscore = value["Highscore"] as! Int?
-               
-                                        let tapedupStatus = value["tapedupStatus"] as? String? ?? ""
-                      
-                                        let timesPlayed = value["timesPlayed"] as! Int?
-                                   
-                                        let totalPlayTime = value["totalPlayTime"] as! Int?
-                        
-                                        let totalTaps = value["totalTaps"] as! Int?
+                                            let Highscore = value["Highscore"] as! Int?
+                   
+                                            let tapedupStatus = value["tapedupStatus"] as? String? ?? ""
+                          
+                                            let timesPlayed = value["timesPlayed"] as! Int?
+                                       
+                                            let totalPlayTime = value["totalPlayTime"] as! Int?
+                            
+                                            let totalTaps = value["totalTaps"] as! Int?
 
-                                        let joinDate = value["joinDate"] as? String? ?? ""
-                                        
-                                        UIView.performWithoutAnimation {
-                                            self.name.setTitle(username, for: .normal)
-                                            self.name.layoutIfNeeded()
-                                        }
-                                        self.usernameField.text = username
-                                        self.dateJoinedLbl.text = joinDate
-                                        
-                                        self.age.isHidden = true
-                                        self.screenSize.isHidden = true
-                                        self.shareButton.isHidden = true
-                                        self.viewOtherUsersBtn.isEnabled = false
-                                        self.viewOtherUsersBtn.title = ""
-                                        self.imageAvatar.isUserInteractionEnabled = false
-                                        self.name.isUserInteractionEnabled = false
-                                        
-                                        if username != nil {
-                                            self.statsLbl.text = "\(String(describing: username!))'s Stats"
+                                            let joinDate = value["joinDate"] as? String? ?? ""
                                             
-                                            self.navigationItem.title = "\(String(describing: username!))'s Profile"
-                                        }
+                                            UIView.performWithoutAnimation {
+                                                self.name.setTitle(username, for: .normal)
+                                                self.name.layoutIfNeeded()
+                                            }
+                                            self.usernameField.text = username
+                                            self.dateJoinedLbl.text = joinDate
+                                            
+                                            self.age.isHidden = true
+                                            self.screenSize.isHidden = true
+                                            self.shareButton.isHidden = true
+                                            self.viewOtherUsersBtn.isEnabled = false
+                                            self.viewOtherUsersBtn.title = ""
+                                            self.imageAvatar.isUserInteractionEnabled = false
+                                            self.name.isUserInteractionEnabled = false
+                                            
+                                            if username != nil {
+                                                self.statsLbl.text = "\(String(describing: username!))'s Stats"
+                                                
+                                                self.navigationItem.title = "\(String(describing: username!))'s Profile"
+                                            }
 
-                                        if tapedupStatus != nil {
-                                            self.detailTableItems.insert(tapedupStatus!, at: 0)
-                                        } else {
-                                            self.detailTableItems.insert("", at: 0)
-                                        }
+                                            if tapedupStatus != nil {
+                                                self.detailTableItems.insert(tapedupStatus!, at: 0)
+                                            } else {
+                                                self.detailTableItems.insert("", at: 0)
+                                            }
+                                            
+                                            if Highscore != nil {
+                                                self.detailTableItems.insert(String(describing: Highscore!), at: 1)
+                                            } else {
+                                                self.detailTableItems.insert("", at: 1)
+                                            }
+                                            
+                                            if totalTaps != nil {
+                                                self.detailTableItems.insert(String(describing: totalTaps!), at: 2)
+                                            } else {
+                                                self.detailTableItems.insert("", at: 2)
+                                            }
+                                            
+                                            if totalPlayTime != nil {
+                                                self.detailTableItems.insert("\(String(describing: totalPlayTime!)) secs", at: 3)
+                                            } else {
+                                                self.detailTableItems.insert("", at: 3)
+                                            }
+                                            
+                                            if timesPlayed != nil {
+                                                self.detailTableItems.insert(String(describing: timesPlayed!), at: 4)
+                                            } else {
+                                                self.detailTableItems.insert("", at: 4)
+                                            }
+                                            
+                                            self.tableView.reloadData()
                                         
-                                        if Highscore != nil {
-                                            self.detailTableItems.insert(String(describing: Highscore!), at: 1)
                                         } else {
-                                            self.detailTableItems.insert("", at: 1)
+                                            self.animateInME()
+                                            
+                                            self.errorTitle.text = "Error"
+                                            self.errorDescription.text = "Couldn't find user"
+                                            
+                                            self.shouldGoBackIfError = true
+                                            
+                                            self.name.isUserInteractionEnabled = false
+                                            self.age.isUserInteractionEnabled = false
+                                            self.imageAvatar.isUserInteractionEnabled = false
+                                            self.viewOtherUsersBtn.isEnabled = false
+                                            self.tableView.isUserInteractionEnabled = false
+                                            self.shareButton.isUserInteractionEnabled = false
                                         }
-                                        
-                                        if totalTaps != nil {
-                                            self.detailTableItems.insert(String(describing: totalTaps!), at: 2)
-                                        } else {
-                                            self.detailTableItems.insert("", at: 2)
-                                        }
-                                        
-                                        if totalPlayTime != nil {
-                                            self.detailTableItems.insert("\(String(describing: totalPlayTime!)) secs", at: 3)
-                                        } else {
-                                            self.detailTableItems.insert("", at: 3)
-                                        }
-                                        
-                                        if timesPlayed != nil {
-                                            self.detailTableItems.insert(String(describing: timesPlayed!), at: 4)
-                                        } else {
-                                            self.detailTableItems.insert("", at: 4)
-                                        }
-                                        
-                                        self.tableView.reloadData()
                                     } else {
                                         self.animateInME()
                                         
                                         self.errorTitle.text = "Error"
                                         self.errorDescription.text = "Couldn't find user"
+                                        
+                                        self.shouldGoBackIfError = true
+                                        
+                                        self.name.isUserInteractionEnabled = false
+                                        self.age.isUserInteractionEnabled = false
+                                        self.imageAvatar.isUserInteractionEnabled = false
+                                        self.viewOtherUsersBtn.isEnabled = false
+                                        self.tableView.isUserInteractionEnabled = false
+                                        self.shareButton.isUserInteractionEnabled = false
                                     }
                                 }, withCancel: { (error) in
                                     self.animateInME()
@@ -1247,31 +1310,74 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
                                     self.errorTitle.text = "Error"
                                     self.errorDescription.text = "\(String(describing: error.localizedDescription))"
                                     
+                                    self.shouldGoBackIfError = true
+                                    
+                                    self.name.isUserInteractionEnabled = false
+                                    self.age.isUserInteractionEnabled = false
+                                    self.imageAvatar.isUserInteractionEnabled = false
+                                    self.viewOtherUsersBtn.isEnabled = false
+                                    self.tableView.isUserInteractionEnabled = false
+                                    self.shareButton.isUserInteractionEnabled = false
                                 })
-
                             } else {
                                 self.animateInME()
                                 
                                 self.errorTitle.text = "Error"
                                 self.errorDescription.text = "Couldn't find user"
+                                
+                                self.shouldGoBackIfError = true
+                                
+                                self.name.isUserInteractionEnabled = false
+                                self.age.isUserInteractionEnabled = false
+                                self.imageAvatar.isUserInteractionEnabled = false
+                                self.viewOtherUsersBtn.isEnabled = false
+                                self.tableView.isUserInteractionEnabled = false
+                                self.shareButton.isUserInteractionEnabled = false
                             }
                         } else {
                             self.animateInME()
                             
                             self.errorTitle.text = "Error"
                             self.errorDescription.text = "Couldn't find user"
+                            
+                            self.shouldGoBackIfError = true
+                            
+                            self.name.isUserInteractionEnabled = false
+                            self.age.isUserInteractionEnabled = false
+                            self.imageAvatar.isUserInteractionEnabled = false
+                            self.viewOtherUsersBtn.isEnabled = false
+                            self.tableView.isUserInteractionEnabled = false
+                            self.shareButton.isUserInteractionEnabled = false
                         }
                     } else {
                         self.animateInME()
                         
                         self.errorTitle.text = "Error"
                         self.errorDescription.text = "Couldn't find user"
+                        
+                        self.shouldGoBackIfError = true
+                        
+                        self.name.isUserInteractionEnabled = false
+                        self.age.isUserInteractionEnabled = false
+                        self.imageAvatar.isUserInteractionEnabled = false
+                        self.viewOtherUsersBtn.isEnabled = false
+                        self.tableView.isUserInteractionEnabled = false
+                        self.shareButton.isUserInteractionEnabled = false
                     }
                 }, withCancel: { (error) in
                     self.animateInME()
                     
                     self.errorTitle.text = "Error"
                     self.errorDescription.text = "\(String(describing: error.localizedDescription))"
+                    
+                    self.shouldGoBackIfError = true
+                    
+                    self.name.isUserInteractionEnabled = false
+                    self.age.isUserInteractionEnabled = false
+                    self.imageAvatar.isUserInteractionEnabled = false
+                    self.viewOtherUsersBtn.isEnabled = false
+                    self.tableView.isUserInteractionEnabled = false
+                    self.shareButton.isUserInteractionEnabled = false
                 })
             }
         }

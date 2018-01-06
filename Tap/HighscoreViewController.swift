@@ -157,7 +157,7 @@ class HighscoreViewController: UIViewController {
                                         if Highscore == 0 {
                                             self.youLBL.isHidden = true
                                             self.highscore.isHidden = true
-                                            self.onLBL.text = "This player hasn't played Highscore Mode yet!"
+                                            self.onLBL.text = "This player hasn't played Highscore Mode yet"
                                             self.date.isHidden = true
                                         } else {
                                             self.youLBL.text = "This player achieved their highscore of"

@@ -163,7 +163,11 @@ class TimesPlayedViewController: UIViewController {
                                     if let value = snapshot.value as? NSDictionary {
                                         
                                         let timesPlayed = value["timesPlayed"] as? Int
-                                        self.totalLBL.text = "This player has played a total of \(String(describing: timesPlayed!)) games"
+                                        if timesPlayed == 1 {
+                                            self.totalLBL.text = "This player has played a total of \(String(describing: timesPlayed!)) game"
+                                        } else {
+                                            self.totalLBL.text = "This player has played a total of \(String(describing: timesPlayed!)) games"
+                                        }
 
                                         let timesPlayedTM = value["timesPlayedTM"] as? Int
                                         self.timeData.text = "\(String(describing: timesPlayedTM!)) in Time Mode"

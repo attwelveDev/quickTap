@@ -537,20 +537,29 @@ class SettingsTableViewController: UITableViewController, UITextFieldDelegate {
                 let usersRef = ref.child("users").child(uid)
                 usersRef.removeValue(completionBlock: { (error, database) in
                     if error != nil {
-                        print(error?.localizedDescription as Any)
+                        self.animateInErrorView()
+                        if let unwrappedError = error {
+                            self.errorDescription.text = "\(unwrappedError.localizedDescription)"
+                        }
                     }
                 })
                 let usernamesRef = ref.child("usernamesTaken").child(AccountViewController.usernameForRef)
                 usernamesRef.removeValue(completionBlock: { (error, database) in
                     if error != nil {
-                        print(error?.localizedDescription as Any)
+                        self.animateInErrorView()
+                        if let unwrappedError = error {
+                            self.errorDescription.text = "\(unwrappedError.localizedDescription)"
+                        }
                     }
                 })
                 
                 let storageRef = Storage.storage().reference().child("\(uid)")
                 storageRef.delete(completion: { (error) in
                     if error != nil {
-                        print(error?.localizedDescription as Any)
+                        self.animateInErrorView()
+                        if let unwrappedError = error {
+                            self.errorDescription.text = "\(unwrappedError.localizedDescription)"
+                        }
                     }
                 })
                 

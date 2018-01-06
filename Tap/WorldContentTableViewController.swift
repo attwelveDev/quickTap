@@ -185,7 +185,9 @@ class WorldContentTableViewController: UITableViewController, UITextFieldDelegat
     }
     
     func animateIn() {
-        self.view.addSubview(errorView)
+        DispatchQueue.main.async {
+            self.view.addSubview(self.errorView)
+        }
         if #available(iOS 11.0, *) {
             errorView.center = CGPoint(x: self.view.center.x, y: self.view.center.y - self.searchController.searchBar.frame.height -  (self.navigationController?.navigationBar.frame.height)!)
         } else {
@@ -278,25 +280,34 @@ class WorldContentTableViewController: UITableViewController, UITextFieldDelegat
                             
                             if error != nil {
                                 self.animateIn()
-                                self.errorDescription.text = "\(String(describing: error?.localizedDescription))"
+                                if let unwrappedError = error {
+                                    self.errorDescription.text = "\(unwrappedError.localizedDescription)"
+                                }
                             } else {
                                 if response as? HTTPURLResponse != nil {
                                     if let imageData = data {
                                         
                                         if let image = UIImage(data: imageData) {
                                             if let highscore = Highscore {
-                                                self.userInfoArray.insert(userInfo(profilePic: image, username: username, tapedupStatus: status, highscore: String(highscore)), at: 0)
-                                                DispatchQueue.main.async(execute: {
-                                                    self.tableView.reloadData()
-                                                    self.searchController.searchBar.isUserInteractionEnabled = true
-                                                    
-                                                })
+//                                                if username != nil && status != nil && Highscore != nil && profileImageUrl != nil {
+                                                    self.userInfoArray.insert(userInfo(profilePic: image, username: username, tapedupStatus: status, highscore: String(highscore)), at: 0)
+                                                    DispatchQueue.main.async(execute: {
+                                                        self.tableView.reloadData()
+                                                        self.searchController.searchBar.isUserInteractionEnabled = true
+                                                        
+                                                    })
+//                                                } else {
+//                                                    self.animateIn()
+//                                                    self.errorDescription.text = "Couldn't retrieve user info"
+//                                                }
+                                            } else {
+                                                self.animateIn()
+                                                self.errorDescription.text = "Couldn't retrieve user info"
                                             }
                                         } else {
                                             self.animateIn()
                                             self.errorDescription.text = "Couldn't retrieve user info"
                                         }
-                                        
                                     } else {
                                         self.animateIn()
                                         self.errorDescription.text = "Couldn't retrieve user info"
@@ -319,7 +330,7 @@ class WorldContentTableViewController: UITableViewController, UITextFieldDelegat
         
         }, withCancel: { (error) in
             self.animateIn()
-            self.errorDescription.text = "Couldn't find user info"
+            self.errorDescription.text = "\(error.localizedDescription)"
         })
         
         // Do any additional setup after loading the view.
