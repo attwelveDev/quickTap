@@ -926,33 +926,12 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
                             Storage.storage().reference(forURL: profileImageUrl!).downloadURL(completion: { (url, error) in
                                 
                                 let session = URLSession(configuration: .default)
-                                let getImageFromUrl = session.dataTask(with: url!) { (data, response, error) in
+                                
+                                if url != nil {
+                                
+                                    let getImageFromUrl = session.dataTask(with: url!) { (data, response, error) in
 
-                                    if error != nil {
-                                        if let savedUserAvatar = NSUbiquitousKeyValueStore.default.object(forKey: "userAvatar") as? NSData {
-                                            if let image = UIImage(data: savedUserAvatar as Data) {
-                                                DispatchQueue.main.async(execute: {
-                                                    self.imageAvatar.image = image
-                                                })
-                                            }
-                                        }
-                                    } else {
-                                        if response as? HTTPURLResponse != nil {
-                                            if let imageData = data {
-                                                
-                                                DispatchQueue.main.async(execute: {
-                                                    let image = UIImage(data: imageData)
-                                                    self.imageAvatar.image = image
-                                                })
-                                                
-                                            } else {
-                                                if let savedUserAvatar = NSUbiquitousKeyValueStore.default.object(forKey: "userAvatar") as? NSData {
-                                                    if let image = UIImage(data: savedUserAvatar as Data) {
-                                                        self.imageAvatar.image = image
-                                                    }
-                                                }
-                                            }
-                                        } else {
+                                        if error != nil {
                                             if let savedUserAvatar = NSUbiquitousKeyValueStore.default.object(forKey: "userAvatar") as? NSData {
                                                 if let image = UIImage(data: savedUserAvatar as Data) {
                                                     DispatchQueue.main.async(execute: {
@@ -960,13 +939,43 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
                                                     })
                                                 }
                                             }
+                                        } else {
+                                            if response as? HTTPURLResponse != nil {
+                                                if let imageData = data {
+                                                    
+                                                    DispatchQueue.main.async(execute: {
+                                                        let image = UIImage(data: imageData)
+                                                        self.imageAvatar.image = image
+                                                    })
+                                                    
+                                                } else {
+                                                    if let savedUserAvatar = NSUbiquitousKeyValueStore.default.object(forKey: "userAvatar") as? NSData {
+                                                        if let image = UIImage(data: savedUserAvatar as Data) {
+                                                            self.imageAvatar.image = image
+                                                        }
+                                                    }
+                                                }
+                                            } else {
+                                                if let savedUserAvatar = NSUbiquitousKeyValueStore.default.object(forKey: "userAvatar") as? NSData {
+                                                    if let image = UIImage(data: savedUserAvatar as Data) {
+                                                        DispatchQueue.main.async(execute: {
+                                                            self.imageAvatar.image = image
+                                                        })
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                    
+                                    getImageFromUrl.resume()
+                                    
+                                } else {
+                                    if let profilePicture = NSUbiquitousKeyValueStore.default.object(forKey: "userAvatar") as? NSData {
+                                        if let image = UIImage(data: profilePicture as Data) {
+                                            self.imageAvatar.image = image
                                         }
                                     }
                                 }
-                                
-                                getImageFromUrl.resume()
-                                
-                                
                             })
                         
                         } else {
