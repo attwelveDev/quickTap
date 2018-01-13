@@ -558,86 +558,97 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
         
         self.view.endEditing(true)
         
-        let charSet = CharacterSet(charactersIn: ".#$[]")
-        if usernameField.text?.rangeOfCharacter(from: charSet) == nil {
+        if usernameField.text?.isEmpty == false || usernameField.text != "" {
+            let charSet = CharacterSet(charactersIn: ".#$[]")
+            if usernameField.text?.rangeOfCharacter(from: charSet) == nil {
 
-            let usernamesRef = Database.database().reference().child("usernamesTaken")
-            let usernameValue = self.usernameField.text
-            usernamesRef.child(usernameValue!).observeSingleEvent(of: .value, with: { (snapshot) in
-                if snapshot.exists() {
+                let usernamesRef = Database.database().reference().child("usernamesTaken")
+                let usernameValue = self.usernameField.text
+                usernamesRef.child(usernameValue!).observeSingleEvent(of: .value, with: { (snapshot) in
+                    if snapshot.exists() {
+                        self.view.endEditing(true)
+                        
+                        self.animateInME()
+                        
+                        self.errorTitle.text = "Error"
+                        self.errorDescription.text = "This username is taken."
+                        
+                        self.shouldGoBackIfError = false
+                    } else {
+                        self.view.endEditing(true)
+                        
+                        let user = Auth.auth().currentUser
+                        
+                        let username = self.usernameField.text
+                        
+                        guard let uid = user?.uid else {
+                            return
+                        }
+                        
+                        let ref = Database.database().reference(fromURL: "https://quicktap-155512.firebaseio.com/")
+                        
+                        var usernamesRef = ref.child("usernamesTaken").child(AccountViewController.usernameForRef)
+                        usernamesRef.removeValue(completionBlock: { (error, reference) in
+                            if error != nil {
+                                self.animateInME()
+                                
+                                self.errorTitle.text = "Error"
+                                if let unwrappedError = error {
+                                    self.errorDescription.text = "\(unwrappedError.localizedDescription)"
+                                }
+                                
+                                self.shouldGoBackIfError = false
+                            } else {
+                                
+                                self.animateOutUN()
+                                
+                                self.name.setTitle("\(self.usernameField.text!)", for: UIControlState.normal)
+                                
+                                let usernameDefault = NSUbiquitousKeyValueStore.default
+                                usernameDefault.set(self.usernameField.text!, forKey: "usernameDefault")
+                                usernameDefault.synchronize()
+                                
+                                let usersRef = ref.child("users").child(uid)
+                                let values = ["username": username]
+                                usersRef.updateChildValues(values as Any as! [AnyHashable : Any])
+                                
+                                let value = ["\(String(describing: username!))": "\(uid)"]
+                                usernamesRef = ref.child("usernamesTaken")
+                                usernamesRef.updateChildValues(value)
+                                
+                                AccountViewController.usernameForRef = username!
+                            
+                            }
+                        })
+                        
+                    }
+                }, withCancel: { (error) in
                     self.view.endEditing(true)
                     
                     self.animateInME()
                     
                     self.errorTitle.text = "Error"
-                    self.errorDescription.text = "This username is taken."
+                    self.errorDescription.text = "\(error.localizedDescription)"
                     
                     self.shouldGoBackIfError = false
-                } else {
-                    self.view.endEditing(true)
-                    
-                    let user = Auth.auth().currentUser
-                    
-                    let username = self.usernameField.text
-                    
-                    guard let uid = user?.uid else {
-                        return
-                    }
-                    
-                    let ref = Database.database().reference(fromURL: "https://quicktap-155512.firebaseio.com/")
-                    
-                    var usernamesRef = ref.child("usernamesTaken").child(AccountViewController.usernameForRef)
-                    usernamesRef.removeValue(completionBlock: { (error, reference) in
-                        if error != nil {
-                            self.animateInME()
-                            
-                            self.errorTitle.text = "Error"
-                            if let unwrappedError = error {
-                                self.errorDescription.text = "\(unwrappedError.localizedDescription)"
-                            }
-                            
-                            self.shouldGoBackIfError = false
-                        } else {
-                            
-                            self.animateOutUN()
-                            
-                            self.name.setTitle("\(self.usernameField.text!)", for: UIControlState.normal)
-                            
-                            let usernameDefault = NSUbiquitousKeyValueStore.default
-                            usernameDefault.set(self.usernameField.text!, forKey: "usernameDefault")
-                            usernameDefault.synchronize()
-                            
-                            let usersRef = ref.child("users").child(uid)
-                            let values = ["username": username]
-                            usersRef.updateChildValues(values as Any as! [AnyHashable : Any])
-                            
-                            let value = ["\(String(describing: username!))": "\(uid)"]
-                            usernamesRef = ref.child("usernamesTaken")
-                            usernamesRef.updateChildValues(value)
-                            
-                            AccountViewController.usernameForRef = username!
-                        
-                        }
-                    })
-                    
-                }
-            }, withCancel: { (error) in
+                })
+            } else {
                 self.view.endEditing(true)
                 
                 self.animateInME()
                 
                 self.errorTitle.text = "Error"
-                self.errorDescription.text = "\(error.localizedDescription)"
+                self.errorDescription.text = "'.', '#', '$', '[' or ']' are not allowed"
                 
                 self.shouldGoBackIfError = false
-            })
+            }
         } else {
             self.view.endEditing(true)
             
             self.animateInME()
             
             self.errorTitle.text = "Error"
-            self.errorDescription.text = "'.', '#', '$', '[' or ']' are not allowed"
+            self.errorDescription.text = "Please fill in your username"
             
             self.shouldGoBackIfError = false
         }
@@ -1020,6 +1031,18 @@ class AccountViewController: UIViewController, UIImagePickerControllerDelegate, 
                         
                         let timesPlayed = value["timesPlayed"] as! Int?
                         NSUbiquitousKeyValueStore.default.set(timesPlayed as Any, forKey: "timesPlayed")
+                        
+                        let timesPlayedTM = value["timesPlayedTM"] as! Int?
+                        NSUbiquitousKeyValueStore.default.set(timesPlayedTM as Any, forKey: "timesPlayedTM")
+                        
+                        let timesPlayedHS = value["timesPlayedHS"] as! Int?
+                        NSUbiquitousKeyValueStore.default.set(timesPlayedHS as Any, forKey: "timesPlayedHS")
+                        
+                        let timesPlayedAT = value["timesPlayedAT"] as! Int?
+                        NSUbiquitousKeyValueStore.default.set(timesPlayedAT as Any, forKey: "timesPlayedAT")
+                        
+                        let timesPlayedTRLM = value["timesPlayedTRLM"] as! Int?
+                        NSUbiquitousKeyValueStore.default.set(timesPlayedTRLM as Any, forKey: "timesPlayedTRLM")
                         
                         let totalPlayTime = value["totalPlayTime"] as! Int?
                         NSUbiquitousKeyValueStore.default.set(totalPlayTime as Any, forKey: "totalPlayTime")

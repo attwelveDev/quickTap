@@ -155,8 +155,10 @@
                     <items>
                         <group width="1" alignment="center" verticalAlignment="center" layout="overlap" id="4nx-Ji-6a2">
                             <items>
-                                <button width="1" height="1" alignment="center" verticalAlignment="center" id="PpK-Ej-Na5">
+                                <button width="1" height="1" alignment="center" verticalAlignment="center" title="3" id="PpK-Ej-Na5">
+                                    <color key="titleColor" red="0.90251296759999999" green="0.87860709429999995" blue="0.86578613520000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <fontDescription key="font" type="system" weight="black" pointSize="16"/>
                                     <connections>
                                         <action selector="tapped" destination="zh3-IF-SLr" id="289-c2-HJ4"/>
                                     </connections>
@@ -182,9 +184,11 @@
                         </group>
                     </items>
                     <connections>
+                        <outlet property="button" destination="PpK-Ej-Na5" id="Rk9-nI-F9j"/>
                         <outlet property="countdown" destination="6Cf-ny-Erj" id="g3g-4P-GJZ"/>
                         <outlet property="group" destination="4nx-Ji-6a2" id="4Ni-Hp-7wy"/>
                         <outlet property="score" destination="kZH-0C-TuB" id="1pQ-UM-yzv"/>
+                        <outlet property="subGroup" destination="UGy-2z-dvZ" id="7V0-Rd-6jp"/>
                     </connections>
                 </controller>
             </objects>

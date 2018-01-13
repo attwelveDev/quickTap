@@ -91,343 +91,219 @@ class GameOverViewController: UIViewController, MFMailComposeViewControllerDeleg
             let ref = Database.database().reference(fromURL: "https://quicktap-155512.firebaseio.com/")
             let usersRef = ref.child("users").child(uid)
 
-                var timesPlayed = NSUbiquitousKeyValueStore.default.double(forKey: "timesPlayed")
+            var timesPlayed = NSUbiquitousKeyValueStore.default.double(forKey: "timesPlayed")
+            
+            if NSUbiquitousKeyValueStore.default.object(forKey: "timesPlayed") == nil {
                 
-                if NSUbiquitousKeyValueStore.default.object(forKey: "timesPlayed") == nil {
+                NSUbiquitousKeyValueStore.default.set(1, forKey: "timesPlayed")
+                
+                let values = ["timesPlayed": timesPlayed]
+                usersRef.updateChildValues(values as Any as! [AnyHashable : Any])
+                
+            } else {
+                timesPlayed += 1
+                
+                NSUbiquitousKeyValueStore.default.set(timesPlayed, forKey: "timesPlayed")
+                
+                let values = ["timesPlayed": timesPlayed]
+                usersRef.updateChildValues(values as Any as! [AnyHashable : Any])
+                
+            }
+            
+            var totalPlayTime = NSUbiquitousKeyValueStore.default.double(forKey: "totalPlayTime")
+            
+            if NSUbiquitousKeyValueStore.default.object(forKey: "totalPlayTime") == nil {
+                
+                if ViewController.mode == 1 {
+                    NSUbiquitousKeyValueStore.default.set(GameOverViewController.timePlayed, forKey: "totalPlayTime")
                     
-                    NSUbiquitousKeyValueStore.default.set(1, forKey: "timesPlayed")
-                    
-                    let values = ["timesPlayed": timesPlayed]
+                    let values = ["totalPlayTime": totalPlayTime]
                     usersRef.updateChildValues(values as Any as! [AnyHashable : Any])
                     
-                } else {
-                    timesPlayed += 1
+                } else if ViewController.mode == 0 {
+                    NSUbiquitousKeyValueStore.default.set(60, forKey: "totalPlayTime")
                     
-                    NSUbiquitousKeyValueStore.default.set(timesPlayed, forKey: "timesPlayed")
+                    let values = ["totalPlayTime": totalPlayTime]
+                    usersRef.updateChildValues(values as Any as! [AnyHashable : Any])
                     
-                    let values = ["timesPlayed": timesPlayed]
+                } else if ViewController.mode == 2 {
+                    NSUbiquitousKeyValueStore.default.set(GameOverViewController.timePlayed, forKey: "totalPlayTime")
+                    
+                    let values = ["totalPlayTime": totalPlayTime]
+                    usersRef.updateChildValues(values as Any as! [AnyHashable : Any])
+                    
+                } else if ViewController.mode == 3 {
+                    NSUbiquitousKeyValueStore.default.set(MultiplayerViewController.timeDurationOfTM, forKey: "totalPlayTime")
+                    
+                    let values = ["totalPlayTime": totalPlayTime]
                     usersRef.updateChildValues(values as Any as! [AnyHashable : Any])
                     
                 }
                 
-                var totalPlayTime = NSUbiquitousKeyValueStore.default.double(forKey: "totalPlayTime")
+            } else {
                 
-                if NSUbiquitousKeyValueStore.default.object(forKey: "totalPlayTime") == nil {
+                if ViewController.mode == 1 {
+                    totalPlayTime += GameOverViewController.timePlayed
+                    NSUbiquitousKeyValueStore.default.set(totalPlayTime, forKey: "totalPlayTime")
                     
-                    if ViewController.mode == 1 {
-                        NSUbiquitousKeyValueStore.default.set(GameOverViewController.timePlayed, forKey: "totalPlayTime")
-                        
-                        let values = ["totalPlayTime": totalPlayTime]
-                        usersRef.updateChildValues(values as Any as! [AnyHashable : Any])
-                        
-                    } else if ViewController.mode == 0 {
-                        NSUbiquitousKeyValueStore.default.set(60, forKey: "totalPlayTime")
-                        
-                        let values = ["totalPlayTime": totalPlayTime]
-                        usersRef.updateChildValues(values as Any as! [AnyHashable : Any])
-                        
-                    } else if ViewController.mode == 2 {
-                        NSUbiquitousKeyValueStore.default.set(GameOverViewController.timePlayed, forKey: "totalPlayTime")
-                        
-                        let values = ["totalPlayTime": totalPlayTime]
-                        usersRef.updateChildValues(values as Any as! [AnyHashable : Any])
-                        
-                    } else if ViewController.mode == 3 {
-                        NSUbiquitousKeyValueStore.default.set(MultiplayerViewController.timeDurationOfTM, forKey: "totalPlayTime")
-                        
-                        let values = ["totalPlayTime": totalPlayTime]
-                        usersRef.updateChildValues(values as Any as! [AnyHashable : Any])
-                        
-                    }
+                    let values = ["totalPlayTime": totalPlayTime]
+                    usersRef.updateChildValues(values as Any as! [AnyHashable : Any])
                     
-                } else {
+                } else if ViewController.mode == 0 {
+                    totalPlayTime += 60
+                    NSUbiquitousKeyValueStore.default.set(totalPlayTime, forKey: "totalPlayTime")
                     
-                    if ViewController.mode == 1 {
-                        totalPlayTime += GameOverViewController.timePlayed
-                        NSUbiquitousKeyValueStore.default.set(totalPlayTime, forKey: "totalPlayTime")
-                        
-                        let values = ["totalPlayTime": totalPlayTime]
-                        usersRef.updateChildValues(values as Any as! [AnyHashable : Any])
-                        
-                    } else if ViewController.mode == 0 {
-                        totalPlayTime += 60
-                        NSUbiquitousKeyValueStore.default.set(totalPlayTime, forKey: "totalPlayTime")
-                        
-                        let values = ["totalPlayTime": totalPlayTime]
-                        usersRef.updateChildValues(values as Any as! [AnyHashable : Any])
-                        
-                    } else if ViewController.mode == 2 {
-                        totalPlayTime += GameOverViewController.timePlayed
-                        NSUbiquitousKeyValueStore.default.set(totalPlayTime, forKey: "totalPlayTime")
-                        
-                        let values = ["totalPlayTime": totalPlayTime]
-                        usersRef.updateChildValues(values as Any as! [AnyHashable : Any])
-                        
-                    } else if ViewController.mode == 3 {
-                        totalPlayTime += MultiplayerViewController.timeDurationOfTM
-                        NSUbiquitousKeyValueStore.default.set(totalPlayTime, forKey: "totalPlayTime")
-                        
-                        let values = ["totalPlayTime": totalPlayTime]
-                        usersRef.updateChildValues(values as Any as! [AnyHashable : Any])
-                        
-                    }
+                    let values = ["totalPlayTime": totalPlayTime]
+                    usersRef.updateChildValues(values as Any as! [AnyHashable : Any])
+                    
+                } else if ViewController.mode == 2 {
+                    totalPlayTime += GameOverViewController.timePlayed
+                    NSUbiquitousKeyValueStore.default.set(totalPlayTime, forKey: "totalPlayTime")
+                    
+                    let values = ["totalPlayTime": totalPlayTime]
+                    usersRef.updateChildValues(values as Any as! [AnyHashable : Any])
+                    
+                } else if ViewController.mode == 3 {
+                    totalPlayTime += MultiplayerViewController.timeDurationOfTM
+                    NSUbiquitousKeyValueStore.default.set(totalPlayTime, forKey: "totalPlayTime")
+                    
+                    let values = ["totalPlayTime": totalPlayTime]
+                    usersRef.updateChildValues(values as Any as! [AnyHashable : Any])
                     
                 }
                 
-                var totalTaps = NSUbiquitousKeyValueStore.default.double(forKey: "totalTaps")
+            }
+            
+            var totalTaps = NSUbiquitousKeyValueStore.default.double(forKey: "totalTaps")
+            
+            if NSUbiquitousKeyValueStore.default.object(forKey: "totalTaps") == nil {
                 
-                if NSUbiquitousKeyValueStore.default.object(forKey: "totalTaps") == nil {
+                if ViewController.mode == 1 {
+                    NSUbiquitousKeyValueStore.default.set(ViewController.score, forKey: "totalTaps")
                     
-                    if ViewController.mode == 1 {
-                        NSUbiquitousKeyValueStore.default.set(ViewController.score, forKey: "totalTaps")
-                        
-                        let values = ["totalTaps": totalTaps]
-                        usersRef.updateChildValues(values as Any as! [AnyHashable : Any])
-                        
-                    } else if ViewController.mode == 0 {
-                        NSUbiquitousKeyValueStore.default.set(ViewController.score, forKey: "totalTaps")
-                        
-                        let values = ["totalTaps": totalTaps]
-                        usersRef.updateChildValues(values as Any as! [AnyHashable : Any])
-                        
-                    } else if ViewController.mode == 2 {
-                        NSUbiquitousKeyValueStore.default.set(MultiplayerViewController.whiteScore, forKey: "totalTaps")
-                        
-                        let values = ["totalTaps": totalTaps]
-                        usersRef.updateChildValues(values as Any as! [AnyHashable : Any])
-                        
-                    } else if ViewController.mode == 3 {
-                        NSUbiquitousKeyValueStore.default.set(MultiplayerViewController.timesTapped, forKey: "totalTaps")
-                        
-                        let values = ["totalTaps": totalTaps]
-                        usersRef.updateChildValues(values as Any as! [AnyHashable : Any])
-                        
-                    }
+                    let values = ["totalTaps": totalTaps]
+                    usersRef.updateChildValues(values as Any as! [AnyHashable : Any])
                     
-                } else {
+                } else if ViewController.mode == 0 {
+                    NSUbiquitousKeyValueStore.default.set(ViewController.score, forKey: "totalTaps")
                     
-                    if ViewController.mode == 1 {
-                        totalTaps += ViewController.score
-                        NSUbiquitousKeyValueStore.default.set(totalTaps, forKey: "totalTaps")
-                        
-                        let values = ["totalTaps": totalTaps]
-                        usersRef.updateChildValues(values as Any as! [AnyHashable : Any])
-                        
-                    } else if ViewController.mode == 0 {
-                        totalTaps += ViewController.score
-                        NSUbiquitousKeyValueStore.default.set(totalTaps, forKey: "totalTaps")
-                        
-                        let values = ["totalTaps": totalTaps]
-                        usersRef.updateChildValues(values as Any as! [AnyHashable : Any])
-                        
-                    } else if ViewController.mode == 2 {
-                        totalTaps += MultiplayerViewController.whiteScore
-                        NSUbiquitousKeyValueStore.default.set(totalTaps, forKey: "totalTaps")
-                        
-                        let values = ["totalTaps": totalTaps]
-                        usersRef.updateChildValues(values as Any as! [AnyHashable : Any])
-                        
-                    } else if ViewController.mode == 3 {
-                        totalTaps += MultiplayerViewController.timesTapped
-                        NSUbiquitousKeyValueStore.default.set(totalTaps, forKey: "totalTaps")
-                        
-                        let values = ["totalTaps": totalTaps]
-                        usersRef.updateChildValues(values as Any as! [AnyHashable : Any])
-                        
-                    }
+                    let values = ["totalTaps": totalTaps]
+                    usersRef.updateChildValues(values as Any as! [AnyHashable : Any])
+                    
+                } else if ViewController.mode == 2 {
+                    NSUbiquitousKeyValueStore.default.set(MultiplayerViewController.whiteScore, forKey: "totalTaps")
+                    
+                    let values = ["totalTaps": totalTaps]
+                    usersRef.updateChildValues(values as Any as! [AnyHashable : Any])
+                    
+                } else if ViewController.mode == 3 {
+                    NSUbiquitousKeyValueStore.default.set(MultiplayerViewController.timesTapped, forKey: "totalTaps")
+                    
+                    let values = ["totalTaps": totalTaps]
+                    usersRef.updateChildValues(values as Any as! [AnyHashable : Any])
                     
                 }
                 
+            } else {
                 
-                if NSUbiquitousKeyValueStore.default.double(forKey: "timesPlayed") >= 250 && NSUbiquitousKeyValueStore.default.double(forKey: "totalPlayTime") >= 1000 && NSUbiquitousKeyValueStore.default.double(forKey: "totalTaps") >= 10000 {
+                if ViewController.mode == 1 {
+                    totalTaps += ViewController.score
+                    NSUbiquitousKeyValueStore.default.set(totalTaps, forKey: "totalTaps")
+                    
+                    let values = ["totalTaps": totalTaps]
+                    usersRef.updateChildValues(values as Any as! [AnyHashable : Any])
+                    
+                } else if ViewController.mode == 0 {
+                    totalTaps += ViewController.score
+                    NSUbiquitousKeyValueStore.default.set(totalTaps, forKey: "totalTaps")
+                    
+                    let values = ["totalTaps": totalTaps]
+                    usersRef.updateChildValues(values as Any as! [AnyHashable : Any])
+                    
+                } else if ViewController.mode == 2 {
+                    totalTaps += MultiplayerViewController.whiteScore
+                    NSUbiquitousKeyValueStore.default.set(totalTaps, forKey: "totalTaps")
+                    
+                    let values = ["totalTaps": totalTaps]
+                    usersRef.updateChildValues(values as Any as! [AnyHashable : Any])
+                    
+                } else if ViewController.mode == 3 {
+                    totalTaps += MultiplayerViewController.timesTapped
+                    NSUbiquitousKeyValueStore.default.set(totalTaps, forKey: "totalTaps")
+                    
+                    let values = ["totalTaps": totalTaps]
+                    usersRef.updateChildValues(values as Any as! [AnyHashable : Any])
+                    
+                }
+                
+            }
+            
+            
+            if NSUbiquitousKeyValueStore.default.double(forKey: "timesPlayed") >= 250 && NSUbiquitousKeyValueStore.default.double(forKey: "totalPlayTime") >= 1000 && NSUbiquitousKeyValueStore.default.double(forKey: "totalTaps") >= 10000 {
+                
+                let defaults = NSUbiquitousKeyValueStore.default
+                if defaults.object(forKey: "isFirstGoingIntermediate") == nil {
+                    defaults.set("No", forKey:"isFirstGoingIntermediate")
+                    defaults.synchronize()
+                    GameOverViewController.newLevel = true
+                }
+                
+                NSUbiquitousKeyValueStore.default.set("Intermediate", forKey: "tapedupStatus")
+                
+                let values = ["tapedupStatus": NSUbiquitousKeyValueStore.default.object(forKey: "tapedupStatus")]
+                usersRef.updateChildValues(values as Any as! [AnyHashable : Any])
+                
+                if NSUbiquitousKeyValueStore.default.double(forKey: "timesPlayed") >= 500 && NSUbiquitousKeyValueStore.default.double(forKey: "totalPlayTime") >= 10000 && NSUbiquitousKeyValueStore.default.double(forKey: "totalTaps") >= 100000 {
                     
                     let defaults = NSUbiquitousKeyValueStore.default
-                    if defaults.object(forKey: "isFirstGoingIntermediate") == nil {
-                        defaults.set("No", forKey:"isFirstGoingIntermediate")
+                    if defaults.object(forKey: "isFirstGoingAdvanced") == nil {
+                        defaults.set("No", forKey:"isFirstGoingAdvanced")
                         defaults.synchronize()
                         GameOverViewController.newLevel = true
                     }
                     
-                    NSUbiquitousKeyValueStore.default.set("Intermediate", forKey: "tapedupStatus")
+                    NSUbiquitousKeyValueStore.default.set("Advanced", forKey: "tapedupStatus")
                     
                     let values = ["tapedupStatus": NSUbiquitousKeyValueStore.default.object(forKey: "tapedupStatus")]
                     usersRef.updateChildValues(values as Any as! [AnyHashable : Any])
                     
-                    if NSUbiquitousKeyValueStore.default.double(forKey: "timesPlayed") >= 500 && NSUbiquitousKeyValueStore.default.double(forKey: "totalPlayTime") >= 10000 && NSUbiquitousKeyValueStore.default.double(forKey: "totalTaps") >= 100000 {
+                    if NSUbiquitousKeyValueStore.default.double(forKey: "timesPlayed") >= 1000 && NSUbiquitousKeyValueStore.default.double(forKey: "totalPlayTime") >= 100000 && NSUbiquitousKeyValueStore.default.double(forKey: "totalTaps") >= 1000000 {
                         
                         let defaults = NSUbiquitousKeyValueStore.default
-                        if defaults.object(forKey: "isFirstGoingAdvanced") == nil {
-                            defaults.set("No", forKey:"isFirstGoingAdvanced")
+                        if defaults.object(forKey: "isFirstGoingProfessional") == nil {
+                            defaults.set("No", forKey:"isFirstGoingProfessional")
                             defaults.synchronize()
                             GameOverViewController.newLevel = true
                         }
                         
-                        NSUbiquitousKeyValueStore.default.set("Advanced", forKey: "tapedupStatus")
+                        NSUbiquitousKeyValueStore.default.set("Professional", forKey: "tapedupStatus")
                         
                         let values = ["tapedupStatus": NSUbiquitousKeyValueStore.default.object(forKey: "tapedupStatus")]
                         usersRef.updateChildValues(values as Any as! [AnyHashable : Any])
                         
-                        if NSUbiquitousKeyValueStore.default.double(forKey: "timesPlayed") >= 1000 && NSUbiquitousKeyValueStore.default.double(forKey: "totalPlayTime") >= 100000 && NSUbiquitousKeyValueStore.default.double(forKey: "totalTaps") >= 1000000 {
+                        if NSUbiquitousKeyValueStore.default.double(forKey: "timesPlayed") >= 10000 && NSUbiquitousKeyValueStore.default.double(forKey: "totalPlayTime") >= 1000000 && NSUbiquitousKeyValueStore.default.double(forKey: "totalTaps") >= 1000000000 {
                             
                             let defaults = NSUbiquitousKeyValueStore.default
-                            if defaults.object(forKey: "isFirstGoingProfessional") == nil {
-                                defaults.set("No", forKey:"isFirstGoingProfessional")
+                            if defaults.object(forKey: "isFirstGoingHardcore") == nil {
+                                defaults.set("No", forKey:"isFirstGoingHardcore")
                                 defaults.synchronize()
                                 GameOverViewController.newLevel = true
                             }
                             
-                            NSUbiquitousKeyValueStore.default.set("Professional", forKey: "tapedupStatus")
+                            NSUbiquitousKeyValueStore.default.set("Hardcore", forKey: "tapedupStatus")
                             
                             let values = ["tapedupStatus": NSUbiquitousKeyValueStore.default.object(forKey: "tapedupStatus")]
                             usersRef.updateChildValues(values as Any as! [AnyHashable : Any])
                             
-                            if NSUbiquitousKeyValueStore.default.double(forKey: "timesPlayed") >= 10000 && NSUbiquitousKeyValueStore.default.double(forKey: "totalPlayTime") >= 1000000 && NSUbiquitousKeyValueStore.default.double(forKey: "totalTaps") >= 1000000000 {
-                                
-                                let defaults = NSUbiquitousKeyValueStore.default
-                                if defaults.object(forKey: "isFirstGoingHardcore") == nil {
-                                    defaults.set("No", forKey:"isFirstGoingHardcore")
-                                    defaults.synchronize()
-                                    GameOverViewController.newLevel = true
-                                }
-                                
-                                NSUbiquitousKeyValueStore.default.set("Hardcore", forKey: "tapedupStatus")
-                                
-                                let values = ["tapedupStatus": NSUbiquitousKeyValueStore.default.object(forKey: "tapedupStatus")]
-                                usersRef.updateChildValues(values as Any as! [AnyHashable : Any])
-                                
-                            }
                         }
                     }
-                } else {
-                    NSUbiquitousKeyValueStore.default.set("Amateur", forKey: "tapedupStatus")
-                    
-                    let values = ["tapedupStatus": NSUbiquitousKeyValueStore.default.object(forKey: "tapedupStatus")]
-                    usersRef.updateChildValues(values as Any as! [AnyHashable : Any])
                 }
+            } else {
+                NSUbiquitousKeyValueStore.default.set("Amateur", forKey: "tapedupStatus")
                 
-//            }, withCancel: { (error) in
-////                var timesPlayed = NSUbiquitousKeyValueStore.default.double(forKey: "timesPlayed")
-////
-////                if NSUbiquitousKeyValueStore.default.object(forKey: "timesPlayed") == nil {
-////                    NSUbiquitousKeyValueStore.default.set(1, forKey: "timesPlayed")
-////                } else {
-////                    timesPlayed += 1
-////                    NSUbiquitousKeyValueStore.default.set(timesPlayed, forKey: "timesPlayed")
-////                }
-////
-////                var totalPlayTime = NSUbiquitousKeyValueStore.default.double(forKey: "totalPlayTime")
-////
-////                if NSUbiquitousKeyValueStore.default.object(forKey: "totalPlayTime") == nil {
-////
-////                    if ViewController.mode == 1 {
-////                        NSUbiquitousKeyValueStore.default.set(GameOverViewController.timePlayed, forKey: "totalPlayTime")
-////                    } else if ViewController.mode == 0 {
-////                        NSUbiquitousKeyValueStore.default.set(60, forKey: "totalPlayTime")
-////                    } else if ViewController.mode == 2 {
-////                        NSUbiquitousKeyValueStore.default.set(GameOverViewController.timePlayed, forKey: "totalPlayTime")
-////                    } else if ViewController.mode == 3 {
-////                        NSUbiquitousKeyValueStore.default.set(MultiplayerViewController.timeDurationOfTM, forKey: "totalPlayTime")
-////                    }
-////
-////                } else {
-////
-////                    if ViewController.mode == 1 {
-////                        totalPlayTime += GameOverViewController.timePlayed
-////                        NSUbiquitousKeyValueStore.default.set(totalPlayTime, forKey: "totalPlayTime")
-////                    } else if ViewController.mode == 0 {
-////                        totalPlayTime += 60
-////                        NSUbiquitousKeyValueStore.default.set(totalPlayTime, forKey: "totalPlayTime")
-////                    } else if ViewController.mode == 2 {
-////                        totalPlayTime += GameOverViewController.timePlayed
-////                        NSUbiquitousKeyValueStore.default.set(totalPlayTime, forKey: "totalPlayTime")
-////                    } else if ViewController.mode == 3 {
-////                        totalPlayTime += MultiplayerViewController.timeDurationOfTM
-////                        NSUbiquitousKeyValueStore.default.set(totalPlayTime, forKey: "totalPlayTime")
-////                    }
-////
-////                }
-////
-////                var totalTaps = NSUbiquitousKeyValueStore.default.double(forKey: "totalTaps")
-////
-////                if NSUbiquitousKeyValueStore.default.object(forKey: "totalTaps") == nil {
-////
-////                    if ViewController.mode == 1 {
-////                        NSUbiquitousKeyValueStore.default.set(ViewController.score, forKey: "totalTaps")
-////                    } else if ViewController.mode == 0 {
-////                        NSUbiquitousKeyValueStore.default.set(ViewController.score, forKey: "totalTaps")
-////                    } else if ViewController.mode == 2 {
-////                        NSUbiquitousKeyValueStore.default.set(MultiplayerViewController.whiteScore, forKey: "totalTaps")
-////                    } else if ViewController.mode == 3 {
-////                        NSUbiquitousKeyValueStore.default.set(MultiplayerViewController.timesTapped, forKey: "totalTaps")
-////                    }
-////
-////                } else {
-////
-////                    if ViewController.mode == 1 {
-////                        totalTaps += ViewController.score
-////                        NSUbiquitousKeyValueStore.default.set(totalTaps, forKey: "totalTaps")
-////                    } else if ViewController.mode == 0 {
-////                        totalTaps += ViewController.score
-////                        NSUbiquitousKeyValueStore.default.set(totalTaps, forKey: "totalTaps")
-////                    } else if ViewController.mode == 2 {
-////                        totalTaps += MultiplayerViewController.whiteScore
-////                        NSUbiquitousKeyValueStore.default.set(totalTaps, forKey: "totalTaps")
-////                    } else if ViewController.mode == 3 {
-////                        totalTaps += MultiplayerViewController.timesTapped
-////                        NSUbiquitousKeyValueStore.default.set(totalTaps, forKey: "totalTaps")
-////                    }
-////
-////                }
-////
-////
-////                if NSUbiquitousKeyValueStore.default.double(forKey: "timesPlayed") >= 250 && NSUbiquitousKeyValueStore.default.double(forKey: "totalPlayTime") >= 1000 && NSUbiquitousKeyValueStore.default.double(forKey: "totalTaps") >= 10000 {
-////
-////                    let defaults = NSUbiquitousKeyValueStore.default
-////                    if defaults.object(forKey: "isFirstGoingIntermediate") == nil {
-////                        defaults.set("No", forKey:"isFirstGoingIntermediate")
-////                        defaults.synchronize()
-////                        GameOverViewController.newLevel = true
-////                    }
-////
-////                    NSUbiquitousKeyValueStore.default.set("Intermediate", forKey: "tapedupStatus")
-////                    if NSUbiquitousKeyValueStore.default.double(forKey: "timesPlayed") >= 500 && NSUbiquitousKeyValueStore.default.double(forKey: "totalPlayTime") >= 10000 && NSUbiquitousKeyValueStore.default.double(forKey: "totalTaps") >= 100000 {
-////
-////                        let defaults = NSUbiquitousKeyValueStore.default
-////                        if defaults.object(forKey: "isFirstGoingAdvanced") == nil {
-////                            defaults.set("No", forKey:"isFirstGoingAdvanced")
-////                            defaults.synchronize()
-////                            GameOverViewController.newLevel = true
-////                        }
-////
-////                        NSUbiquitousKeyValueStore.default.set("Advanced", forKey: "tapedupStatus")
-////                        if NSUbiquitousKeyValueStore.default.double(forKey: "timesPlayed") >= 1000 && NSUbiquitousKeyValueStore.default.double(forKey: "totalPlayTime") >= 100000 && NSUbiquitousKeyValueStore.default.double(forKey: "totalTaps") >= 1000000 {
-////
-////                            let defaults = NSUbiquitousKeyValueStore.default
-////                            if defaults.object(forKey: "isFirstGoingProfessional") == nil {
-////                                defaults.set("No", forKey:"isFirstGoingProfessional")
-////                                defaults.synchronize()
-////                                GameOverViewController.newLevel = true
-////                            }
-////
-////                            NSUbiquitousKeyValueStore.default.set("Professional", forKey: "tapedupStatus")
-////                            if NSUbiquitousKeyValueStore.default.double(forKey: "timesPlayed") >= 10000 && NSUbiquitousKeyValueStore.default.double(forKey: "totalPlayTime") >= 1000000 && NSUbiquitousKeyValueStore.default.double(forKey: "totalTaps") >= 1000000000 {
-////
-////                                let defaults = NSUbiquitousKeyValueStore.default
-////                                if defaults.object(forKey: "isFirstGoingHardcore") == nil {
-////                                    defaults.set("No", forKey:"isFirstGoingHardcore")
-////                                    defaults.synchronize()
-////                                    GameOverViewController.newLevel = true
-////                                }
-////
-////                                NSUbiquitousKeyValueStore.default.set("Hardcore", forKey: "tapedupStatus")
-////                            }
-////                        }
-////                    }
-////                } else {
-////                    NSUbiquitousKeyValueStore.default.set("Amateur", forKey: "tapedupStatus")
-////                }
-//            })
-//
+                let values = ["tapedupStatus": NSUbiquitousKeyValueStore.default.object(forKey: "tapedupStatus")]
+                usersRef.updateChildValues(values as Any as! [AnyHashable : Any])
+            }
         }
         
         mailErrorView.layer.cornerRadius = 10.0
@@ -486,17 +362,16 @@ class GameOverViewController: UIViewController, MFMailComposeViewControllerDeleg
             let ref = Database.database().reference(fromURL: "https://quicktap-155512.firebaseio.com/")
             let usersRef = ref.child("users").child(uid)
             
-            
             var timesPlayedHS = NSUbiquitousKeyValueStore.default.double(forKey: "timesPlayedHS")
             if NSUbiquitousKeyValueStore.default.object(forKey: "timesPlayedHS") == nil {
                 NSUbiquitousKeyValueStore.default.set(1, forKey: "timesPlayedHS")
-                
+                        
                 let values = ["timesPlayedHS": timesPlayedHS]
                 usersRef.updateChildValues(values as Any as! [AnyHashable : Any])
             } else {
                 timesPlayedHS += 1
                 NSUbiquitousKeyValueStore.default.set(timesPlayedHS, forKey: "timesPlayedHS")
-                
+                        
                 let values = ["timesPlayedHS": timesPlayedHS]
                 usersRef.updateChildValues(values as Any as! [AnyHashable : Any])
             }
@@ -577,8 +452,8 @@ class GameOverViewController: UIViewController, MFMailComposeViewControllerDeleg
             if GameOverViewController.multiplayerWinner == 0 {
                 let array = ["\(MultiplayerViewController.brownPNV) Won!", "Master of Taps - \(MultiplayerViewController.brownPNV)", "\(MultiplayerViewController.brownPNV) with the victory!", "You can do better \(MultiplayerViewController.bluePNV)!"]
                 let randomIndex = Int(arc4random_uniform(UInt32(array.count)))
-                s.text = "\(MultiplayerViewController.brownPNV)'s Score"
-                hs.text = "\(MultiplayerViewController.bluePNV)'s Score"
+                s.text = "\(MultiplayerViewController.brownPNV)"
+                hs.text = "\(MultiplayerViewController.bluePNV)"
                 scoreDisplay.text = "\(MultiplayerViewController.whiteScore.cleanValue)"
                 highscoreDisplay.text = "\(MultiplayerViewController.blueScore.cleanValue)"
                 gameOver.text = "\(array[randomIndex])"
@@ -587,8 +462,8 @@ class GameOverViewController: UIViewController, MFMailComposeViewControllerDeleg
             } else if GameOverViewController.multiplayerWinner == 1 {
                 let array = ["\(MultiplayerViewController.bluePNV) Won!", "Master of Taps - \(MultiplayerViewController.bluePNV)", "\(MultiplayerViewController.bluePNV) with the victory!", "You can do better \(MultiplayerViewController.brownPNV)!"]
                 let randomIndex = Int(arc4random_uniform(UInt32(array.count)))
-                s.text = "\(MultiplayerViewController.brownPNV)'s Score"
-                hs.text = "\(MultiplayerViewController.bluePNV)'s Score"
+                s.text = "\(MultiplayerViewController.brownPNV)"
+                hs.text = "\(MultiplayerViewController.bluePNV)"
                 scoreDisplay.text = "\(MultiplayerViewController.whiteScore.cleanValue)"
                 highscoreDisplay.text = "\(MultiplayerViewController.blueScore.cleanValue)"
                 gameOver.text = "\(array[randomIndex])"
@@ -597,8 +472,8 @@ class GameOverViewController: UIViewController, MFMailComposeViewControllerDeleg
             } else if GameOverViewController.multiplayerWinner == 2 {
                 let array = ["It's a tie!", "There's gotta be a winner!?", "A tie? Are you serious?", "Tie? Bowties are better."]
                 let randomIndex = Int(arc4random_uniform(UInt32(array.count)))
-                s.text = "\(MultiplayerViewController.brownPNV)'s Score"
-                hs.text = "\(MultiplayerViewController.bluePNV)'s Score"
+                s.text = "\(MultiplayerViewController.brownPNV)"
+                hs.text = "\(MultiplayerViewController.bluePNV)"
                 scoreDisplay.text = "\(MultiplayerViewController.whiteScore.cleanValue)"
                 highscoreDisplay.text = "\(MultiplayerViewController.blueScore.cleanValue)"
                 gameOver.text = "\(array[randomIndex])"
@@ -638,7 +513,7 @@ class GameOverViewController: UIViewController, MFMailComposeViewControllerDeleg
                 let randomIndex = Int(arc4random_uniform(UInt32(array.count)))
                 gameOver.text = "\(array[randomIndex])"
                 scoreStack.isHidden = true
-                hs.text = "Match Duration"
+                hs.text = "Time"
                 highscoreDisplay.text = "\(MultiplayerViewController.timeDurationOfTM.cleanValue) secs"
             } else if GameOverViewController.multiplayerWinner == 1 {
                 let array = ["\(MultiplayerViewController.bluePNV) Won!", "Master of Taps - \(MultiplayerViewController.bluePNV)", "\(MultiplayerViewController.bluePNV) with the victory!", "You can do better \(MultiplayerViewController.brownPNV)!"]
@@ -727,8 +602,8 @@ class GameOverViewController: UIViewController, MFMailComposeViewControllerDeleg
             } else if GameOverViewController.multiplayerWinner == 2 {
                 mailComposerVC.setMessageBody("Hello! Today we (\(MultiplayerViewController.brownPNV) and \(MultiplayerViewController.bluePNV)) played AcrossTable Mode from QuickTap. \(MultiplayerViewController.bluePNV) achieved a score of \(MultiplayerViewController.blueScore.cleanValue) taps tying with \(MultiplayerViewController.brownPNV) in \(GameOverViewController.timePlayed.cleanValue) secs. \n\nQuickTap is all about tapping quickly, hence the name. With two modes in Singleplayer, 'Time Mode' and 'Highscore Mode' sit along side Multiplayer's two modes: AcrossTable Mode and Territorial Mode. When you've become too tired, jump over to Tapedup World to check out other Tapedupers. You'll always be engaged because of the huge range of choices. Download here: https://itunes.apple.com/us/app/quicktap/id1190851546?mt=8", isHTML: false)
             }
-        } else if GameOverViewController.multiplayerWinner == 2 {
-            mailComposerVC.setSubject("Our (\(MultiplayerViewController.brownPNV) and \(MultiplayerViewController.bluePNV)) score in QuickTap!")
+        } else if ViewController.mode == 3 {
+            mailComposerVC.setSubject("We (\(MultiplayerViewController.brownPNV) and \(MultiplayerViewController.bluePNV)) played Territorial Mode in QuickTap!")
             if GameOverViewController.multiplayerWinner == 0 {
                 mailComposerVC.setMessageBody("Hello! Today we (\(MultiplayerViewController.brownPNV) and \(MultiplayerViewController.bluePNV)) played Territorial Mode from QuickTap and \(MultiplayerViewController.brownPNV) won in \(MultiplayerViewController.timeDurationOfTM.cleanValue) secs. \n\nQuickTap is all about tapping quickly, hence the name. With two modes in Singleplayer, 'Time Mode' and 'Highscore Mode' sit along side Multiplayer's two modes: AcrossTable Mode and Territorial Mode. When you've become too tired, jump over to Tapedup World to check out other Tapedupers. You'll always be engaged because of the huge range of choices. Download here: https://itunes.apple.com/us/app/quicktap/id1190851546?mt=8", isHTML: false)
             } else if GameOverViewController.multiplayerWinner == 1 {

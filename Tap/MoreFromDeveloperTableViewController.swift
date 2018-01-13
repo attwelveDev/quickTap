@@ -7,9 +7,14 @@
 //
 
 import UIKit
+import StoreKit
 
-class MoreFromDeveloperTableViewController: UITableViewController {
+class MoreFromDeveloperTableViewController: UITableViewController, SKStoreProductViewControllerDelegate {
 
+    @IBOutlet var errorView: UIView!
+    @IBOutlet weak var errorDescription: UILabel!
+    @IBOutlet weak var okButton: UIButton!
+    
     @IBOutlet var tableContent: UITableView!
     let tempConv = [
         ("Get TempConv"),
@@ -72,19 +77,73 @@ class MoreFromDeveloperTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if (indexPath.section == 0 && indexPath.row == 0) {
+//
+//            if let url = URL(string: "https://itunes.apple.com/us/app/tempconv/id1163432921?ls=1&mt=8") {
+//                if #available(iOS 10.0, *) {
+//                    UIApplication.shared.open(url, options: [:], completionHandler: nil)
+//                } else {
+//                    // Fallback on earlier versions
+//                }
+//            }
             
-            if let url = URL(string: "https://itunes.apple.com/us/app/tempconv/id1163432921?ls=1&mt=8") {
-                if #available(iOS 10.0, *) {
-                    UIApplication.shared.open(url, options: [:], completionHandler: nil)
+            activityIndicator("Loading")
+            
+            let storeVc = SKStoreProductViewController()
+            storeVc.delegate = self
+            
+            let parameters = [SKStoreProductParameterITunesItemIdentifier: NSNumber(value: 1163432921)]
+            
+            storeVc.loadProduct(withParameters: parameters, completionBlock: { (result, error) in
+                
+                self.effectView.removeFromSuperview()
+                
+                if result {
+                    self.present(storeVc, animated: true, completion: nil)
                 } else {
-                    // Fallback on earlier versions
+                    if let unwrappedError = error {
+                        self.animateInErrorView()
+                        self.errorDescription.text = "\(unwrappedError.localizedDescription)"
+                    }
                 }
-            }
+            })
             
             tableView.deselectRow(at: indexPath, animated: true)
         }
     }
     
+    func productViewControllerDidFinish(_ viewController: SKStoreProductViewController) {
+        viewController.dismiss(animated: true, completion: nil)
+    }
+    
+    var activityIndicator = UIActivityIndicatorView()
+    var strLabel = UILabel()
+    
+    let effectView = UIVisualEffectView(effect: UIBlurEffect(style: .light))
+    
+    func activityIndicator(_ title: String) {
+        
+        strLabel.removeFromSuperview()
+        activityIndicator.removeFromSuperview()
+        effectView.removeFromSuperview()
+        
+        strLabel = UILabel(frame: CGRect(x: 50, y: 0, width: 160, height: 45))
+        strLabel.text = title
+        strLabel.font = UIFont.systemFont(ofSize: 20, weight: .black)
+        strLabel.textColor = UIColor(red: 33.0/255.0, green: 93.0/255.0, blue: 125.0/255.0, alpha: 1.0)
+        
+        effectView.frame = CGRect(x: view.frame.midX - strLabel.frame.width / 2, y: view.frame.midY - strLabel.frame.height / 2 , width: 160, height: 45)
+        effectView.center = CGPoint(x: self.view.center.x, y: self.view.center.y - (self.navigationController?.navigationBar.frame.height)!)
+        effectView.layer.cornerRadius = 10
+        effectView.layer.masksToBounds = true
+        
+        activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .gray)
+        activityIndicator.frame = CGRect(x: 0, y: 0, width: 45, height: 45)
+        activityIndicator.startAnimating()
+        
+        effectView.contentView.addSubview(activityIndicator)
+        effectView.contentView.addSubview(strLabel)
+        self.view.addSubview(effectView)
+    }
     
     override func viewDidLoad() {
         
@@ -104,6 +163,16 @@ class MoreFromDeveloperTableViewController: UITableViewController {
         tableContent.delegate = self
         tableContent.dataSource = self
         
+        errorView.layer.shadowColor = UIColor.black.cgColor
+        errorView.layer.shadowOpacity = 1
+        errorView.layer.shadowOffset = CGSize.zero
+        errorView.layer.shadowRadius = 10
+        errorView.layer.shadowPath = UIBezierPath(rect: errorView.bounds).cgPath
+        errorView.layer.cornerRadius = 10.0
+        errorView.clipsToBounds = true
+        okButton.layer.cornerRadius = 10.0
+        okButton.clipsToBounds = true
+        
         navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
         navigationController?.navigationBar.shadowImage = UIImage()
         
@@ -112,6 +181,33 @@ class MoreFromDeveloperTableViewController: UITableViewController {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    func animateInErrorView() {
+        self.view.addSubview(errorView)
+        errorView.center = CGPoint(x: self.view.center.x, y: self.view.center.y - (self.navigationController?.navigationBar.frame.height)!)
+        
+        errorView.transform = CGAffineTransform.init(scaleX: 1.3, y: 1.3)
+        errorView.alpha = 0
+        
+        UIView.animate(withDuration: 0.5) {
+            self.errorView.alpha = 1
+            self.errorView.transform = CGAffineTransform.identity
+        }
+    }
+    
+    func animateOutErrorView() {
+        UIView.animate(withDuration: 0.5, animations: {
+            self.errorView.transform = CGAffineTransform.init(scaleX: 1.3, y: 1.3)
+            self.errorView.alpha = 0
+            
+        }) { (success: Bool) in
+            self.errorView.removeFromSuperview()
+        }
+    }
+    
+    @IBAction func dismissError(_ sender: Any) {
+        animateOutErrorView()
     }
     
     @IBAction func goBack(_ sender: Any) {

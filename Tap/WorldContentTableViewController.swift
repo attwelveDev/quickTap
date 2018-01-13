@@ -10,6 +10,34 @@ import UIKit
 import Firebase
 import FirebaseAuth
 import FirebaseDatabase
+import SystemConfiguration
+
+class Reachability {
+    func isInternetAvailable() -> Bool {
+        
+        var zeroAddress = sockaddr_in()
+        zeroAddress.sin_len = UInt8(MemoryLayout<sockaddr_in>.size)
+        zeroAddress.sin_family = sa_family_t(AF_INET)
+        
+        guard let defaultRouteReachability = withUnsafePointer(to: &zeroAddress, {
+            $0.withMemoryRebound(to: sockaddr.self, capacity: 1) {
+                SCNetworkReachabilityCreateWithAddress(nil, $0)
+            }
+        }) else {
+            return false
+        }
+        
+        var flags: SCNetworkReachabilityFlags = []
+        if !SCNetworkReachabilityGetFlags(defaultRouteReachability, &flags) {
+            return false
+        }
+        
+        let isReachable = flags.contains(.reachable)
+        let needsConnection = flags.contains(.connectionRequired)
+        
+        return (isReachable && !needsConnection)
+    }
+}
 
 class UserTableViewCell: UITableViewCell {
     @IBOutlet weak var profilePic: UIImageView!
@@ -182,12 +210,19 @@ class WorldContentTableViewController: UITableViewController, UITextFieldDelegat
     
     @IBAction func okAction(_ sender: Any) {
         animateOut()
+        
+        WorldContentTableViewController.isViewOtherUsers = false
+        
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let ivc = storyboard.instantiateViewController(withIdentifier: "accountVC")
+        ivc.modalPresentationStyle = .custom
+        ivc.modalTransitionStyle = .crossDissolve
+        //        self.present(ivc, animated: true, completion: { _ in })
+        self.present(ivc, animated: true, completion: nil)
     }
     
     func animateIn() {
-        DispatchQueue.main.async {
-            self.view.addSubview(self.errorView)
-        }
+        self.view.addSubview(self.errorView)
         if #available(iOS 11.0, *) {
             errorView.center = CGPoint(x: self.view.center.x, y: self.view.center.y - self.searchController.searchBar.frame.height -  (self.navigationController?.navigationBar.frame.height)!)
         } else {
@@ -212,6 +247,8 @@ class WorldContentTableViewController: UITableViewController, UITextFieldDelegat
             self.errorView.removeFromSuperview()
         }
     }
+    
+    let reachability = Reachability()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -264,74 +301,96 @@ class WorldContentTableViewController: UITableViewController, UITextFieldDelegat
             tableContent.isScrollEnabled = true
         }
 
-        Database.database().reference().child("users").observe(.childAdded, with: { (snapshot) in
-            if let value = snapshot.value as? NSDictionary {
-                
-                let username = value["username"] as? String? ?? ""
-                let status = value["tapedupStatus"] as? String? ?? ""
-                let Highscore = value["Highscore"] as! Int?
-                let profileImageUrl = value["profileImageUrl"] as? String? ?? ""
+//        let connectedRef = Database.database().reference(withPath: ".info/connected")
+//
+//        connectedRef.observe(.value) { (connected) in
+//            if let boolean = connected.value as? Bool, boolean == true {
+        
+        if reachability.isInternetAvailable() {
+            
+                Database.database().reference().child("users").observe(.childAdded, with: { (snapshot) in
+                    if let value = snapshot.value as? NSDictionary {
+                        
+                        self.activityIndicator("Loading")
+                        
+                        let username = value["username"] as? String? ?? ""
+                        let status = value["tapedupStatus"] as? String? ?? ""
+                        let Highscore = value["Highscore"] as! Int?
+                        let profileImageUrl = value["profileImageUrl"] as? String? ?? ""
 
-                if snapshot.hasChild("profileImageUrl") {
+                        if snapshot.hasChild("profileImageUrl") {
 
-                    Storage.storage().reference(forURL: profileImageUrl!).downloadURL(completion: { (url, error) in
-                        let session = URLSession(configuration: .default)
-                        let getImageFromUrl = session.dataTask(with: url!) { (data, response, error) in
-                            
-                            if error != nil {
-                                self.animateIn()
-                                if let unwrappedError = error {
-                                    self.errorDescription.text = "\(unwrappedError.localizedDescription)"
-                                }
-                            } else {
-                                if response as? HTTPURLResponse != nil {
-                                    if let imageData = data {
-                                        
-                                        if let image = UIImage(data: imageData) {
-                                            if let highscore = Highscore {
-//                                                if username != nil && status != nil && Highscore != nil && profileImageUrl != nil {
-                                                    self.userInfoArray.insert(userInfo(profilePic: image, username: username, tapedupStatus: status, highscore: String(highscore)), at: 0)
-                                                    DispatchQueue.main.async(execute: {
-                                                        self.tableView.reloadData()
-                                                        self.searchController.searchBar.isUserInteractionEnabled = true
-                                                        
-                                                    })
-//                                                } else {
-//                                                    self.animateIn()
-//                                                    self.errorDescription.text = "Couldn't retrieve user info"
-//                                                }
+                            Storage.storage().reference(forURL: profileImageUrl!).downloadURL(completion: { (url, error) in
+                                let session = URLSession(configuration: .default)
+                                let getImageFromUrl = session.dataTask(with: url!) { (data, response, error) in
+                                    
+                                    if error != nil {
+                                        self.effectView.removeFromSuperview()
+                                        self.animateIn()
+                                        if let unwrappedError = error {
+                                            self.errorDescription.text = "\(unwrappedError.localizedDescription)"
+                                        }
+                                    } else {
+                                        if response as? HTTPURLResponse != nil {
+                                            if let imageData = data {
+                                                
+                                                if let image = UIImage(data: imageData) {
+                                                    if let highscore = Highscore {
+        //                                                if username != nil && status != nil && Highscore != nil && profileImageUrl != nil {
+                                                            self.userInfoArray.insert(userInfo(profilePic: image, username: username, tapedupStatus: status, highscore: String(highscore)), at: 0)
+                                                            DispatchQueue.main.async(execute: {
+                                                                self.tableView.reloadData()
+                                                                self.effectView.removeFromSuperview()
+                                                                self.searchController.searchBar.isUserInteractionEnabled = true
+                                                                
+                                                            })
+        //                                                } else {
+        //                                                    self.animateIn()
+        //                                                    self.errorDescription.text = "Couldn't retrieve user info"
+        //                                                }
+                                                    } else {
+                                                        self.effectView.removeFromSuperview()
+                                                        self.animateIn()
+                                                        self.errorDescription.text = "Couldn't retrieve user info"
+                                                    }
+                                                } else {
+                                                    self.effectView.removeFromSuperview()
+                                                    self.animateIn()
+                                                    self.errorDescription.text = "Couldn't retrieve user info"
+                                                }
                                             } else {
+                                                self.effectView.removeFromSuperview()
                                                 self.animateIn()
                                                 self.errorDescription.text = "Couldn't retrieve user info"
                                             }
                                         } else {
+                                            self.effectView.removeFromSuperview()
                                             self.animateIn()
                                             self.errorDescription.text = "Couldn't retrieve user info"
                                         }
-                                    } else {
-                                        self.animateIn()
-                                        self.errorDescription.text = "Couldn't retrieve user info"
                                     }
-                                } else {
-                                    self.animateIn()
-                                    self.errorDescription.text = "Couldn't retrieve user info"
                                 }
-                            }
+                                
+                                getImageFromUrl.resume()
+                            })
+                            
                         }
-                        
-                        getImageFromUrl.resume()
-                    })
-                    
-                }
-            } else {
-                self.animateIn()
-                self.errorDescription.text = "Couldn't find user info"
-            }
-        
-        }, withCancel: { (error) in
+                    } else {
+                        self.effectView.removeFromSuperview()
+                        self.animateIn()
+                        self.errorDescription.text = "Couldn't find user info"
+                    }
+                
+                }, withCancel: { (error) in
+                    self.effectView.removeFromSuperview()
+                    self.animateIn()
+                    self.errorDescription.text = "\(error.localizedDescription)"
+                })
+        } else {
+            self.effectView.removeFromSuperview()
             self.animateIn()
-            self.errorDescription.text = "\(error.localizedDescription)"
-        })
+            self.errorDescription.text = "Network error. Please try again later."
+        }
         
         // Do any additional setup after loading the view.
     }
@@ -339,6 +398,36 @@ class WorldContentTableViewController: UITableViewController, UITextFieldDelegat
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+
+    var activityIndicator = UIActivityIndicatorView()
+    var strLabel = UILabel()
+    
+    let effectView = UIVisualEffectView(effect: UIBlurEffect(style: .light))
+    
+    func activityIndicator(_ title: String) {
+        
+        strLabel.removeFromSuperview()
+        activityIndicator.removeFromSuperview()
+        effectView.removeFromSuperview()
+        
+        strLabel = UILabel(frame: CGRect(x: 50, y: 0, width: 160, height: 45))
+        strLabel.text = title
+        strLabel.font = UIFont.systemFont(ofSize: 20, weight: .black)
+        strLabel.textColor = UIColor(red: 33.0/255.0, green: 93.0/255.0, blue: 125.0/255.0, alpha: 1.0)
+        
+        effectView.frame = CGRect(x: view.frame.midX - strLabel.frame.width / 2, y: view.frame.midY - strLabel.frame.height / 2 , width: 160, height: 45)
+        effectView.center = CGPoint(x: self.view.center.x, y: self.view.center.y - self.searchController.searchBar.frame.height -  (self.navigationController?.navigationBar.frame.height)!)
+        effectView.layer.cornerRadius = 10
+        effectView.layer.masksToBounds = true
+        
+        activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .gray)
+        activityIndicator.frame = CGRect(x: 0, y: 0, width: 45, height: 45)
+        activityIndicator.startAnimating()
+        
+        effectView.contentView.addSubview(activityIndicator)
+        effectView.contentView.addSubview(strLabel)
+        self.view.addSubview(effectView)
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {

@@ -54,18 +54,142 @@ class MultiplayerViewController: UIViewController {
             
         }) { (success: Bool) in
             self.playerNameView.removeFromSuperview()
-            
-            self.blueBTN.isUserInteractionEnabled = true
-            self.brownBTN.isUserInteractionEnabled = true
-            
+
         }
     }
 
     
     @IBOutlet weak var score: UILabel!
     @IBOutlet weak var score2: UILabel!
-    @IBOutlet weak var spaceToBTN: NSLayoutConstraint!
-    @IBOutlet weak var spaceToBTN2: NSLayoutConstraint!
+
+    var countdownTimer = Timer()
+    var countdownLabel = UILabel()
+    var countdownLabelB = UILabel()
+    var countdownTime = 3
+    
+    @objc func updateCountdown() {
+        countdownTime -= 1
+        if #available(iOS 10.0, *) {
+            let generator = UIImpactFeedbackGenerator(style: .heavy)
+            generator.prepare()
+            generator.impactOccurred()
+        }
+        countdownLabel.text = String(countdownTime)
+        countdownLabelB.text = String(countdownTime)
+        
+        if countdownTime == 0 {
+            UIView.animate(withDuration: 0.5, animations: {
+                self.countdownLabel.alpha = 0
+                self.countdownLabelB.alpha = 0
+                if MultiplayerViewController.differentMode == 1 {
+                    self.brownPN.alpha = 1
+                    self.bluePN.alpha = 1
+                    self.whiteScoreStack.alpha = 1
+                    self.blueScoreStack.alpha = 1
+                    self.whiteTimeStack.alpha = 1
+                    self.blueTimeStack.alpha = 1
+                } else if MultiplayerViewController.differentMode == 2 {
+                    self.brownPN.alpha = 1
+                    self.bluePN.alpha = 1
+                    self.whiteScoreStack.alpha = 0
+                    self.blueScoreStack.alpha = 0
+                    self.whiteTimeStack.alpha = 1
+                    self.blueTimeStack.alpha = 1
+                }
+            }, completion: { (success: Bool) in
+                self.countdownLabel.removeFromSuperview()
+                self.countdownLabelB.removeFromSuperview()
+                if MultiplayerViewController.differentMode == 1 {
+                    self.brownPN.isHidden = false
+                    self.bluePN.isHidden = false
+                    self.whiteScoreStack.isHidden = false
+                    self.blueScoreStack.isHidden = false
+                    self.whiteTimeStack.isHidden = false
+                    self.blueTimeStack.isHidden = false
+                } else if MultiplayerViewController.differentMode == 2 {
+                    self.brownPN.isHidden = false
+                    self.bluePN.isHidden = false
+                    self.whiteScoreStack.isHidden = true
+                    self.blueScoreStack.isHidden = true
+                    self.whiteTimeStack.isHidden = false
+                    self.blueTimeStack.isHidden = false
+                    
+                }
+            })
+            
+            brownBTN.isUserInteractionEnabled = true
+            blueBTN.isUserInteractionEnabled = true
+            
+            if MultiplayerViewController.differentMode == 1 {
+                
+                whiteCountdown.text = "\(MultiplayerViewController.time) secs"
+                blueCountdown.text = "\(MultiplayerViewController.time) secs"
+                
+                if (MultiplayerViewController.time <= 10) {
+                    whiteCountdown.textColor = UIColor.red
+                    blueCountdown.textColor = UIColor.red
+                } else if (MultiplayerViewController.time >= 11) {
+                    whiteCountdown.textColor = UIColor(red: 33.0/255.0, green: 93.0/255.0, blue: 125.0/255.0, alpha: 1.0)
+                    blueCountdown.textColor = UIColor(red: 213.0/255.0, green: 147.0/255.0, blue: 114.0/255.0, alpha: 1.0)
+                }
+                
+                ViewController.mode = 2
+                
+                timer.invalidate()
+                stopwatch.invalidate()
+                
+                self.timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(MultiplayerViewController.update), userInfo: nil, repeats: true)
+                
+            } else if MultiplayerViewController.differentMode == 2 {
+                
+                
+                ViewController.mode = 3
+
+                whiteCountdown.text = "0 secs"
+                blueCountdown.text = "0 secs"
+                
+                timer.invalidate()
+                stopwatch.invalidate()
+                
+                MultiplayerViewController.timeDurationOfTM = 0
+                
+                self.stopwatch = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(MultiplayerViewController.stopwatchUpdate), userInfo: nil, repeats: true)
+                
+            }
+        }
+    }
+    
+    func initCountdown() {
+        brownBTN.isUserInteractionEnabled = false
+        blueBTN.isUserInteractionEnabled = false
+        
+        animateOut()
+        
+        countdownLabel.frame = CGRect(x: 0, y: 0, width: 75, height: 75)
+        countdownLabel.font = UIFont.systemFont(ofSize: 61, weight: .black)
+        countdownLabel.textAlignment = .center
+        countdownLabel.textColor = UIColor(red: 230.0/255.0, green: 224.0/255.0, blue: 221.0/255.0, alpha: 1.0)
+        countdownLabel.text = String(countdownTime)
+        countdownLabel.transform = CGAffineTransform(rotationAngle: 3.14)
+        
+        brownBTN.addSubview(countdownLabel)
+        countdownLabel.translatesAutoresizingMaskIntoConstraints = false
+        countdownLabel.centerXAnchor.constraint(equalTo: brownBTN.centerXAnchor, constant: 0).isActive = true
+        countdownLabel.centerYAnchor.constraint(equalTo: brownBTN.centerYAnchor, constant: 44).isActive = true
+
+        countdownLabelB.frame = CGRect(x: 0, y: 0, width: 75, height: 75)
+        countdownLabelB.font = UIFont.systemFont(ofSize: 61, weight: .black)
+        countdownLabelB.center = blueBTN.center
+        countdownLabelB.textAlignment = .center
+        countdownLabelB.textColor = UIColor(red: 230.0/255.0, green: 224.0/255.0, blue: 221.0/255.0, alpha: 1.0)
+        countdownLabelB.text = String(countdownTime)
+        
+        blueBTN.addSubview(countdownLabelB)
+        countdownLabelB.translatesAutoresizingMaskIntoConstraints = false
+        countdownLabelB.centerXAnchor.constraint(equalTo: blueBTN.centerXAnchor, constant: 0).isActive = true
+        countdownLabelB.centerYAnchor.constraint(equalTo: blueBTN.centerYAnchor, constant: 0).isActive = true
+
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -89,59 +213,19 @@ class MultiplayerViewController: UIViewController {
             self.playerNameView.alpha = 1
         }
         
-        if MultiplayerViewController.differentMode == 1 {
+        if MultiplayerViewController.differentMode == 1 || MultiplayerViewController.differentMode == 2 {
             
-            whiteCountdown.text = "\(MultiplayerViewController.time) secs"
-            blueCountdown.text = "\(MultiplayerViewController.time) secs"
+            brownBTN.isUserInteractionEnabled = false
+            blueBTN.isUserInteractionEnabled = false
             
-            if (MultiplayerViewController.time <= 10) {
-                whiteCountdown.textColor = UIColor.red
-                blueCountdown.textColor = UIColor.red
-            } else if (MultiplayerViewController.time >= 11) {
-                whiteCountdown.textColor = UIColor(red: 33.0/255.0, green: 93.0/255.0, blue: 125.0/255.0, alpha: 1.0)
-                blueCountdown.textColor = UIColor(red: 213.0/255.0, green: 147.0/255.0, blue: 114.0/255.0, alpha: 1.0)
+            initCountdown()
+            
+            if #available(iOS 10.0, *) {
+                let generator = UIImpactFeedbackGenerator(style: .heavy)
+                generator.prepare()
+                generator.impactOccurred()
             }
-            
-            ViewController.mode = 2
-            
-            animateOut()
-            brownPN.isHidden = false
-            bluePN.isHidden = false
-            whiteScoreStack.isHidden = false
-            blueScoreStack.isHidden = false
-            whiteTimeStack.isHidden = false
-            blueTimeStack.isHidden = false
-            
-            timer.invalidate()
-            stopwatch.invalidate()
-            
-            self.timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(MultiplayerViewController.update), userInfo: nil, repeats: true)
-            
-        } else if MultiplayerViewController.differentMode == 2 {
-
-            
-            ViewController.mode = 3
-            
-            animateOut()
-            
-            brownPN.isHidden = false
-            bluePN.isHidden = false
-            
-            whiteScoreStack.isHidden = true
-            blueScoreStack.isHidden = true
-            
-            whiteCountdown.text = "0 secs"
-            blueCountdown.text = "0 secs"
-            
-            whiteTimeStack.isHidden = false
-            blueTimeStack.isHidden = false
-            
-            timer.invalidate()
-            stopwatch.invalidate()
-            
-            MultiplayerViewController.timeDurationOfTM = 0
-            
-            self.stopwatch = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(MultiplayerViewController.stopwatchUpdate), userInfo: nil, repeats: true)
+            self.timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(ViewController.updateCountdown), userInfo: nil, repeats: true)
             
         }
 

@@ -179,54 +179,95 @@ class ViewController: UIViewController {
         
     }
     
+    var timer = Timer()
+    var countdownLabel = UILabel()
+    var countdownTime = 3
+    
+    @objc func updateCountdown() {
+        
+        countdownTime -= 1
+        if #available(iOS 10.0, *) {
+            let generator = UIImpactFeedbackGenerator(style: .heavy)
+            generator.prepare()
+            generator.impactOccurred()
+        }
+        countdownLabel.text = String(countdownTime)
+        
+        if countdownTime == 0 {
+            timer.invalidate()
+            UIView.animate(withDuration: 0.5, animations: {
+                self.countdownLabel.alpha = 0
+                self.score.alpha = 1
+                self.scoreDisplay.alpha = 1
+                self.countdownToEndStack.alpha = 1
+                if Auth.auth().currentUser != nil && self.hsSwitch.isOn == true {
+                    self.highscoreStack.alpha = 1
+                }
+            }, completion: { (success: Bool) in
+                self.countdownLabel.removeFromSuperview()
+                self.score.isHidden = false
+                self.scoreDisplay.isHidden = false
+                self.countdownToEndStack.isHidden = false
+                if Auth.auth().currentUser != nil && self.hsSwitch.isOn == true {
+                    self.highscoreStack.isHidden = false
+                }
+            })
+            
+            stackView.removeFromSuperview()
+            
+            if slider.value == 60 && UserDefaults.standard.value(forKey: "valueTextValue") == nil {
+                slider.value = 60
+                time = 60
+                countdown.text = "60 secs"
+            }
+            
+            countdown.text = "\(slider.value.cleanValue) secs"
+            time = Int(slider.value)
+            if (slider.value <= 10) {
+                countdown.textColor = UIColor.red
+            } else if (slider.value >= 11) {
+                countdown.textColor = UIColor(red: 230.0/255.0, green: 224.0/255.0, blue: 221.0/255.0, alpha: 1.0)
+            }
+            
+            _ = Timer.scheduledTimer(timeInterval: TimeInterval(interval), target: self, selector: #selector(ViewController.update), userInfo: nil, repeats: true)
+            tapBTN.isUserInteractionEnabled = true
+            
+            if Auth.auth().currentUser == nil {
+                ViewController.mode = 1
+            } else {
+                if hsSwitch.isOn == true {
+                    ViewController.mode = 0
+                    time = 60
+                    countdown.text = "60 secs"
+                    countdown.textColor = UIColor(red: 230.0/255.0, green: 224.0/255.0, blue: 221.0/255.0, alpha: 1.0)
+
+                }
+                
+            }
+            
+        }
+        
+    }
+    
     @IBAction func startGame(_ sender: Any) {
 
         animateOut()
         
-        stackView.removeFromSuperview()
+        countdownLabel.frame = CGRect(x: 0, y: 0, width: 75, height: 75)
+        countdownLabel.font = UIFont.systemFont(ofSize: 61, weight: .black)
+        countdownLabel.center = self.view.center
+        countdownLabel.textAlignment = .center
+        countdownLabel.textColor = UIColor(red: 230.0/255.0, green: 224.0/255.0, blue: 221.0/255.0, alpha: 1.0)
+        countdownLabel.text = String(countdownTime)
         
-        self.score.isHidden = false
-        self.scoreDisplay.isHidden = false
-        self.countdownToEndStack.isHidden = false
+        self.view.addSubview(countdownLabel)
         
-        if slider.value == 60 && UserDefaults.standard.value(forKey: "valueTextValue") == nil {
-            print("Passed")
-            slider.value = 60
-            time = 60
-            countdown.text = "60 secs"
+        if #available(iOS 10.0, *) {
+            let generator = UIImpactFeedbackGenerator(style: .heavy)
+            generator.prepare()
+            generator.impactOccurred()
         }
-        countdown.text = "\(slider.value.cleanValue) secs"
-        time = Int(slider.value)
-        if (slider.value <= 10) {
-            countdown.textColor = UIColor.red
-        } else if (slider.value >= 11) {
-            countdown.textColor = UIColor(red: 230.0/255.0, green: 224.0/255.0, blue: 221.0/255.0, alpha: 1.0)
-        }
-        
-        _ = Timer.scheduledTimer(timeInterval: TimeInterval(interval), target: self, selector: #selector(ViewController.update), userInfo: nil, repeats: true)
-        tapBTN.isUserInteractionEnabled = true
-
-        if Auth.auth().currentUser == nil {
-            ViewController.mode = 1
-        } else {
-        
-            if hsSwitch.isOn == true {
-                ViewController.mode = 0
-                time = 60
-                countdown.text = "60 secs"
-                countdown.textColor = UIColor(red: 230.0/255.0, green: 224.0/255.0, blue: 221.0/255.0, alpha: 1.0)
-
-                highscoreStack.isHidden = false
-                highscoreStack.alpha = 1
-                
-                
-                if self.hsSwitch.isOn == true {
-                    highscoreStack.isHidden = false
-                    highscoreStack.alpha = 1
-                }
-            }
-            
-        }
+        self.timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(ViewController.updateCountdown), userInfo: nil, repeats: true)
         
     }
     
@@ -384,10 +425,26 @@ class ViewController: UIViewController {
                     let Highscore = value["Highscore"] as? Int
                     NSUbiquitousKeyValueStore.default.set(Highscore, forKey: "Highscore")
                     
+                    let timesPlayed = value["timesPlayed"] as! Int?
+                    NSUbiquitousKeyValueStore.default.set(timesPlayed as Any, forKey: "timesPlayed")
+                    
+                    let timesPlayedTM = value["timesPlayedTM"] as! Int?
+                    NSUbiquitousKeyValueStore.default.set(timesPlayedTM as Any, forKey: "timesPlayedTM")
+                    
+                    let timesPlayedHS = value["timesPlayedHS"] as! Int?
+                    NSUbiquitousKeyValueStore.default.set(timesPlayedHS as Any, forKey: "timesPlayedHS")
+                    
+                    let timesPlayedAT = value["timesPlayedAT"] as! Int?
+                    NSUbiquitousKeyValueStore.default.set(timesPlayedAT as Any, forKey: "timesPlayedAT")
+                    
+                    let timesPlayedTRLM = value["timesPlayedTRLM"] as! Int?
+                    NSUbiquitousKeyValueStore.default.set(timesPlayedTRLM as Any, forKey: "timesPlayedTRLM")
+                    
                     let highscoreDefault = NSUbiquitousKeyValueStore.default
                     if (highscoreDefault.object(forKey: "Highscore") != nil){
                         ViewController.highscore = highscoreDefault.object(forKey: "Highscore") as! Double!
                         self.highscoreDisplay.text = "\(String(describing: Highscore!))"
+                        self.highscoreLabel.text = "\(String(describing: Highscore!))"
                     }
                     
                     if self.hsSwitch.isOn == true {
@@ -395,6 +452,7 @@ class ViewController: UIViewController {
                         if (highscoreDefault.object(forKey: "Highscore") != nil){
                             ViewController.highscore = highscoreDefault.object(forKey: "Highscore") as! Double!
                             self.highscoreLabel.text = "\(String(describing: Highscore!))"
+                            self.highscoreDisplay.text = "\(String(describing: Highscore!))"
                         }
                         
                     }
@@ -403,6 +461,7 @@ class ViewController: UIViewController {
                     let highscoreDefault = NSUbiquitousKeyValueStore.default
                     if (highscoreDefault.object(forKey: "Highscore") != nil){
                         ViewController.highscore = highscoreDefault.object(forKey: "Highscore") as! Double!
+                        self.highscoreLabel.text = "\(ViewController.highscore.cleanValue)"
                         self.highscoreDisplay.text = "\(ViewController.highscore.cleanValue)"
                     }
                     
@@ -411,6 +470,7 @@ class ViewController: UIViewController {
                         if (highscoreDefault.object(forKey: "Highscore") != nil){
                             ViewController.highscore = highscoreDefault.object(forKey: "Highscore") as! Double!
                             self.highscoreLabel.text = "\(ViewController.highscore.cleanValue)"
+                            self.highscoreDisplay.text = "\(ViewController.highscore.cleanValue)"
                         }
                         
                     }
@@ -421,6 +481,7 @@ class ViewController: UIViewController {
                 if (highscoreDefault.object(forKey: "Highscore") != nil){
                     ViewController.highscore = highscoreDefault.object(forKey: "Highscore") as! Double!
                     self.highscoreDisplay.text = "\(ViewController.highscore.cleanValue)"
+                    self.highscoreLabel.text = "\(ViewController.highscore.cleanValue)"
                 }
                 
                 if self.hsSwitch.isOn == true {
@@ -428,6 +489,7 @@ class ViewController: UIViewController {
                     if (highscoreDefault.object(forKey: "Highscore") != nil){
                         ViewController.highscore = highscoreDefault.object(forKey: "Highscore") as! Double!
                         self.highscoreLabel.text = "\(ViewController.highscore.cleanValue)"
+                        self.highscoreDisplay.text = "\(ViewController.highscore.cleanValue)"
                     }
                     
                 }
@@ -574,6 +636,7 @@ class ViewController: UIViewController {
             if ViewController.score >= ViewController.highscore {
                 ViewController.highscore = ViewController.score
                 highscoreLabel.text = "\((ViewController.highscore).cleanValue)"
+                highscoreDisplay.text = "\(ViewController.highscore.cleanValue)"
                 highscoreLabel.textColor = UIColor.green
                 scoreLabel.textColor = UIColor.green
                 

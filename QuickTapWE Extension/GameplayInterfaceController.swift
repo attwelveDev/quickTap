@@ -106,15 +106,44 @@ class GameplayInterfaceController: WKInterfaceController {
 //        session.activate()
         
     }
+    
+    var countdownT = Timer()
+    var cTime = 3
+    
+    @IBOutlet var subGroup: WKInterfaceGroup!
+    @IBOutlet var button: WKInterfaceButton!
+    
+    @objc func updateCountdown() {
+        cTime -= 1
+        button.setTitle(String(cTime))
+        
+        if cTime == 0 {
+            button.setEnabled(true)
+            
+            countdownT.invalidate()
+            
+            animate(withDuration: 0.2) {
+                self.subGroup.setAlpha(1)
+                self.button.setTitle(nil)
+            }
+            
+            interval = 1
+            
+            _ = Timer.scheduledTimer(timeInterval: TimeInterval(interval), target: self, selector: #selector(GameplayInterfaceController.countdownTimer), userInfo: nil, repeats: true)
+        }
+    }
 
     override func willActivate() {
         // This method is called when watch view controller is about to be visible to user
         super.willActivate()
 
-        self.group.setAlpha(0)
+        subGroup.setAlpha(0)
         
+        button.setEnabled(false)
+        
+        button.setAlpha(0)
         animate(withDuration: 0.2) {
-            self.group.setAlpha(1)
+            self.button.setAlpha(1)
         }
         
         countdown.setText("\(countdownTime) secs")
@@ -122,16 +151,15 @@ class GameplayInterfaceController: WKInterfaceController {
         if countdownTime == 10 {
             countdown.setTextColor(UIColor.red)
         }
+        
+        self.countdownT = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(GameplayInterfaceController.updateCountdown), userInfo: nil, repeats: true)
 //
 //        if InterfaceController.modeSelection == "time" {
 //            highscoreGroup.setHidden(true)
 //        } else if InterfaceController.modeSelection == "highscore" {
 //            highscoreGroup.setHidden(false)
 //        }
-        
-        interval = 1
-        
-        _ = Timer.scheduledTimer(timeInterval: TimeInterval(interval), target: self, selector: #selector(GameplayInterfaceController.countdownTimer), userInfo: nil, repeats: true)
+    
     }
 
     override func didDeactivate() {
