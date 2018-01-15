@@ -13,6 +13,7 @@ import FirebaseDatabase
 
 class PlayerNamesViewController: UIViewController, UITextFieldDelegate {
     
+    @IBOutlet weak var acrossWorldBtn: UIButton!
     @IBOutlet weak var startBTN: UIButton!
     @IBAction func startGame(_ sender: Any) {
         
@@ -83,6 +84,16 @@ class PlayerNamesViewController: UIViewController, UITextFieldDelegate {
     @IBAction func goBack(_ sender: Any) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let ivc = storyboard.instantiateViewController(withIdentifier: "Start")
+        ivc.modalPresentationStyle = .custom
+        ivc.modalTransitionStyle = .crossDissolve
+        //        self.present(ivc, animated: true, completion: { _ in })
+        self.present(ivc, animated: true, completion: nil)
+    }
+    
+    @IBAction func goToAcrossWorld(_ sender: Any) {
+        MultiplayerViewController.instantiationSource = "acrossWorld"
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let ivc = storyboard.instantiateViewController(withIdentifier: "Multi")
         ivc.modalPresentationStyle = .custom
         ivc.modalTransitionStyle = .crossDissolve
         //        self.present(ivc, animated: true, completion: { _ in })
@@ -337,6 +348,8 @@ class PlayerNamesViewController: UIViewController, UITextFieldDelegate {
         
         backBTN.layer.cornerRadius = 10.0
         backBTN.clipsToBounds = true
+        acrossWorldBtn.layer.cornerRadius = 10.0
+        acrossWorldBtn.clipsToBounds = true
         bottomBTN.layer.cornerRadius = 10.0
         bottomBTN.clipsToBounds = true
         startBTN.layer.cornerRadius = 10.0

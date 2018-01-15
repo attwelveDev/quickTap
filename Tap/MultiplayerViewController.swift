@@ -39,7 +39,9 @@ class MultiplayerViewController: UIViewController {
     static var bluePNV = "Blue"
     
     @IBOutlet weak var containerView: UIView!
+    @IBOutlet weak var containerViewAWM: UIView!
     @IBOutlet var playerNameView: UIView!
+    @IBOutlet var acrossWorldView: UIView!
     
     var timer = Timer()
     var stopwatch = Timer()
@@ -191,6 +193,8 @@ class MultiplayerViewController: UIViewController {
 
     }
     
+    static var instantiationSource = ""
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -203,16 +207,7 @@ class MultiplayerViewController: UIViewController {
         
         blueBTN.isUserInteractionEnabled = false
         brownBTN.isUserInteractionEnabled = false
-        
-        self.view.addSubview(self.playerNameView)
-        playerNameView.center = self.view.center
-        
-        UIView.animate(withDuration: 2.0, animations: {
-            self.playerNameView.alpha = 0
-        }) { _ in
-            self.playerNameView.alpha = 1
-        }
-        
+                
         if MultiplayerViewController.differentMode == 1 || MultiplayerViewController.differentMode == 2 {
             
             brownBTN.isUserInteractionEnabled = false
@@ -229,16 +224,33 @@ class MultiplayerViewController: UIViewController {
             
         }
 
-        playerNameView.center = self.view.center
+        if MultiplayerViewController.instantiationSource == "playerNames" {
+            self.view.addSubview(self.playerNameView)
+            playerNameView.center = self.view.center
 
-        playerNameView.layer.shadowColor = UIColor.black.cgColor
-        playerNameView.layer.shadowOpacity = 1
-        playerNameView.layer.shadowOffset = CGSize.zero
-        playerNameView.layer.shadowRadius = 10
-        playerNameView.layer.shadowPath = UIBezierPath(rect: containerView.bounds).cgPath
-        playerNameView.layer.cornerRadius = 10.0
-        playerNameView.layer.masksToBounds = false
-        
+            playerNameView.layer.shadowColor = UIColor.black.cgColor
+            playerNameView.layer.shadowOpacity = 1
+            playerNameView.layer.shadowOffset = CGSize.zero
+            playerNameView.layer.shadowRadius = 10
+            playerNameView.layer.shadowPath = UIBezierPath(rect: containerView.bounds).cgPath
+            playerNameView.layer.cornerRadius = 10.0
+            playerNameView.layer.masksToBounds = false
+            
+            acrossWorldView.removeFromSuperview()
+        } else {
+            self.view.addSubview(self.acrossWorldView)
+            acrossWorldView.center = self.view.center
+            
+            acrossWorldView.layer.shadowColor = UIColor.black.cgColor
+            acrossWorldView.layer.shadowOpacity = 1
+            acrossWorldView.layer.shadowOffset = CGSize.zero
+            acrossWorldView.layer.shadowRadius = 10
+            acrossWorldView.layer.shadowPath = UIBezierPath(rect: containerViewAWM.bounds).cgPath
+            acrossWorldView.layer.cornerRadius = 10.0
+            acrossWorldView.layer.masksToBounds = false
+            
+            playerNameView.removeFromSuperview()
+        }
         // Do any additional setup after loading the view.
         whiteScoreStack.transform = CGAffineTransform(rotationAngle: 3.14)
         whiteTimeStack.transform = CGAffineTransform(rotationAngle: 3.14)

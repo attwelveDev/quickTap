@@ -216,6 +216,7 @@ class StartViewController: UIViewController {
         self.present(ivc, animated: true, completion: nil)
     }
     @IBAction func multiplayerAction(_ sender: Any) {
+        MultiplayerViewController.instantiationSource = "playerNames"
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let ivc = storyboard.instantiateViewController(withIdentifier: "Multi")
         ivc.modalPresentationStyle = .custom

@@ -10,6 +10,7 @@
 		040DC8671FF223FD006C83F2 /* SignInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040DC8661FF223FD006C83F2 /* SignInViewController.swift */; };
 		040DC8691FF224B5006C83F2 /* WorldContentTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040DC8681FF224B5006C83F2 /* WorldContentTableViewController.swift */; };
 		040DC86B1FF227F8006C83F2 /* ResetPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040DC86A1FF227F8006C83F2 /* ResetPasswordViewController.swift */; };
+		04153EDD200C8B4800F7B404 /* AcrossWorldViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04153EDC200C8B4800F7B404 /* AcrossWorldViewController.swift */; };
 		043044E21FF0B6B600677427 /* CreateAccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043044E11FF0B6B600677427 /* CreateAccountViewController.swift */; };
 		04798AB51DD9016300155341 /* MoreTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04798AB41DD9016300155341 /* MoreTableViewController.swift */; };
 		04947C6B1E123E330069ABCA /* MoreFromDeveloperTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04947C6A1E123E330069ABCA /* MoreFromDeveloperTableViewController.swift */; };
@@ -114,6 +115,7 @@
 		040DC8661FF223FD006C83F2 /* SignInViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInViewController.swift; sourceTree = "<group>"; };
 		040DC8681FF224B5006C83F2 /* WorldContentTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorldContentTableViewController.swift; sourceTree = "<group>"; };
 		040DC86A1FF227F8006C83F2 /* ResetPasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResetPasswordViewController.swift; sourceTree = "<group>"; };
+		04153EDC200C8B4800F7B404 /* AcrossWorldViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AcrossWorldViewController.swift; sourceTree = "<group>"; };
 		043044E11FF0B6B600677427 /* CreateAccountViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateAccountViewController.swift; sourceTree = "<group>"; };
 		047961921FE0AEF400D9BC00 /* QuickTapWE.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = QuickTapWE.entitlements; sourceTree = "<group>"; };
 		04798AB41DD9016300155341 /* MoreTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MoreTableViewController.swift; sourceTree = "<group>"; };
@@ -287,6 +289,7 @@
 				04E2316D1DD81175001B70D2 /* ViewController.swift */,
 				04F9D9181DDEBDB8003069DD /* MultiplayerViewController.swift */,
 				04A590F11E0E43E100EB324E /* PlayerNamesViewController.swift */,
+				04153EDC200C8B4800F7B404 /* AcrossWorldViewController.swift */,
 				04DC69A11DD848270091D69B /* GameOverViewController.swift */,
 			);
 			name = GameplayViewControllers;
@@ -899,6 +902,7 @@
 				043044E21FF0B6B600677427 /* CreateAccountViewController.swift in Sources */,
 				04B524891FEBB29700337D34 /* SettingsTableViewController.swift in Sources */,
 				040DC8671FF223FD006C83F2 /* SignInViewController.swift in Sources */,
+				04153EDD200C8B4800F7B404 /* AcrossWorldViewController.swift in Sources */,
 				04A504E41DD86A9D003645CD /* StartViewController.swift in Sources */,
 				04A590F21E0E43E100EB324E /* PlayerNamesViewController.swift in Sources */,
 				04947C6B1E123E330069ABCA /* MoreFromDeveloperTableViewController.swift in Sources */,
